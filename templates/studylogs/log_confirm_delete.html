@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Delete Log - SkillSphere{% endblock %}
+{% block page_title %}Delete Study Log{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card-custom p-4 text-center">
+            <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+            <h5 class="mt-3">Delete study log for "{{ log.topic }}"?</h5>
+            <p class="text-muted">{{ log.date|date:"M d, Y" }} - {{ log.hours }} hours</p>
+            <form method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger me-2">Delete</button>
+                <a href="{% url 'studylogs:list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

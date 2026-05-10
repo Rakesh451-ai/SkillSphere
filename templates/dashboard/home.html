@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - SkillSphere{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4 col-lg-2-4">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted mb-1 small">Total Study Hours</p>
+                    <div class="stat-value text-primary">{{ total_hours }}</div>
+                </div>
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-clock-fill"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2-4">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted mb-1 small">Current Streak</p>
+                    <div class="stat-value" style="color:#e17055;">{{ current_streak }} <small class="fs-6">days</small></div>
+                </div>
+                <div class="stat-icon" style="background:#e1705510;color:#e17055;"><i class="bi bi-fire"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2-4">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted mb-1 small">Placement Readiness</p>
+                    <div class="stat-value" style="color:#00cec9;">{{ placement_score }}%</div>
+                </div>
+                <div class="stat-icon" style="background:#00cec910;color:#00cec9;"><i class="bi bi-briefcase-fill"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2-4">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted mb-1 small">Goals Completed</p>
+                    <div class="stat-value" style="color:#6c5ce7;">{{ completed_goals }}<small class="fs-6 text-muted">/{{ total_goals }}</small></div>
+                </div>
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-bullseye"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2-4">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="text-muted mb-1 small">Productivity Score</p>
+                    <div class="stat-value" style="color:#fd79a8;">{{ productivity_score }}%</div>
+                </div>
+                <div class="stat-icon" style="background:#fd79a810;color:#fd79a8;"><i class="bi bi-speedometer2"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="card-custom p-4">
+            <h6 class="fw-bold mb-3">Weekly Study Hours</h6>
+            <canvas id="weeklyChart" height="200"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-custom p-4">
+            <h6 class="fw-bold mb-3">Skill Progress</h6>
+            <canvas id="skillChart" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card-custom p-4">
+            <h6 class="fw-bold mb-3">Productivity Trend</h6>
+            <canvas id="productivityChart" height="180"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card-custom p-4">
+            <h6 class="fw-bold mb-3">Monthly Analytics</h6>
+            <canvas id="monthlyChart" height="180"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Insights -->
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card-custom p-4">
+            <h6 class="fw-bold mb-3"><i class="bi bi-arrow-up-circle-fill text-success"></i> Most Improved</h6>
+            {% if most_improved %}
+            <p class="mb-1 fw-semibold">{{ most_improved.skill_name }}</p>
+            <p class="text-muted small">{{ most_improved.hours_practiced }} hours practiced</p>
+            <div class="progress" style="height:8px;">
+                <div class="progress-bar" style="width:{{ most_improved.progress }}%;"></div>
+            </div>
+            {% else %}
+            <p class="text-muted">Add skills to see insights</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-custom p-4">
+            <h6 class="fw-bold mb-3"><i class="bi bi-arrow-down-circle-fill text-danger"></i> Needs Improvement</h6>
+            {% if weakest %}
+            <p class="mb-1 fw-semibold">{{ weakest.skill_name }}</p>
+            <p class="text-muted small">{{ weakest.hours_practiced }} hours practiced</p>
+            <div class="progress" style="height:8px;">
+                <div class="progress-bar bg-danger" style="width:{{ weakest.progress }}%;"></div>
+            </div>
+            {% else %}
+            <p class="text-muted">Add skills to see insights</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-custom p-4">
+            <h6 class="fw-bold mb-3"><i class="bi bi-lightbulb-fill text-warning"></i> AI Recommendations</h6>
+            {% for rec in recommendations %}
+            <div class="d-flex align-items-start mb-2">
+                <span class="badge bg-{{ rec.priority|default:'medium' }} me-2" style="{% if rec.priority == 'high' %}background:#e17055!important;{% elif rec.priority == 'low' %}background:#00cec9!important;{% else %}background:#fdcb6e!important;color:#333!important;{% endif %}">{{ rec.priority }}</span>
+                <small>{{ rec.message }}</small>
+            </div>
+            {% empty %}
+            <p class="text-muted small">No recommendations yet. Log some study sessions first!</p>
+            {% endfor %}
+            <a href="{% url 'recommendations:list' %}" class="btn btn-sm btn-outline-primary mt-2">View All</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+new Chart(weeklyCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ weekly_labels|safe }},
+        datasets: [{
+            label: 'Hours',
+            data: {{ weekly_data|safe }},
+            backgroundColor: 'rgba(108, 92, 231, 0.7)',
+            borderRadius: 8,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+const skillCtx = document.getElementById('skillChart').getContext('2d');
+new Chart(skillCtx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ skill_names|safe }},
+        datasets: [{
+            data: {{ skill_hours|safe }},
+            backgroundColor: ['#6c5ce7','#00cec9','#fd79a8','#fdcb6e','#e17055','#0984e3','#55efc4','#a29bfe'],
+        }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } } }
+});
+
+const prodCtx = document.getElementById('productivityChart').getContext('2d');
+new Chart(prodCtx, {
+    type: 'line',
+    data: {
+        labels: {{ weekly_labels|safe }},
+        datasets: [{
+            label: 'Productivity',
+            data: {{ productivity_data|safe }},
+            borderColor: '#fd79a8',
+            backgroundColor: 'rgba(253,121,168,0.1)',
+            fill: true,
+            tension: 0.4,
+        }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 10 } } }
+});
+
+const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+new Chart(monthlyCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ monthly_labels|safe }},
+        datasets: [{
+            label: 'Hours',
+            data: {{ monthly_hours|safe }},
+            backgroundColor: 'rgba(0, 206, 201, 0.7)',
+            borderRadius: 8,
+        }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Resume Analysis - SkillSphere{% endblock %}
+{% block page_title %}Resume Analysis Result{% endblock %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card-custom p-4 text-center">
+            <h6 class="fw-bold mb-3">Resume Score</h6>
+            <div class="position-relative d-inline-block">
+                <div style="width:150px;height:150px;border-radius:50%;border:8px solid {% if analysis.score >= 70 %}#00b894{% elif analysis.score >= 40 %}#fdcb6e{% else %}#e17055{% endif %};display:flex;align-items:center;justify-content:center;margin:0 auto;">
+                    <span class="fs-1 fw-bold">{{ analysis.score }}</span>
+                </div>
+            </div>
+            <p class="text-muted mt-2">out of 100</p>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card-custom p-4 mb-4">
+            <h6 class="fw-bold mb-3"><i class="bi bi-lightbulb-fill text-warning"></i> Suggestions</h6>
+            {% for suggestion in analysis.suggestions %}
+            <div class="d-flex align-items-start gap-2 mb-2">
+                <i class="bi bi-arrow-right-circle-fill text-primary mt-1"></i>
+                <span>{{ suggestion }}</span>
+            </div>
+            {% empty %}
+            <p class="text-success">Your resume looks great! No major suggestions.</p>
+            {% endfor %}
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card-custom p-4">
+                    <h6 class="fw-bold mb-3"><i class="bi bi-check-circle-fill text-success"></i> Sections Found</h6>
+                    {% for section in analysis.sections_found %}
+                    <span class="badge bg-success bg-opacity-10 text-success me-1 mb-1 px-3 py-2">{{ section }}</span>
+                    {% empty %}
+                    <p class="text-muted small">No standard sections detected.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-custom p-4">
+                    <h6 class="fw-bold mb-3"><i class="bi bi-x-circle-fill text-danger"></i> Missing Sections</h6>
+                    {% for section in analysis.missing_sections %}
+                    <span class="badge bg-danger bg-opacity-10 text-danger me-1 mb-1 px-3 py-2">{{ section }}</span>
+                    {% empty %}
+                    <p class="text-success small">All key sections present!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card-custom p-4 mt-4">
+            <h6 class="fw-bold mb-3"><i class="bi bi-stars text-primary"></i> Skills Found</h6>
+            {% for skill in analysis.skills_found %}
+            <span class="badge bg-primary bg-opacity-10 text-primary me-1 mb-1 px-3 py-2">{{ skill }}</span>
+            {% empty %}
+            <p class="text-muted small">No tech skills detected.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'resumeanalyzer:upload' %}" class="btn btn-outline-primary"><i class="bi bi-arrow-left"></i> Upload Another</a>
+</div>
+{% endblock %}
