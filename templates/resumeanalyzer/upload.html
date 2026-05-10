@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Resume Analyzer - SkillSphere{% endblock %}
+{% block page_title %}Resume Analyzer{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card-custom p-4 mb-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-cloud-arrow-up-fill text-primary"></i> Upload Resume</h5>
+            <p class="text-muted small">Upload your resume as a PDF to get instant analysis and suggestions.</p>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.resume_file }}
+                <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-search"></i> Analyze Resume</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card-custom p-4">
+            <h5 class="fw-bold mb-3">Previous Analyses</h5>
+            {% for analysis in analyses %}
+            <a href="{% url 'resumeanalyzer:result' analysis.pk %}" class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-2" style="background:#f8f9fa;text-decoration:none;color:inherit;">
+                <div>
+                    <span class="fw-semibold">Resume #{{ analysis.pk }}</span>
+                    <small class="text-muted ms-2">{{ analysis.created_at|date:"M d, Y" }}</small>
+                </div>
+                <span class="badge {% if analysis.score >= 70 %}bg-success{% elif analysis.score >= 40 %}bg-warning text-dark{% else %}bg-danger{% endif %} fs-6">{{ analysis.score }}/100</span>
+            </a>
+            {% empty %}
+            <p class="text-muted">No resumes analyzed yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

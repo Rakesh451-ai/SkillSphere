@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Profile - SkillSphere{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-custom p-4 text-center mb-4">
+            {% if user.profile_image %}
+            <img src="{{ user.profile_image.url }}" class="rounded-circle mb-3" width="120" height="120" style="object-fit:cover;">
+            {% else %}
+            <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width:120px;height:120px;">
+                <i class="bi bi-person-fill fs-1 text-primary"></i>
+            </div>
+            {% endif %}
+            <h4 class="fw-bold">{{ user.display_name }}</h4>
+            <p class="text-muted">@{{ user.username }}</p>
+            <div class="d-flex justify-content-center gap-3 mb-3">
+                <span class="badge badge-xp text-white px-3 py-2"><i class="bi bi-lightning-charge-fill"></i> {{ user.xp_points }} XP</span>
+                <span class="badge bg-success px-3 py-2"><i class="bi bi-fire"></i> {{ user.current_streak }} day streak</span>
+            </div>
+            {% if user.college %}<p class="mb-1"><i class="bi bi-building"></i> {{ user.college }}</p>{% endif %}
+            {% if user.branch %}<p class="mb-1"><i class="bi bi-bookmark"></i> {{ user.branch }}</p>{% endif %}
+            {% if user.year %}<p class="mb-1"><i class="bi bi-calendar"></i> {{ user.get_year_display }}</p>{% endif %}
+            {% if user.bio %}<p class="text-muted mt-2">{{ user.bio }}</p>{% endif %}
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                {% if user.github_link %}<a href="{{ user.github_link }}" class="btn btn-sm btn-outline-dark" target="_blank"><i class="bi bi-github"></i></a>{% endif %}
+                {% if user.linkedin_link %}<a href="{{ user.linkedin_link }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-linkedin"></i></a>{% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card-custom p-4">
+            <h5 class="fw-bold mb-4">Edit Profile</h5>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    {% for field in form %}
+                    <div class="{% if field.name in 'first_name,last_name,email,college,branch,year' %}col-md-6{% else %}col-12{% endif %} mb-3">
+                        <label class="form-label fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}<small class="text-muted">{{ field.help_text }}</small>{% endif %}
+                        {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
