@@ -197,3 +197,8 @@ def analytics(request):
         'goal_stats': goal_stats,
     }
     return render(request, 'dashboard/analytics.html', context)
+
+
+@login_required
+def cpp_calculator(request):
+    return render(request, 'dashboard/cpp_calculator.html')

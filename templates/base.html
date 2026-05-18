@@ -124,6 +124,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'cpp_calculator' %}active{% endif %}" href="{% url 'dashboard:cpp_calculator' %}">
+                    <i class="bi bi-calculator-fill"></i> C++ GUI Calculator
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.app_name == 'leaderboard' %}active{% endif %}" href="{% url 'leaderboard:leaderboard' %}">
                     <i class="bi bi-trophy-fill"></i> Leaderboard
                 </a>

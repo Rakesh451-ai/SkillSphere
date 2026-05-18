@@ -6,4 +6,5 @@ app_name = 'dashboard'
 urlpatterns = [
     path('', views.home, name='home'),
     path('analytics/', views.analytics, name='analytics'),
+    path('cpp-calculator/', views.cpp_calculator, name='cpp_calculator'),
 ]
