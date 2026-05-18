@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}C++ GUI Calculator - SkillSphere{% endblock %}
+{% block page_title %}C++ GUI Calculator{% endblock %}
+
+{% block content %}
+<div class="card-custom p-4 mb-4">
+    <h4 class="fw-bold mb-3">Calculator using C++ GUI (Qt)</h4>
+    <p class="text-muted mb-3">
+        This example builds a desktop calculator using <strong>Qt Widgets</strong> in C++.
+        It supports basic operations: addition, subtraction, multiplication, and division.
+    </p>
+    <ol>
+        <li>Install Qt Creator and Qt 6 (or Qt 5).</li>
+        <li>Create a new <code>Qt Widgets Application</code>.</li>
+        <li>Replace your <code>main.cpp</code> with the code below.</li>
+        <li>Build and run the project.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-4">
+    <h6 class="fw-bold mb-3">main.cpp</h6>
+    <pre class="bg-dark text-light p-3 rounded" style="overflow:auto;"><code>#include &lt;QApplication&gt;
+#include &lt;QWidget&gt;
+#include &lt;QGridLayout&gt;
+#include &lt;QPushButton&gt;
+#include &lt;QLineEdit&gt;
+#include &lt;QString&gt;
+
+class Calculator : public QWidget {
+public:
+    Calculator() {
+        auto *layout = new QGridLayout(this);
+        display = new QLineEdit(this);
+        display-&gt;setReadOnly(true);
+        display-&gt;setAlignment(Qt::AlignRight);
+        display-&gt;setMinimumHeight(40);
+
+        layout-&gt;addWidget(display, 0, 0, 1, 4);
+
+        const QString buttons[4][4] = {
+            {"7", "8", "9", "/"},
+            {"4", "5", "6", "*"},
+            {"1", "2", "3", "-"},
+            {"0", "C", "=", "+"}
+        };
+
+        for (int row = 0; row &lt; 4; ++row) {
+            for (int col = 0; col &lt; 4; ++col) {
+                auto *btn = new QPushButton(buttons[row][col], this);
+                btn-&gt;setMinimumSize(60, 45);
+                layout-&gt;addWidget(btn, row + 1, col);
+                connect(btn, &amp;QPushButton::clicked, this, [this, btn]() {
+                    handleButton(btn-&gt;text());
+                });
+            }
+        }
+
+        setWindowTitle("C++ GUI Calculator");
+        resize(300, 260);
+    }
+
+private:
+    QLineEdit *display;
+    double firstValue = 0.0;
+    QString operation;
+    bool waitingSecondValue = false;
+
+    void handleButton(const QString &amp;text) {
+        if (text == "C") {
+            display-&gt;clear();
+            firstValue = 0.0;
+            operation.clear();
+            waitingSecondValue = false;
+            return;
+        }
+
+        if (text == "+" || text == "-" || text == "*" || text == "/") {
+            firstValue = display-&gt;text().toDouble();
+            operation = text;
+            waitingSecondValue = true;
+            return;
+        }
+
+        if (text == "=") {
+            double secondValue = display-&gt;text().toDouble();
+            double result = 0.0;
+
+            if (operation == "+") result = firstValue + secondValue;
+            if (operation == "-") result = firstValue - secondValue;
+            if (operation == "*") result = firstValue * secondValue;
+            if (operation == "/") {
+                if (secondValue == 0.0) {
+                    display-&gt;setText("Error");
+                    return;
+                }
+                result = firstValue / secondValue;
+            }
+
+            display-&gt;setText(QString::number(result));
+            waitingSecondValue = false;
+            return;
+        }
+
+        if (waitingSecondValue) {
+            display-&gt;clear();
+            waitingSecondValue = false;
+        }
+        display-&gt;setText(display-&gt;text() + text);
+    }
+};
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+    Calculator window;
+    window.show();
+    return app.exec();
+}</code></pre>
+</div>
+{% endblock %}
