@@ -1,0 +1,1 @@
+gunicorn skillsphere.wsgi:application
