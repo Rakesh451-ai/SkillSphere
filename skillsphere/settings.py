@@ -72,8 +72,8 @@ import dj_database_url
 db_url = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
 if db_url and db_url not in ("None", "null"):
     DATABASES = {
-        "default": dj_database_url.config(
-            default=db_url,
+        "default": dj_database_url.parse(
+            db_url,
             conn_max_age=600,
             ssl_require=True,
         )
