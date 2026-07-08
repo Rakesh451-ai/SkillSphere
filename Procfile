@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn skillsphere.wsgi:application
+web: python create_superuser.py && python manage.py migrate && gunicorn skillsphere.wsgi:application
