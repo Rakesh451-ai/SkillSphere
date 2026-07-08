@@ -69,12 +69,30 @@ WSGI_APPLICATION = "skillsphere.wsgi.application"
 
 import dj_database_url
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default="postgresql://rakesh:@127.0.0.1:5432/skillsphere",
-        conn_max_age=600,
-    )
-}
+if "DATABASE_URL" in os.environ:
+    DATABASES = {
+        "default": dj_database_url.config(
+            conn_max_age=600,
+        )
+    }
+elif os.environ.get("RENDER") == "true":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "skillsphere",
+            "USER": "rakesh",
+            "PASSWORD": "",
+            "HOST": "127.0.0.1",
+            "PORT": "5432",
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
