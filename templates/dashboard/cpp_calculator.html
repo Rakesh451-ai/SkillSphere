@@ -1,119 +1,3199 @@
 {% extends "base.html" %}
-{% block title %}C++ GUI Calculator - SkillSphere{% endblock %}
-{% block page_title %}C++ GUI Calculator{% endblock %}
+{% block title %}Coding Games Arcade - SkillSphere{% endblock %}
+{% block page_title %}Coding Games Arcade{% endblock %}
 
-{% block content %}
-<div class="card-custom p-4 mb-4">
-    <h4 class="fw-bold mb-3">Calculator using C++ GUI (Qt)</h4>
-    <p class="text-muted mb-3">
-        This example builds a desktop calculator using <strong>Qt Widgets</strong> in C++.
-        It supports basic operations: addition, subtraction, multiplication, and division.
-    </p>
-    <ol>
-        <li>Install Qt Creator and Qt 6 (or Qt 5).</li>
-        <li>Create a new <code>Qt Widgets Application</code>.</li>
-        <li>Replace your <code>main.cpp</code> with the code below.</li>
-        <li>Build and run the project.</li>
-    </ol>
-</div>
+{% block extra_css %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;500;600;700&display=swap');
 
-<div class="card-custom p-4">
-    <h6 class="fw-bold mb-3">main.cpp</h6>
-    <pre class="bg-dark text-light p-3 rounded" style="overflow:auto;"><code>#include &lt;QApplication&gt;
-#include &lt;QWidget&gt;
-#include &lt;QGridLayout&gt;
-#include &lt;QPushButton&gt;
-#include &lt;QLineEdit&gt;
-#include &lt;QString&gt;
-
-class Calculator : public QWidget {
-public:
-    Calculator() {
-        auto *layout = new QGridLayout(this);
-        display = new QLineEdit(this);
-        display-&gt;setReadOnly(true);
-        display-&gt;setAlignment(Qt::AlignRight);
-        display-&gt;setMinimumHeight(40);
-
-        layout-&gt;addWidget(display, 0, 0, 1, 4);
-
-        const QString buttons[4][4] = {
-            {"7", "8", "9", "/"},
-            {"4", "5", "6", "*"},
-            {"1", "2", "3", "-"},
-            {"0", "C", "=", "+"}
-        };
-
-        for (int row = 0; row &lt; 4; ++row) {
-            for (int col = 0; col &lt; 4; ++col) {
-                auto *btn = new QPushButton(buttons[row][col], this);
-                btn-&gt;setMinimumSize(60, 45);
-                layout-&gt;addWidget(btn, row + 1, col);
-                connect(btn, &amp;QPushButton::clicked, this, [this, btn]() {
-                    handleButton(btn-&gt;text());
-                });
-            }
-        }
-
-        setWindowTitle("C++ GUI Calculator");
-        resize(300, 260);
+    :root {
+        --cyber-purple: #8b5cf6;
+        --cyber-pink: #d946ef;
+        --cyber-cyan: #06b6d4;
+        --cyber-green: #10b981;
+        --cyber-red: #ef4444;
+        --cyber-yellow: #f59e0b;
+        --cyber-dark: #0f172a;
+        --cyber-black: #030712;
+        --cyber-gray: #1f2937;
+        --cyber-border: rgba(139, 92, 246, 0.25);
     }
 
-private:
-    QLineEdit *display;
-    double firstValue = 0.0;
-    QString operation;
-    bool waitingSecondValue = false;
+    body {
+        font-family: 'Outfit', sans-serif;
+    }
 
-    void handleButton(const QString &amp;text) {
-        if (text == "C") {
-            display-&gt;clear();
-            firstValue = 0.0;
-            operation.clear();
-            waitingSecondValue = false;
-            return;
-        }
+    /* Cyberpunk Game Container */
+    .arcade-container {
+        background: radial-gradient(circle at top, #1e1b4b 0%, #030712 100%);
+        border-radius: 24px;
+        padding: 30px;
+        border: 2px solid var(--cyber-border);
+        box-shadow: 0 0 40px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.6);
+        color: #f3f4f6;
+        overflow: hidden;
+        position: relative;
+    }
 
-        if (text == "+" || text == "-" || text == "*" || text == "/") {
-            firstValue = display-&gt;text().toDouble();
-            operation = text;
-            waitingSecondValue = true;
-            return;
-        }
+    .arcade-container::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 4px;
+        background: linear-gradient(90deg, var(--cyber-purple), var(--cyber-pink), var(--cyber-cyan));
+    }
 
-        if (text == "=") {
-            double secondValue = display-&gt;text().toDouble();
-            double result = 0.0;
+    .arcade-title {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, #a78bfa, #f472b6, #22d3ee);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+    }
 
-            if (operation == "+") result = firstValue + secondValue;
-            if (operation == "-") result = firstValue - secondValue;
-            if (operation == "*") result = firstValue * secondValue;
-            if (operation == "/") {
-                if (secondValue == 0.0) {
-                    display-&gt;setText("Error");
-                    return;
+    /* Tab Buttons Styling */
+    .game-tab-nav {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid var(--cyber-border);
+        padding: 8px;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+    }
+
+    .game-tab-btn {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        border-radius: 12px !important;
+        padding: 12px 20px !important;
+        color: #9ca3af !important;
+        border: 1px solid transparent !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin: 2px;
+    }
+
+    .game-tab-btn:hover {
+        color: #fff !important;
+        background: rgba(139, 92, 246, 0.1) !important;
+        border-color: rgba(139, 92, 246, 0.3) !important;
+    }
+
+    .game-tab-btn.active {
+        background: linear-gradient(135deg, var(--cyber-purple) 0%, #6366f1 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        color: #fff !important;
+        transform: translateY(-2px);
+    }
+
+    /* Card Panels */
+    .game-panel {
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid var(--cyber-border);
+        border-radius: 20px;
+        padding: 24px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* HUD Stats display */
+    .hud-panel {
+        background: rgba(3, 7, 18, 0.6);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 16px;
+        padding: 16px;
+        transition: all 0.3s;
+    }
+
+    .hud-panel:hover {
+        border-color: var(--cyber-purple);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+    }
+
+    .hud-label {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.75rem;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .hud-value {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        font-size: 1.6rem;
+    }
+
+    /* IDE / Terminal Windows */
+    .window-terminal {
+        background-color: var(--cyber-black);
+        border: 1px solid #374151;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        position: relative;
+    }
+
+    .window-terminal:focus-within {
+        border-color: var(--cyber-cyan) !important;
+        box-shadow: 0 0 25px rgba(6, 182, 212, 0.35);
+    }
+
+    .window-terminal pre,
+    .window-terminal code,
+    .window-body-editor {
+        color: #e5e7eb !important;
+    }
+
+    .window-header {
+        background-color: var(--cyber-gray);
+        padding: 12px 20px;
+        border-bottom: 1px solid #374151;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .window-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    .dot-red { background-color: var(--cyber-red); }
+    .dot-yellow { background-color: var(--cyber-yellow); }
+    .dot-green { background-color: var(--cyber-green); }
+
+    .window-body-editor {
+        padding: 24px;
+        min-height: 280px;
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #e5e7eb;
+        white-space: pre-wrap;
+        word-break: break-all;
+        position: relative;
+        outline: none;
+    }
+
+    /* Options buttons for Hunter, Complexity & Predictor */
+    .cyber-btn-choice {
+        background: rgba(31, 41, 55, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #e5e7eb;
+        text-align: left;
+        padding: 16px 20px;
+        border-radius: 14px;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 100%;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+    }
+
+    .cyber-btn-choice:hover {
+        background: rgba(139, 92, 246, 0.15);
+        border-color: var(--cyber-purple);
+        transform: translateX(6px);
+        color: #fff;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+    }
+
+    .cyber-btn-choice.correct {
+        background: rgba(16, 185, 129, 0.15) !important;
+        border-color: var(--cyber-green) !important;
+        color: #34d399 !important;
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+    }
+
+    .cyber-btn-choice.incorrect {
+        background: rgba(239, 68, 68, 0.15) !important;
+        border-color: var(--cyber-red) !important;
+        color: #f87171 !important;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
+    }
+
+    /* Timer Bar Component */
+    .cyber-timer-wrap {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .cyber-timer-fill {
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, var(--cyber-green) 0%, var(--cyber-yellow) 50%, var(--cyber-red) 100%);
+        transition: width 0.1s linear;
+    }
+
+    /* Speed Typer Highlighting */
+    .char-node {
+        color: #a3a3a3 !important; /* Make untyped characters a clearly readable light gray */
+        border-bottom: 2px solid transparent;
+        transition: all 0.1s;
+    }
+
+    .char-node.char-correct {
+        color: #34d399 !important;
+        text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    }
+
+    .char-node.char-wrong {
+        color: #f87171 !important;
+        background-color: rgba(239, 68, 68, 0.18) !important;
+        border-bottom: 2px solid var(--cyber-red) !important;
+    }
+
+    .char-node.char-active {
+        color: #38bdf8 !important;
+        background-color: rgba(56, 189, 248, 0.15) !important;
+        border-bottom: 2px solid #38bdf8 !important;
+        animation: activeCaret 0.8s infinite alternate;
+    }
+
+    .char-node.char-active.char-wrong {
+        color: #f87171 !important;
+        background-color: rgba(239, 68, 68, 0.25) !important;
+        border-bottom: 2px solid var(--cyber-red) !important;
+        animation: activeCaretError 0.8s infinite alternate;
+    }
+
+    @keyframes activeCaret {
+        0% { border-bottom-color: transparent; }
+        100% { border-bottom-color: #38bdf8; }
+    }
+
+    @keyframes activeCaretError {
+        0% { border-bottom-color: transparent; }
+        100% { border-bottom-color: var(--cyber-red); }
+    }
+
+    #typer-focus-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease-in-out;
+    }
+    
+    .window-terminal.unfocused-active #typer-focus-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .hidden-textarea {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        opacity: 0.01;
+        z-index: -1;
+        pointer-events: none;
+        resize: none;
+        overflow: hidden;
+        border: none;
+        outline: none;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+    }
+
+    /* Arcade Modal styling */
+    .arcade-modal {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(3, 7, 18, 0.85);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 20px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease-in-out;
+    }
+
+    .arcade-modal.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .arcade-modal-content {
+        background: radial-gradient(circle at top, #1e1b4b 0%, #030712 100%);
+        border: 2px solid var(--cyber-border);
+        border-radius: 24px;
+        padding: 30px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
+        transform: scale(0.95);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .arcade-modal.show .arcade-modal-content {
+        transform: scale(1);
+    }
+
+    @keyframes activeCaret {
+        0% { border-bottom-color: transparent; }
+        100% { border-bottom-color: #38bdf8; }
+    }
+
+    .shake-anim {
+        animation: systemShake 0.2s ease-in-out;
+    }
+
+    @keyframes systemShake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-6px); }
+        75% { transform: translateX(6px); }
+    }
+
+    /* Code Repair Shop Puzzle Elements */
+    .repair-block {
+        background-color: #1e293b;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 10px 16px;
+        margin-bottom: 10px;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        user-select: none;
+        transition: all 0.2s;
+    }
+
+    .repair-block:hover {
+        border-color: var(--cyber-purple);
+        transform: translateY(-2px);
+        background-color: #334155;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+    }
+
+    .workspace-block {
+        background-color: #0b0f19;
+        border: 1px solid rgba(139, 92, 246, 0.25);
+        border-radius: 10px;
+        padding: 8px 16px;
+        margin-bottom: 10px;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: padding-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        border-left: 4px solid var(--cyber-purple);
+    }
+
+    .workspace-block.line-correct {
+        border-color: var(--cyber-green) !important;
+        border-left-color: var(--cyber-green) !important;
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+    }
+
+    .workspace-block.line-error {
+        border-color: var(--cyber-red) !important;
+        border-left-color: var(--cyber-red) !important;
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.15);
+    }
+
+    #parsons-workspace {
+        position: relative;
+        background-image: repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(139, 92, 246, 0.08) 31px, rgba(139, 92, 246, 0.08) 32px);
+    }
+
+    .repair-controls-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #9ca3af;
+        font-size: 0.75rem;
+        padding: 3px 7px;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+
+    .repair-controls-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .repair-controls-btn.btn-remove:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: var(--cyber-red);
+        color: var(--cyber-red);
+    }
+    /* Solid Black Background & White Text Overrides */
+    body, 
+    .main-content, 
+    .top-navbar,
+    .arcade-container,
+    .window-terminal,
+    .window-body-editor,
+    .hud-panel,
+    .card-custom {
+        background-color: #000000 !important;
+        background: #000000 !important;
+        color: #ffffff !important;
+    }
+
+    .top-navbar {
+        border-bottom: 1px solid #374151 !important;
+    }
+
+    .card-custom,
+    .arcade-container,
+    .window-terminal,
+    .hud-panel {
+        border: 1px solid #374151 !important;
+        box-shadow: none !important;
+    }
+
+    .text-muted, 
+    .text-light-50, 
+    p.text-muted {
+        color: #9ca3af !important; /* Make secondary text readable light grey */
+    }
+
+    .nav-link.active {
+        background-color: #1f2937 !important;
+        border-color: #374151 !important;
+    }
+
+    .hud-label {
+        color: #9ca3af !important;
+    }
+
+    /* Keep correct highlighting colors visible */
+    .char-node.char-correct {
+        color: #34d399 !important;
+    }
+    .char-node.char-wrong {
+        color: #f87171 !important;
+        background-color: rgba(239, 68, 68, 0.25) !important;
+    }
+    .char-node.char-active {
+        color: #38bdf8 !important;
+        border-bottom-color: #38bdf8 !important;
+    }
+    .char-node.char-active.char-wrong {
+        color: #f87171 !important;
+        border-bottom-color: #f87171 !important;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Arcade Header Card -->
+<div class="card-custom p-4 mb-4 text-center" style="background: linear-gradient(135deg, #1e1b4b 0%, #311084 100%); border: 2px solid var(--cyber-border); box-shadow: 0 10px 30px rgba(0,0,0,0.25);">
+    <h2 class="arcade-title mb-2"><i class="bi bi-controller me-2"></i>SkillSphere Coding Arcade</h2>
+    <p class="text-light-50 mb-0 max-w-2xl mx-auto">Boost your programmer muscle memory, compiler inspection speed, and logical capabilities across multiple games and stages!</p>
+</div>
+
+<div class="arcade-container">
+    <div class="row">
+        <!-- Game Selection Nav Navigation -->
+        <div class="col-12 mb-4">
+            <div class="game-tab-nav">
+                <ul class="nav nav-pills nav-fill gap-2" id="arcadeTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active game-tab-btn" id="typer-tab" data-bs-toggle="tab" data-bs-target="#typer-content" type="button" role="tab">
+                            <i class="bi bi-keyboard-fill me-2"></i>Speed Typer
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link game-tab-btn" id="bug-tab" data-bs-toggle="tab" data-bs-target="#bug-content" type="button" role="tab">
+                            <i class="bi bi-bug-fill me-2"></i>Bug Hunter
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link game-tab-btn" id="complexity-tab" data-bs-toggle="tab" data-bs-target="#complexity-content" type="button" role="tab">
+                            <i class="bi bi-speedometer2 me-2"></i>Big-O Master
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link game-tab-btn" id="parsons-tab" data-bs-toggle="tab" data-bs-target="#parsons-content" type="button" role="tab">
+                            <i class="bi bi-tools me-2"></i>Code Repair Shop
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link game-tab-btn" id="predictor-tab" data-bs-toggle="tab" data-bs-target="#predictor-content" type="button" role="tab">
+                            <i class="bi bi-terminal-fill me-2"></i>Output Predictor
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Games Content Screen panels -->
+        <div class="col-12">
+            <div class="tab-content" id="arcadeTabsContent">
+
+                <!-- GAME 1: SPEED TYPER -->
+                <div class="tab-pane fade show active" id="typer-content" role="tabpanel">
+                    <div class="game-panel">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                            <div>
+                                <h4 class="fw-bold mb-1 text-white"><i class="bi bi-keyboard text-warning me-2"></i>Speed Coding Typer</h4>
+                                <p class="text-muted small mb-0">Complete code blocks with high speed & perfect accuracy. Auto-indentation included!</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <select id="typer-level-select" class="form-select bg-dark text-white border-secondary rounded-pill" style="width: auto;">
+                                    <option value="0">Level 1: Python - Binary Search</option>
+                                    <option value="1">Level 2: JS - API Fetch Handler</option>
+                                    <option value="2">Level 3: C++ - Reverse Linked List</option>
+                                    <option value="3">Level 4: SQL - Window Aggregate</option>
+                                    <option value="4">Level 5: HTML/CSS - Centering Div</option>
+                                </select>
+                                <button id="typer-start-btn" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm">
+                                    <i class="bi bi-play-fill me-1"></i> Start Run
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- WPM ACC HUD Indicators -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-6 col-md-3">
+                                <div class="hud-panel text-center">
+                                    <span class="hud-label d-block mb-1">Words Per Minute</span>
+                                    <span class="hud-value text-warning" id="typer-wpm">0</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="hud-panel text-center">
+                                    <span class="hud-label d-block mb-1">Accuracy</span>
+                                    <span class="hud-value text-success" id="typer-accuracy">100%</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="hud-panel text-center">
+                                    <span class="hud-label d-block mb-1">Elapsed Time</span>
+                                    <span class="hud-value text-info" id="typer-time">0.0s</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="hud-panel text-center">
+                                    <span class="hud-label d-block mb-1">High Score WPM</span>
+                                    <span class="hud-value text-danger" id="typer-highscore">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- IDE Simulator Box -->
+                        <div class="window-terminal mb-4" id="typer-editor-container">
+                            <div class="window-header">
+                                <div>
+                                    <span class="window-dot dot-red"></span>
+                                    <span class="window-dot dot-yellow"></span>
+                                    <span class="window-dot dot-green"></span>
+                                    <span class="text-muted small ms-2" id="typer-file-name">binary_search.py</span>
+                                </div>
+                                <span class="badge bg-secondary" id="typer-lang-badge">Python</span>
+                            </div>
+                            <textarea id="typer-hidden-input" class="hidden-textarea" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+                            <div class="window-body-editor" id="typer-editor" tabindex="0">
+                                <span class="text-muted text-center d-block py-5"><i class="bi bi-keyboard-fill me-2 fs-3"></i><br>Select your level above and click "Start Run" to test your coding speed!</span>
+                            </div>
+                            <div id="typer-focus-overlay">
+                                <div class="text-center">
+                                    <i class="bi bi-cursor-fill fs-2 text-warning mb-2 d-block"></i>
+                                    <h5 class="fw-bold text-white mb-1">Click to Focus & Type</h5>
+                                    <p class="small text-muted mb-0">Unfocused - typing is paused</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 2: BUG HUNTER -->
+                <div class="tab-pane fade" id="bug-content" role="tabpanel">
+                    <div class="game-panel">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                            <div>
+                                <h4 class="fw-bold mb-1 text-white"><i class="bi bi-bug-fill text-danger me-2"></i>Bug Hunter</h4>
+                                <p class="text-muted small mb-0">Spot compilation warnings, logical leaks, or runtime errors in code blocks.</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 110px;">
+                                    <span class="hud-label d-block">Score</span>
+                                    <span class="fw-bold text-warning fs-5" id="bug-score">0</span>
+                                </div>
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 110px;">
+                                    <span class="hud-label d-block">Lives</span>
+                                    <span class="fs-5" id="bug-lives">❤️❤️❤️</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Code block viewer -->
+                            <div class="col-lg-7">
+                                <div class="window-terminal">
+                                    <div class="window-header">
+                                        <div>
+                                            <span class="window-dot dot-red"></span>
+                                            <span class="window-dot dot-yellow"></span>
+                                            <span class="window-dot dot-green"></span>
+                                            <span class="text-muted small ms-2">debugger_engine.cpp</span>
+                                        </div>
+                                        <span class="badge bg-danger" id="bug-lang-badge">Python</span>
+                                    </div>
+                                    <div class="window-body-editor" style="min-height: 280px; font-size: 0.95rem;">
+                                        <pre class="mb-0"><code class="text-white" id="bug-code-display"># Code will load here</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Options side board -->
+                            <div class="col-lg-5 d-flex flex-column justify-content-between">
+                                <div>
+                                    <span class="badge bg-danger bg-opacity-20 text-danger rounded-pill mb-2 px-3 py-1 fw-bold text-uppercase" id="bug-level-indicator">Level 1</span>
+                                    <h5 class="fw-bold text-white mb-4" id="bug-question-text">Question text will render here...</h5>
+                                    <div id="bug-options-box">
+                                        <!-- Answers populate dynamically -->
+                                    </div>
+                                </div>
+
+                                <!-- Feedback section -->
+                                <div id="bug-feedback-box" class="card p-3 bg-secondary bg-opacity-10 border border-secondary mt-3 text-white" style="display: none;">
+                                    <h6 class="fw-bold mb-1" id="bug-feedback-header">Result Status</h6>
+                                    <p class="small text-muted mb-3" id="bug-explanation-text">Explanation content...</p>
+                                    <button id="bug-next-btn" class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-bold text-uppercase">Next Level <i class="bi bi-arrow-right ms-1"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 3: BIG-O COMPLEXITY MASTER -->
+                <div class="tab-pane fade" id="complexity-content" role="tabpanel">
+                    <div class="game-panel">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                            <div>
+                                <h4 class="fw-bold mb-1 text-white"><i class="bi bi-speedometer2 text-info me-2"></i>Big-O Complexity Master</h4>
+                                <p class="text-muted small mb-0">Hone your complexity analysis skills. Beat the timer and preserve your streak multipliers!</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 100px;">
+                                    <span class="hud-label d-block">Score</span>
+                                    <span class="fw-bold text-info fs-5" id="comp-score">0</span>
+                                </div>
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 100px;">
+                                    <span class="hud-label d-block">Streak</span>
+                                    <span class="fw-bold text-danger fs-5" id="comp-streak">x0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timer status -->
+                        <div class="cyber-timer-wrap mb-4">
+                            <div class="cyber-timer-fill" id="comp-timer-fill"></div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <!-- Welcome challenge trigger -->
+                            <div class="col-md-8 text-center" id="comp-intro-screen">
+                                <div class="py-5">
+                                    <div class="rounded-circle bg-info bg-opacity-10 p-4 text-info d-inline-block mb-3">
+                                        <i class="bi bi-lightning-charge fs-1"></i>
+                                    </div>
+                                    <h4 class="fw-bold text-white mb-2">Complexity Challenge Run</h4>
+                                    <p class="text-muted mb-4">Identify Big-O time limits in 15 seconds. High streaks grant score multipliers. Incorrect responses subtract 5 seconds!</p>
+                                    <button id="comp-start-btn" class="btn btn-info rounded-pill px-5 py-3 fw-bold text-dark fs-5 shadow">
+                                        <i class="bi bi-play-btn-fill me-2"></i> Initiate Challenge
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Play area -->
+                            <div class="col-md-8" id="comp-run-screen" style="display: none;">
+                                <div class="card bg-black bg-opacity-35 p-4 border-0 rounded-4 text-center mb-4 border border-secondary">
+                                    <span class="badge bg-info-subtle text-info rounded-pill mb-2 px-3 py-1 fw-bold text-uppercase" id="comp-algo-badge">Algorithm</span>
+                                    <h4 class="fw-bold text-white mb-0" id="comp-algo-desc">Algorithm description renders here...</h4>
+                                </div>
+                                <div class="row g-3" id="comp-choices-grid">
+                                    <!-- Option buttons render here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 4: CODE REPAIR SHOP -->
+                <div class="tab-pane fade" id="parsons-content" role="tabpanel">
+                    <div class="game-panel">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                            <div>
+                                <h4 class="fw-bold mb-1 text-white"><i class="bi bi-tools text-success me-2"></i>Code Repair Shop</h4>
+                                <p class="text-muted small mb-0">Assemble the program by moving and correctly indenting the scrambled blocks.</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 100px;">
+                                    <span class="hud-label d-block">Score</span>
+                                    <span class="fw-bold text-success fs-5" id="parsons-score">0</span>
+                                </div>
+                                <button id="parsons-check-btn" class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm">
+                                    <i class="bi bi-check-circle-fill me-1"></i> Verify Solution
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Puzzle state overview -->
+                        <div class="card bg-black bg-opacity-30 p-3 border border-secondary rounded-4 mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-success bg-opacity-25 text-success px-3 py-1 rounded-pill fw-bold text-uppercase" id="parsons-stage-badge">Level 1</span>
+                                <span class="text-light-50 small fw-semibold" id="parsons-stage-title">Reverse String</span>
+                            </div>
+                            <h6 class="fw-medium text-white mb-0" id="parsons-stage-desc">Assemble code blocks in the workspace to construct the required logic.</h6>
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Scrambled blocks -->
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-2 text-warning"><i class="bi bi-shuffle me-2"></i>Scrambled Components</h6>
+                                <div class="p-3 bg-dark bg-opacity-25 border rounded-4 border-secondary border-dashed" style="min-height: 380px;" id="parsons-scrambled-box">
+                                    <!-- Components render dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Workspace -->
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-2 text-info"><i class="bi bi-terminal-split me-2"></i>Program Workspace</h6>
+                                <div class="p-3 bg-dark bg-opacity-40 border rounded-4 border-info" style="min-height: 380px;" id="parsons-workspace">
+                                    <!-- Workspace items render dynamically -->
+                                </div>
+                                <div class="text-muted small mt-2 d-flex align-items-center gap-2">
+                                    <i class="bi bi-info-circle-fill text-info"></i>
+                                    <span>Set correct line orders first, then adjust indentation depths with arrows (<i class="bi bi-arrow-left"></i> / <i class="bi bi-arrow-right"></i>).</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Success / Feedback overlay -->
+                        <div id="parsons-feedback-box" class="card p-3 bg-success bg-opacity-10 border border-success mt-4 text-white" style="display: none;">
+                            <h6 class="fw-bold text-success mb-1"><i class="bi bi-check-all me-1"></i> Level Cleared!</h6>
+                            <p class="small text-muted mb-3" id="parsons-feedback-desc">Verification success details...</p>
+                            <button id="parsons-next-btn" class="btn btn-success btn-sm rounded-pill px-4 py-2 fw-bold text-uppercase">Next Level <i class="bi bi-chevron-double-right ms-1"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GAME 5: OUTPUT PREDICTOR -->
+                <div class="tab-pane fade" id="predictor-content" role="tabpanel">
+                    <div class="game-panel">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                            <div>
+                                <h4 class="fw-bold mb-1 text-white"><i class="bi bi-terminal text-info me-2"></i>Output Predictor</h4>
+                                <p class="text-muted small mb-0">Evaluate scripts and predict the console output variables.</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 100px;">
+                                    <span class="hud-label d-block">Score</span>
+                                    <span class="fw-bold text-info fs-5" id="pred-score">0</span>
+                                </div>
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 100px;">
+                                    <span class="hud-label d-block">Lives</span>
+                                    <span class="fs-5" id="pred-lives">❤️❤️❤️</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Code snippet -->
+                            <div class="col-lg-7">
+                                <div class="window-terminal">
+                                    <div class="window-header">
+                                        <div>
+                                            <span class="window-dot dot-red"></span>
+                                            <span class="window-dot dot-yellow"></span>
+                                            <span class="window-dot dot-green"></span>
+                                            <span class="text-muted small ms-2">stdout_buffer.py</span>
+                                        </div>
+                                        <span class="badge bg-info text-dark" id="pred-lang-badge">Python</span>
+                                    </div>
+                                    <div class="window-body-editor" style="min-height: 280px; font-size: 0.95rem;">
+                                        <pre class="mb-0"><code class="text-white" id="pred-code-display"># Code will load here</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Options panel -->
+                            <div class="col-lg-5 d-flex flex-column justify-content-between">
+                                <div>
+                                    <span class="badge bg-info bg-opacity-20 text-info rounded-pill mb-2 px-3 py-1 fw-bold text-uppercase" id="pred-level-indicator">Level 1</span>
+                                    <h5 class="fw-bold text-white mb-4" id="pred-question-text">Question text will load here...</h5>
+                                    <div id="pred-options-box">
+                                        <!-- Options load dynamically -->
+                                    </div>
+                                </div>
+
+                                <!-- Feedback section -->
+                                <div id="pred-feedback-box" class="card p-3 bg-secondary bg-opacity-10 border border-secondary mt-3 text-white" style="display: none;">
+                                    <h6 class="fw-bold mb-1" id="pred-feedback-header">Result Status</h6>
+                                    <p class="small text-muted mb-3" id="pred-explanation-text">Explanation text...</p>
+                                    <button id="pred-next-btn" class="btn btn-info btn-sm rounded-pill px-4 py-2 fw-bold text-dark text-uppercase">Next Level <i class="bi bi-arrow-right ms-1"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom Arcade Modal -->
+    <div id="arcade-modal" class="arcade-modal" style="display: none;">
+        <div class="arcade-modal-content">
+            <div class="arcade-modal-header mb-3">
+                <h4 class="fw-bold mb-0 text-white" id="arcade-modal-title">GAME OVER</h4>
+            </div>
+            <div class="arcade-modal-body text-light-50">
+                <p id="arcade-modal-message">Out of lives! Better luck next time.</p>
+                <div class="hud-panel p-3 text-center my-3">
+                    <span class="hud-label d-block mb-1">Final Score</span>
+                    <span class="fw-bold text-info fs-3" id="arcade-modal-score">0</span>
+                </div>
+            </div>
+            <div class="arcade-modal-footer mt-4">
+                <button id="arcade-modal-btn" class="btn btn-info rounded-pill px-4 py-2 fw-bold text-dark w-100 shadow-sm">
+                    Play Again
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Browser synth for retro arcade game sound effects
+const gameAudio = {
+    audioCtx: null,
+    initCtx() {
+        try {
+            if (!this.audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    this.audioCtx = new AudioContextClass();
+                } else {
+                    console.warn("AudioContext is not supported by this browser.");
                 }
-                result = firstValue / secondValue;
             }
-
-            display-&gt;setText(QString::number(result));
-            waitingSecondValue = false;
-            return;
+        } catch (e) {
+            console.warn("AudioContext initialization blocked/unsupported:", e);
         }
-
-        if (waitingSecondValue) {
-            display-&gt;clear();
-            waitingSecondValue = false;
+    },
+    playBeep(frequency, waveType, duration) {
+        try {
+            this.initCtx();
+            if (!this.audioCtx) return;
+            if (this.audioCtx.state === 'suspended') {
+                this.audioCtx.resume();
+            }
+            const osc = this.audioCtx.createOscillator();
+            const gainNode = this.audioCtx.createGain();
+            
+            osc.connect(gainNode);
+            gainNode.connect(this.audioCtx.destination);
+            
+            osc.type = waveType || 'sine';
+            osc.frequency.setValueAtTime(frequency, this.audioCtx.currentTime);
+            
+            gainNode.gain.setValueAtTime(0.12, this.audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + duration);
+            
+            osc.start();
+            osc.stop(this.audioCtx.currentTime + duration);
+        } catch (e) {
+            console.log("Audio synthesis blocked/unsupported:", e);
         }
-        display-&gt;setText(display-&gt;text() + text);
+    },
+    onSuccess() {
+        this.playBeep(587.33, 'sine', 0.08); // D5
+        setTimeout(() => this.playBeep(880.00, 'sine', 0.12), 60); // A5
+    },
+    onFailure() {
+        this.playBeep(120, 'sawtooth', 0.25);
+    },
+    onLevelUp() {
+        this.playBeep(523.25, 'triangle', 0.07);
+        setTimeout(() => this.playBeep(659.25, 'triangle', 0.07), 60);
+        setTimeout(() => this.playBeep(783.99, 'triangle', 0.07), 120);
+        setTimeout(() => this.playBeep(1046.50, 'triangle', 0.22), 180);
     }
 };
 
-int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
-    Calculator window;
-    window.show();
-    return app.exec();
-}</code></pre>
+
+// CSRF Helper & Save game progress function
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function saveGameProgress(gameType, level, score) {
+    const csrftoken = getCookie('csrftoken');
+    fetch('{% url "dashboard:update_game_progress" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            game_type: gameType,
+            level: level,
+            score: score
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            console.log(`Saved progress: ${gameType} level ${level}`);
+            const xpBadge = document.querySelector('.badge-xp');
+            if (xpBadge) {
+                xpBadge.innerHTML = `<i class="bi bi-lightning-charge-fill"></i> ${data.xp_points} XP`;
+            }
+        }
+    })
+    .catch(err => console.error('Failed to save progress:', err));
+}
+
+
+// Populate Speed Typer Level Select Dropdown Dynamically
+function populateTyperSelect() {
+    const select = document.getElementById('typer-level-select');
+    if (!select) return;
+    select.innerHTML = '';
+    SPEED_TYPER_LEVELS.forEach((level, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = `Level ${index + 1}: ${level.lang} - ${level.file}`;
+        select.appendChild(opt);
+    });
+}
+
+// Global Custom Arcade Modal Function
+function showArcadeModal(title, message, score, buttonText, callback) {
+    document.getElementById('arcade-modal-title').textContent = title;
+    document.getElementById('arcade-modal-message').textContent = message;
+    document.getElementById('arcade-modal-score').textContent = score;
+    const btn = document.getElementById('arcade-modal-btn');
+    btn.textContent = buttonText || 'Play Again';
+    
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    
+    newBtn.addEventListener('click', () => {
+        const modal = document.getElementById('arcade-modal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+            if (callback) callback();
+        }, 250);
+    });
+    
+    const modal = document.getElementById('arcade-modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+}
+
+// Helper to check if a space at index is part of the indentation
+function isIndentationSpace(index, code) {
+    for (let i = index - 1; i >= 0; i--) {
+        if (code[i] === '\n') {
+            return true;
+        }
+        if (code[i] !== ' ') {
+            return false;
+        }
+    }
+    return true;
+}
+
+// ----------------------------------------------------
+// GAME 1: SPEED TYPER LOGIC
+// ----------------------------------------------------
+const SPEED_TYPER_LEVELS = [
+    {
+        lang: 'Python',
+        file: 'binary_search.py',
+        code: `def search(arr, target):
+    low, high = 0, len(arr) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1`
+    },
+    {
+        lang: 'JavaScript',
+        file: 'debounce.js',
+        code: `function debounce(func, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}`
+    },
+    {
+        lang: 'C++',
+        file: 'reverse_list.cpp',
+        code: `ListNode* reverseList(ListNode* head) {
+    ListNode* prev = nullptr;
+    ListNode* curr = head;
+    while (curr != nullptr) {
+        ListNode* nextNode = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = nextNode;
+    }
+    return prev;
+}`
+    },
+    {
+        lang: 'SQL',
+        file: 'dense_rank.sql',
+        code: `SELECT id, name, salary,
+  DENSE_RANK() OVER(
+    PARTITION BY dept_id
+    ORDER BY salary DESC
+  ) as salary_rank
+FROM employees;`
+    },
+    {
+        lang: 'HTML/CSS',
+        file: 'center.html',
+        code: `<div class="container">
+  <div class="child">Centered!</div>
 </div>
+<style>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+</style>`
+    },
+    {
+        lang: 'Python',
+        file: 'comprehension.py',
+        code: `squares = [x * x for x in range(10) if x % 2 == 0]`
+    },
+    {
+        lang: 'JavaScript',
+        file: 'arrow_callback.js',
+        code: `const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(n => n * 2);`
+    },
+    {
+        lang: 'C++',
+        file: 'bubble_sort.cpp',
+        code: `void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}`
+    },
+    {
+        lang: 'SQL',
+        file: 'having_clause.sql',
+        code: `SELECT dept_id, COUNT(*)
+FROM employees
+GROUP BY dept_id
+HAVING COUNT(*) > 5;`
+    },
+    {
+        lang: 'Java',
+        file: 'User.java',
+        code: `public class User {
+    private String name;
+    public User(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return this.name;
+    }
+}`
+    },
+    {
+        lang: 'Python',
+        file: 'decorator.py',
+        code: `def log_func(func):
+    def wrapper(*args, **kwargs):
+        print("Calling function")
+        return func(*args, **kwargs)
+    return wrapper`
+    },
+    {
+        lang: 'JavaScript',
+        file: 'async_await.js',
+        code: `async function fetchData(url) {
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}`
+    },
+    {
+        lang: 'C++',
+        file: 'vector_push.cpp',
+        code: `vector<int> getEvens(int n) {
+    vector<int> evens;
+    for (int i = 0; i <= n; i++) {
+        if (i % 2 == 0) {
+            evens.push_back(i);
+        }
+    }
+    return evens;
+}`
+    },
+    {
+        lang: 'SQL',
+        file: 'inner_join.sql',
+        code: `SELECT e.name, d.dept_name
+FROM employees e
+INNER JOIN departments d
+ON e.dept_id = d.id;`
+    },
+    {
+        lang: 'Java',
+        file: 'ExceptionHandling.java',
+        code: `try {
+    int result = divide(10, 0);
+} catch (ArithmeticException e) {
+    System.out.println("Division by zero!");
+} finally {
+    cleanup();
+}`
+    },
+    {
+        lang: 'Python',
+        file: 'file_io.py',
+        code: `with open("log.txt", "w") as f:
+    f.write("System active
+")`
+    },
+    {
+        lang: 'JavaScript',
+        file: 'event_listener.js',
+        code: `const button = document.getElementById("click-btn");
+button.addEventListener("click", (event) => {
+  console.log("Clicked:", event.target.id);
+});`
+    },
+    {
+        lang: 'C++',
+        file: 'pointers.cpp',
+        code: `void updateValue(int* ptr) {
+    if (ptr != nullptr) {
+        *ptr = 42;
+    }
+}`
+    },
+    {
+        lang: 'SQL',
+        file: 'create_table.sql',
+        code: `CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  price DECIMAL(10, 2) DEFAULT 0.0
+);`
+    },
+    {
+        lang: 'Java',
+        file: 'Inheritance.java',
+        code: `public class Dog extends Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Bark!");
+    }
+}`
+    }
+];
+
+let typerState = {
+    level: Math.max(0, Math.min({{ typer_level|default:0 }}, SPEED_TYPER_LEVELS.length - 1)),
+    currentCode: '',
+    currentIndex: 0,
+    spans: [],
+    gameRunning: false,
+    startTime: null,
+    timer: null,
+    totalTyped: 0,
+    correctTyped: 0
+};
+
+const typerStartBtn = document.getElementById('typer-start-btn');
+const typerLevelSelect = document.getElementById('typer-level-select');
+const typerEditor = document.getElementById('typer-editor');
+const typerHiddenInput = document.getElementById('typer-hidden-input');
+
+typerStartBtn.addEventListener('click', toggleTyperGame);
+typerLevelSelect.addEventListener('change', () => {
+    typerState.level = parseInt(typerLevelSelect.value);
+    populateTyperSelect();
+    typerLevelSelect.value = typerState.level;
+    loadTyperLevel();
+});
+
+typerHiddenInput.addEventListener('blur', () => {
+    if (typerState.gameRunning) {
+        document.getElementById('typer-editor-container').classList.add('unfocused-active');
+        clearInterval(typerState.timer);
+    }
+});
+
+typerHiddenInput.addEventListener('focus', () => {
+    if (typerState.gameRunning) {
+        document.getElementById('typer-editor-container').classList.remove('unfocused-active');
+        typerState.startTime = Date.now() - (parseFloat(document.getElementById('typer-time').textContent) * 1000);
+        typerState.timer = setInterval(() => {
+            const elapsed = (Date.now() - typerState.startTime) / 1000;
+            document.getElementById('typer-time').textContent = elapsed.toFixed(1) + 's';
+            
+            if (elapsed > 0) {
+                const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
+                document.getElementById('typer-wpm').textContent = wpm;
+            }
+        }, 100);
+    }
+});
+
+document.getElementById('typer-focus-overlay').addEventListener('click', () => {
+    typerHiddenInput.focus({ preventScroll: true });
+});
+typerEditor.addEventListener('click', () => {
+    typerHiddenInput.focus({ preventScroll: true });
+});
+
+document.addEventListener('keydown', (e) => {
+    if (typerState.gameRunning && document.activeElement !== typerHiddenInput) {
+        if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT' && document.activeElement.tagName !== 'TEXTAREA') {
+            typerHiddenInput.focus({ preventScroll: true });
+            handleTypingInput(e);
+        }
+    }
+});
+
+function loadTyperLevel() {
+    const levelData = SPEED_TYPER_LEVELS[typerState.level];
+    document.getElementById('typer-file-name').textContent = levelData.file;
+    document.getElementById('typer-lang-badge').textContent = levelData.lang;
+    
+    typerState.currentCode = levelData.code;
+    typerState.currentIndex = 0;
+    typerState.totalTyped = 0;
+    typerState.correctTyped = 0;
+    
+    typerEditor.innerHTML = '';
+    typerState.spans = [];
+    
+    for (let i = 0; i < levelData.code.length; i++) {
+        const char = levelData.code[i];
+        const span = document.createElement('span');
+        span.className = 'char-node';
+        if (char === '\n') {
+            span.innerHTML = '<br>';
+        } else if (char === ' ') {
+            span.innerHTML = '&nbsp;';
+        } else {
+            span.textContent = char;
+        }
+        typerEditor.appendChild(span);
+        typerState.spans.push(span);
+    }
+    
+    const highScore = localStorage.getItem(`typer_highscore_${typerState.level}`) || 0;
+    document.getElementById('typer-highscore').textContent = highScore;
+    
+    document.getElementById('typer-wpm').textContent = '0';
+    document.getElementById('typer-accuracy').textContent = '100%';
+    document.getElementById('typer-time').textContent = '0.0s';
+}
+
+function toggleTyperGame() {
+    gameAudio.initCtx();
+    if (typerState.gameRunning) {
+        clearInterval(typerState.timer);
+        typerState.gameRunning = false;
+        typerStartBtn.classList.remove('btn-danger');
+        typerStartBtn.classList.add('btn-warning');
+        typerStartBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i> Start Run';
+        loadTyperLevel();
+        return;
+    }
+    
+    loadTyperLevel();
+    typerState.gameRunning = true;
+    typerState.startTime = Date.now();
+    typerStartBtn.classList.remove('btn-warning');
+    typerStartBtn.classList.add('btn-danger');
+    typerStartBtn.innerHTML = '<i class="bi bi-stop-fill me-1"></i> Stop Run';
+    
+    if (typerState.spans.length > 0) {
+        typerState.spans[0].classList.add('char-active');
+    }
+    
+    typerHiddenInput.focus({ preventScroll: true });
+    
+    typerState.timer = setInterval(() => {
+        const elapsed = (Date.now() - typerState.startTime) / 1000;
+        document.getElementById('typer-time').textContent = elapsed.toFixed(1) + 's';
+        
+        if (elapsed > 0) {
+            const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
+            document.getElementById('typer-wpm').textContent = wpm;
+        }
+    }, 100);
+}
+
+function handleTypingInput(e) {
+    if (!typerState.gameRunning) return;
+    
+    // Prevent default browser behavior on navigation keys to keep focus steady
+    if (e.key === ' ' || e.key === 'Backspace' || e.key === '/' || e.key === 'Tab') {
+        e.preventDefault();
+    }
+    
+    const targetChar = typerState.currentCode[typerState.currentIndex];
+    const pressedKey = e.key === 'Enter' ? '\n' : e.key;
+    
+    if (pressedKey === targetChar) {
+        const span = typerState.spans[typerState.currentIndex];
+        span.classList.remove('char-active', 'char-wrong');
+        span.classList.add('char-correct');
+        
+        typerState.currentIndex++;
+        typerState.correctTyped++;
+        typerState.totalTyped++;
+        
+        // Auto-complete indentation spaces only
+        while (typerState.currentIndex < typerState.currentCode.length && 
+               typerState.currentCode[typerState.currentIndex] === ' ' && 
+               isIndentationSpace(typerState.currentIndex, typerState.currentCode)) {
+            
+            const autoSpan = typerState.spans[typerState.currentIndex];
+            autoSpan.classList.add('char-correct');
+            typerState.currentIndex++;
+            typerState.correctTyped++;
+        }
+        
+        if (typerState.currentIndex < typerState.currentCode.length) {
+            const nextSpan = typerState.spans[typerState.currentIndex];
+            nextSpan.classList.add('char-active');
+            nextSpan.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        } else {
+            endTyperGame(true);
+        }
+        
+        gameAudio.playBeep(500 + Math.random() * 250, 'sine', 0.04);
+    } else {
+        const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape', 'Backspace'];
+        if (!ignoredKeys.includes(e.key)) {
+            const span = typerState.spans[typerState.currentIndex];
+            span.classList.add('char-wrong');
+            typerState.totalTyped++;
+            gameAudio.onFailure();
+            
+            const container = document.getElementById('typer-editor-container');
+            container.classList.add('shake-anim');
+            setTimeout(() => container.classList.remove('shake-anim'), 200);
+        }
+    }
+    
+    if (typerState.totalTyped > 0) {
+        const accuracy = Math.round((typerState.correctTyped / typerState.totalTyped) * 100);
+        document.getElementById('typer-accuracy').textContent = accuracy + '%';
+    }
+}
+
+typerHiddenInput.addEventListener('keydown', handleTypingInput);
+
+function endTyperGame(isSuccess) {
+    clearInterval(typerState.timer);
+    typerState.gameRunning = false;
+    typerStartBtn.classList.remove('btn-danger');
+    typerStartBtn.classList.add('btn-warning');
+    typerStartBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i> Start Run';
+    
+    if (isSuccess) {
+        gameAudio.onLevelUp();
+        const elapsed = (Date.now() - typerState.startTime) / 1000;
+        const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
+        
+        saveGameProgress('typer', typerState.level + 1, wpm);
+        const oldHigh = parseInt(localStorage.getItem(`typer_highscore_${typerState.level}`)) || 0;
+        if (wpm > oldHigh) {
+            localStorage.setItem(`typer_highscore_${typerState.level}`, wpm);
+            document.getElementById('typer-highscore').textContent = wpm;
+            showArcadeModal(
+                'New Record!',
+                `Level Complete! New WPM High Score: ${wpm} WPM!`,
+                wpm,
+                'Next Level',
+                () => {
+                    typerState.level = (typerState.level + 1) % SPEED_TYPER_LEVELS.length;
+                    typerLevelSelect.value = typerState.level;
+                    loadTyperLevel();
+                }
+            );
+        } else {
+            showArcadeModal(
+                'Level Complete!',
+                `Speed: ${wpm} WPM (Record: ${oldHigh} WPM).`,
+                wpm,
+                'Try Again',
+                () => {
+                    loadTyperLevel();
+                }
+            );
+        }
+    }
+}
+
+// ----------------------------------------------------
+// GAME 2: BUG HUNTER LOGIC
+// ----------------------------------------------------
+const BUG_HUNTER_PUZZLES = [
+    {
+        lang: 'Python',
+        code: `def append_to(element, target=[]):
+    target.append(element)
+    return target
+
+print(append_to(1)) # -> [1]
+print(append_to(2)) # -> [1, 2] (Bug!)`,
+        question: 'Why does the list accumulate elements across multiple calls?',
+        options: [
+            'Lists are immutable in Python, copying values implicitly.',
+            'Default arguments are evaluated once at function definition, sharing the list reference.',
+            'Function scope variables always resolve globally.',
+            'The print function automatically cache function calls.'
+        ],
+        correct: 1,
+        explanation: 'In Python, default arguments are evaluated once when the function is defined. A mutable default argument like target=[] gets reused in every call. Fix by using target=None.'
+    },
+    {
+        lang: 'JavaScript',
+        code: `const obj = {
+  name: "SkillSphere",
+  greet: function() {
+    setTimeout(function() {
+      console.log(this.name);
+    }, 500);
+  }
+};
+obj.greet(); // outputs undefined (Bug!)`,
+        question: 'Identify why "this.name" does not print "SkillSphere":',
+        options: [
+            'setTimeout forces all operations asynchronously which limits access.',
+            'The nested callback rebinds "this" context to the global window scope.',
+            'const structures cannot be read inside subfunctions.',
+            'Objects do not hold lexical binding environments.'
+        ],
+        correct: 1,
+        explanation: 'Regular function callbacks rebind the context of "this". Using an arrow function () => { console.log(this.name) } preserves the parent lexical scope binding.'
+    },
+    {
+        lang: 'C++',
+        code: `void processData() {
+    int* ptr = new int[100];
+    // ... operations on ptr
+    if (checkError()) {
+        return; // Bug!
+    }
+    delete[] ptr;
+}`,
+        question: 'What runtime bug occurs if checkError() returns true?',
+        options: [
+            'A compiler syntax warning blocks execution.',
+            'Memory Leak: Allocated memory block is not freed via delete[] before returning.',
+            'Null Pointer Reference crashes the runtime context.',
+            'C++ automatically free pointers when leaving functions.'
+        ],
+        correct: 1,
+        explanation: 'When checkError() triggers, returning early bypasses "delete[] ptr", leaving 100 integers permanently allocated on the heap (Memory Leak).'
+    },
+    {
+        lang: 'SQL',
+        code: `SELECT dept_id, name, AVG(salary) 
+FROM employees
+GROUP BY dept_id;`,
+        question: 'Why does this query throw a database aggregation error?',
+        options: [
+            'AVG() aggregation must specify precision parameters.',
+            'Inconsistent Grouping: "name" is projected but not included in the GROUP BY clause or an aggregate function.',
+            'GROUP BY expressions strictly require HAVING.',
+            'WHERE clause is missing before GROUP BY.'
+        ],
+        correct: 1,
+        explanation: 'When grouping records, every projected column must either be aggregated (like AVG) or listed in the GROUP BY clause.'
+    },
+    {
+        lang: 'Java',
+        code: `String s1 = new String("Skill");
+String s2 = new String("Skill");
+if (s1 == s2) {
+    System.out.println("Match"); // Not printed!
+}`,
+        question: 'Why does s1 == s2 evaluate to false?',
+        options: [
+            'Constructors create immutable buffers.',
+            'The == operator compares reference addresses. Content comparison must use s1.equals(s2).',
+            'String pooling is not enabled in standard Java.',
+            'String references are automatically hashed.'
+        ],
+        correct: 1,
+        explanation: 'In Java, "==" checks if both object references point to the same memory location. To compare actual String value characters, use equals().'
+    },
+    {
+        lang: 'Python',
+        code: `count = 10
+def increment():
+    count += 1
+
+increment() # UnboundLocalError!`,
+        question: 'Identify the cause of UnboundLocalError:',
+        options: [
+            'Python does not allow += math on global integers.',
+            'Variables referenced & modified inside local function scope are assumed local unless declared global.',
+            'Function signature lacks self parameter wrapper.',
+            'count must be initialized using var prefix.'
+        ],
+        correct: 1,
+        explanation: 'Modifying a global variable locally requires explicitly declaring "global count" inside the function. Otherwise, Python assumes it is a local variable and throws an assignment error.'
+    },
+    {
+        lang: 'JavaScript',
+        code: `for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+} // outputs 3, 3, 3 instead of 0, 1, 2`,
+        question: 'Why does var produce 3, 3, 3 in the event loop?',
+        options: [
+            'setTimeout overrides block limits.',
+            'var has function scope, sharing a single binding that reaches 3 before timeouts run.',
+            'console.log caches variable inputs.',
+            'Loop parameters require recursive bindings.'
+        ],
+        correct: 1,
+        explanation: 'var variables are not block-scoped. Replacing var with block-scoped "let" gives each iteration its own separate context.'
+    },
+    {
+        lang: 'C++',
+        code: `int main() {
+    int arr[5] = {1, 2, 3, 4, 5};
+    std::cout << arr[5]; // Bug!
+}`,
+        question: 'Identify the runtime array bug:',
+        options: [
+            'Arrays in C++ must start at index 1.',
+            'Accessing index 5 is out of bounds (valid indices are 0 to 4), causing undefined behavior.',
+            'std::cout cannot output arrays directly.',
+            'Brace initializer lists cannot contain 5 elements.'
+        ],
+        correct: 1,
+        explanation: 'Arrays in C++ are 0-indexed. Accessing index 5 reads beyond the allocated bounds of the 5-element array.'
+    },
+    {
+        lang: 'SQL',
+        code: `SELECT price / discount_pct 
+FROM products;`,
+        question: 'What runtime error will occur if discount_pct is 0?',
+        options: [
+            'Null value crash.',
+            'Division by Zero error.',
+            'Arithmetic Overflow exception.',
+            'SQL Syntax constraint error.'
+        ],
+        correct: 1,
+        explanation: 'Mathematical division by zero is invalid. Avoid this by using NULLIF(discount_pct, 0) or CASE statements.'
+    },
+    {
+        lang: 'Java',
+        code: `String s = null;
+System.out.println(s.length()); // Bug!`,
+        question: 'What exception is thrown by this code?',
+        options: [
+            'NullPointerException.',
+            'ArrayIndexOutOfBoundsException.',
+            'NumberFormatException.',
+            'StringIndexOutOfBoundsException.'
+        ],
+        correct: 0,
+        explanation: 'Invoking methods on a null reference yields a NullPointerException. Ensure objects are initialized before use.'
+    },
+    {
+        lang: 'Python',
+        code: `d = {[1, 2]: "numbers"} # TypeError!`,
+        question: 'Why does dict key declaration fail?',
+        options: [
+            'Dict keys cannot be declared as lists because lists are mutable (unhashable).',
+            'Values in dicts cannot be strings.',
+            'Dict constructors strictly require lists of tuples.',
+            'Brace symbols are invalid dict syntax.'
+        ],
+        correct: 0,
+        explanation: 'Python dict keys must be hashable. Mutable types like lists cannot be hashed; use immutable tuples instead.'
+    },
+    {
+        lang: 'JavaScript',
+        code: `function test() {
+  console.log(a); // outputs undefined
+  var a = 10;
+}`,
+        question: 'Why does console.log output undefined instead of ReferenceError?',
+        options: [
+            'var has no lexical initialization limits.',
+            'Variable hoisting lifts var declaration (but not assignment) to the top of function scope.',
+            'console.log is asynchronous.',
+            'Function variables default to window context.'
+        ],
+        correct: 1,
+        explanation: 'JavaScript hoists var declarations. It is evaluated as: var a; console.log(a); a = 10;'
+    },
+    {
+        lang: 'C++',
+        code: `int& getVal() {
+    int x = 10;
+    return x; // Bug!
+}`,
+        question: 'What runtime memory bug occurs here?',
+        options: [
+            'Returning local variable references by reference (dangling reference).',
+            'Functions cannot return reference types.',
+            'x is not heap allocated.',
+            'C++ prevents returning values named x.'
+        ],
+        correct: 0,
+        explanation: 'Returning a reference to a local stack variable leaves a dangling reference because x is destroyed when the function returns.'
+    },
+    {
+        lang: 'SQL',
+        code: `SELECT * FROM users WHERE name = "admin";`,
+        question: 'What is the syntax issue in standard SQL?',
+        options: [
+            'users must be written as users_t.',
+            "Double quotes represent identifiers; string literals require single quotes like 'admin'.",
+            'SELECT * is deprecated.',
+            'WHERE clause cannot check strings.'
+        ],
+        correct: 1,
+        explanation: "Standard SQL specifies single quotes ('...') for string literals. Double quotes are reserved for column/table identifiers."
+    },
+    {
+        lang: 'Java',
+        code: `String res = "";
+for (int i = 0; i < 1000; i++) {
+    res += i; // Performance Bug!
+}`,
+        question: 'Why is string concatenation inside a loop slow in Java?',
+        options: [
+            'Java allocates memory to standard integers.',
+            'Strings are immutable; concatenation repeatedly creates new String objects and copies characters.',
+            'Loops run sequentially.',
+            'Java does not optimize variable names.'
+        ],
+        correct: 1,
+        explanation: 'Because String is immutable, using += in a loop repeatedly copies arrays. Fix by using StringBuilder.'
+    },
+    {
+        lang: 'Python',
+        code: `def test()
+    print("hi") # SyntaxError!`,
+        question: 'Identify the missing syntax character:',
+        options: [
+            'Semicolon ; after print.',
+            'Colon : at the end of def test() line.',
+            'Double quotes around print.',
+            'Parentheses around test.'
+        ],
+        correct: 1,
+        explanation: 'Python def statements require a colon (:) at the end of the signature line to open the function block.'
+    },
+    {
+        lang: 'JavaScript',
+        code: `console.log(0 == '0'); // true
+console.log(0 === '0'); // false`,
+        question: 'What causes this difference in evaluation?',
+        options: [
+            'Single quotes represent char arrays.',
+            '== performs type coercion before comparison; === checks both value and type strictly.',
+            '=== forces strict numeric formats.',
+            '0 is an invalid parameter.'
+        ],
+        correct: 1,
+        explanation: "The === operator checks identity without coercion. 0 (number) and '0' (string) have different types, so === returns false."
+    },
+    {
+        lang: 'C++',
+        code: `class Box {
+public:
+    int* val;
+    Box(int v) { val = new int(v); }
+    ~Box() { delete val; }
+};
+// Box b2 = b1; // Crash!`,
+        question: 'Why does copying Box objects cause a crash at destruction?',
+        options: [
+            'Dynamic deletion of integers is unsupported.',
+            'Shallow copy: Default copy constructor copies pointer address, causing double-free on destruction.',
+            'Box destructor is private.',
+            'Destruction cannot release memory.'
+        ],
+        correct: 1,
+        explanation: 'Box lacks a copy constructor. Shallow copying duplicate pointers leads to both destructions deleting the same heap address.'
+    },
+    {
+        lang: 'SQL',
+        code: `UPDATE users SET is_active = true;`,
+        question: 'What dangerous mistake is present in this update query?',
+        options: [
+            'is_active cannot be true.',
+            'Missing WHERE clause, updating every single row in the database table.',
+            'UPDATE requires a FROM clause.',
+            'SET only works on numbers.'
+        ],
+        correct: 1,
+        explanation: 'Omitting the WHERE clause from UPDATE updates all rows. Always restrict statements to specific IDs.'
+    },
+    {
+        lang: 'Java',
+        code: `List<Integer> list = new ArrayList<>();
+for (Integer x : list) {
+    list.remove(x); // Bug!
+}`,
+        question: 'What exception is thrown when modifying a collection in a foreach loop?',
+        options: [
+            'ConcurrentModificationException.',
+            'NullPointerException.',
+            'IndexOutOfBoundsException.',
+            'UnsupportedOperationException.'
+        ],
+        correct: 0,
+        explanation: 'Modifying collections directly while iterating with foreach yields a ConcurrentModificationException. Use Iterator.remove() instead.'
+    }
+];
+
+let bugState = {
+    level: Math.max(0, Math.min({{ bug_level|default:0 }}, BUG_HUNTER_PUZZLES.length - 1)),
+    score: 0,
+    lives: 3,
+    active: false
+};
+
+function initBugGame() {
+    bugState.level = Math.max(0, Math.min({{ bug_level|default:0 }}, BUG_HUNTER_PUZZLES.length - 1));
+    bugState.score = 0;
+    bugState.lives = 3;
+    bugState.active = true;
+    
+    document.getElementById('bug-score').textContent = '0';
+    document.getElementById('bug-lives').textContent = '❤️❤️❤️';
+    document.getElementById('bug-feedback-box').style.display = 'none';
+    
+    loadBugPuzzle();
+}
+
+function loadBugPuzzle() {
+    if (bugState.level >= BUG_HUNTER_PUZZLES.length) {
+        gameAudio.onLevelUp();
+        showArcadeModal(
+            'Victory!',
+            'Congratulations! You cleared all Debugging Levels!',
+            bugState.score,
+            'Play Again',
+            () => {
+                initBugGame();
+            }
+        );
+        return;
+    }
+    
+    const puzzle = BUG_HUNTER_PUZZLES[bugState.level];
+    document.getElementById('bug-level-indicator').textContent = `Level ${bugState.level + 1} / ${BUG_HUNTER_PUZZLES.length}`;
+    document.getElementById('bug-lang-badge').textContent = puzzle.lang;
+    document.getElementById('bug-code-display').textContent = puzzle.code;
+    document.getElementById('bug-question-text').textContent = puzzle.question;
+    
+    const optionsContainer = document.getElementById('bug-options-box');
+    optionsContainer.innerHTML = '';
+    
+    document.getElementById('bug-feedback-box').style.display = 'none';
+    
+    puzzle.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'cyber-btn-choice bug-option-btn';
+        btn.innerHTML = `<span class="badge bg-primary me-3 text-uppercase font-monospace" style="width:24px;">${String.fromCharCode(65 + index)}</span> ${opt}`;
+        btn.addEventListener('click', () => verifyBugChoice(index));
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function verifyBugChoice(selectedIndex) {
+    if (!bugState.active) return;
+    
+    const puzzle = BUG_HUNTER_PUZZLES[bugState.level];
+    const optionBtns = document.querySelectorAll('.bug-option-btn');
+    
+    optionBtns.forEach(btn => btn.disabled = true);
+    
+    const feedbackHeader = document.getElementById('bug-feedback-header');
+    const explanationText = document.getElementById('bug-explanation-text');
+    const feedbackBox = document.getElementById('bug-feedback-box');
+    
+    if (selectedIndex === puzzle.correct) {
+        gameAudio.onSuccess();
+        bugState.score += 100;
+        document.getElementById('bug-score').textContent = bugState.score;
+        optionBtns[selectedIndex].classList.add('correct');
+        
+        feedbackHeader.innerHTML = '<span class="text-success"><i class="bi bi-shield-check me-1"></i> Bug Terminated Successfully!</span>';
+    } else {
+        gameAudio.onFailure();
+        bugState.lives--;
+        optionBtns[selectedIndex].classList.add('incorrect');
+        optionBtns[puzzle.correct].classList.add('correct');
+        
+        let hearts = '';
+        for (let i = 0; i < 3; i++) {
+            hearts += i < bugState.lives ? '❤️' : '🖤';
+        }
+        document.getElementById('bug-lives').textContent = hearts;
+        
+        feedbackHeader.innerHTML = '<span class="text-danger"><i class="bi bi-shield-slash me-1"></i> Execution Failed</span>';
+        
+        if (bugState.lives <= 0) {
+            bugState.active = false;
+            setTimeout(() => {
+                showArcadeModal(
+                    'Game Over',
+                    'Out of Lives! Keep practicing your compiler eyes.',
+                    bugState.score,
+                    'Try Again',
+                    () => {
+                        initBugGame();
+                    }
+                );
+            }, 1000);
+            return;
+        }
+    }
+    
+    explanationText.textContent = puzzle.explanation;
+    feedbackBox.style.display = 'block';
+}
+
+document.getElementById('bug-next-btn').addEventListener('click', () => {
+    bugState.level++;
+    saveGameProgress('bug', bugState.level, 50);
+    loadBugPuzzle();
+});
+
+// ----------------------------------------------------
+// GAME 3: BIG-O COMPLEXITY MASTER LOGIC
+// ----------------------------------------------------
+const COMPLEXITY_PUZZLES = [
+    {
+        title: 'Binary Search Index Search',
+        desc: 'Finding the index of an element in a sorted list of size N.',
+        options: ['O(1)', 'O(log N)', 'O(N)', 'O(N log N)'],
+        correct: 1,
+        explanation: 'Binary search splits the searchable range in half with each iteration, yielding logarithmic complexity.'
+    },
+    {
+        title: 'Merge Sort Array Sorting',
+        desc: 'Sorting an unsorted array of size N using divide-and-conquer partitions.',
+        options: ['O(N)', 'O(N log N)', 'O(N^2)', 'O(2^N)'],
+        correct: 1,
+        explanation: 'Dividing takes O(log N) iterations, and merging at each level takes O(N) linear time.'
+    },
+    {
+        title: 'Standard Matrix Multiplication',
+        desc: 'Multiplying two square matrices of dimensions N x N.',
+        options: ['O(N)', 'O(N^2)', 'O(N^3)', 'O(2^N)'],
+        correct: 2,
+        explanation: 'Standard multiplication uses three nested loops over the N dimensions.'
+    },
+    {
+        title: 'Hash Map Key Retrieval',
+        desc: 'Retrieving the value associated with key K in a Hash Map containing N items.',
+        options: ['O(1)', 'O(log N)', 'O(N)', 'O(N log N)'],
+        correct: 0,
+        explanation: 'Hashes point directly to bucket locations, yielding constant O(1) average lookup times.'
+    },
+    {
+        title: 'Fibonacci Recursive Function',
+        desc: 'Computing Fib(N) recursively using the naive formula Fib(N-1) + Fib(N-2).',
+        options: ['O(N)', 'O(N log N)', 'O(N^2)', 'O(2^N)'],
+        correct: 3,
+        explanation: 'Each function call forks into two child recursive branches, leading to exponential O(2^N) height growth.'
+    },
+    {
+        title: 'Graph BFS / DFS Search',
+        desc: 'Traversing a graph represented as an adjacency list with V vertices and E edges.',
+        options: ['O(V)', 'O(E)', 'O(V + E)', 'O(V * E)'],
+        correct: 2,
+        explanation: 'BFS/DFS visits every vertex and evaluates every edge exactly once.'
+    },
+    {
+        title: 'Priority Queue / Heap Insertion',
+        desc: 'Inserting a new item into a binary heap containing N elements.',
+        options: ['O(1)', 'O(log N)', 'O(N)', 'O(N log N)'],
+        correct: 1,
+        explanation: 'The element may bubble up the heap structure to restore heap invariants, traversing at most the tree height log N.'
+    },
+    {
+        title: 'Sorted Array Merge operation',
+        desc: 'Merging two pre-sorted arrays of sizes N and M into a single sorted array.',
+        options: ['O(N log N)', 'O(N * M)', 'O(N + M)', 'O(1)'],
+        correct: 2,
+        explanation: 'Uses two pointer index checks to process items linearly.'
+    },
+    {
+        title: 'Linear Scan Search',
+        desc: 'Scanning an unsorted list of size N to locate a target element.',
+        options: ['O(1)', 'O(log N)', 'O(N)', 'O(N^2)'],
+        correct: 2,
+        explanation: 'In the worst case, you must check all N elements in the array.'
+    },
+    {
+        title: 'Bubble Sort Algorithm',
+        desc: 'Sorting an unsorted array of size N using adjacent element swaps.',
+        options: ['O(N)', 'O(N log N)', 'O(N^2)', 'O(N^3)'],
+        correct: 2,
+        explanation: 'Requires nested outer/inner loops to scan and swap elements, resulting in quadratic time.'
+    },
+    {
+        title: 'BST Range Search',
+        desc: 'Searching for values inside a range in a Balanced Binary Search Tree of size N.',
+        options: ['O(1)', 'O(log N)', 'O(N)', 'O(N log N)'],
+        correct: 2,
+        explanation: 'In the worst case, the range could encompass all N nodes in the tree.'
+    },
+    {
+        title: 'Permutations Generator',
+        desc: 'Generating all unique ordering permutations of a list of size N.',
+        options: ['O(N^2)', 'O(2^N)', 'O(N!)', 'O(N^N)'],
+        correct: 2,
+        explanation: 'There are exactly N! unique permutations, requiring factorial operations.'
+    },
+    {
+        title: 'Doubling Index Loop',
+        desc: 'A loop where index i doubles with each iteration (for i = 1; i < N; i *= 2).',
+        options: ['O(1)', 'O(log N)', 'O(N)', 'O(N log N)'],
+        correct: 1,
+        explanation: 'Doubling i cuts the remaining search space in half, resulting in logarithmic iterations.'
+    },
+    {
+        title: 'Matrix Transpose',
+        desc: 'Transposing an N x N dimension grid matrix.',
+        options: ['O(N)', 'O(N^2)', 'O(N^3)', 'O(1)'],
+        correct: 1,
+        explanation: 'Requires visiting and swapping each element inside the N x N grid (N^2 total nodes).'
+    },
+    {
+        title: 'Binary Tree Height',
+        desc: 'Computing the max depth of a binary tree of size N.',
+        options: ['O(log N)', 'O(N)', 'O(N log N)', 'O(2^N)'],
+        correct: 1,
+        explanation: 'You must visit every node in the tree at least once to verify height path depth.'
+    },
+    {
+        title: 'Bitwise Shift Operations',
+        desc: 'Performing a left shift or right shift operation on a 64-bit integer.',
+        options: ['O(1)', 'O(log N)', 'O(N)', 'O(64)'],
+        correct: 0,
+        explanation: 'Bitwise operations are executed in a single CPU cycle, representing constant O(1) time.'
+    },
+    {
+        title: 'Quick Sort Average Case',
+        desc: 'Sorting an unsorted array of size N using pivot partition recursive trees.',
+        options: ['O(N)', 'O(N log N)', 'O(N^2)', 'O(2^N)'],
+        correct: 1,
+        explanation: 'Average case divides arrays evenly yielding O(log N) heights, and partitions take O(N).'
+    },
+    {
+        title: 'Power Set Generation',
+        desc: 'Generating all subsets of a set of size N.',
+        options: ['O(N log N)', 'O(N^2)', 'O(2^N)', 'O(N!)'],
+        correct: 2,
+        explanation: 'A set of size N has exactly 2^N subsets, resulting in exponential time.'
+    },
+    {
+        title: 'String Concatenation Loop',
+        desc: 'Building a string by appending single characters N times in an immutable loop.',
+        options: ['O(1)', 'O(N)', 'O(N^2)', 'O(N log N)'],
+        correct: 2,
+        explanation: 'Concatenating in immutable contexts copies previous characters, yielding quadratic growth.'
+    },
+    {
+        title: 'Counting Sort Algorithm',
+        desc: 'Sorting N integers where keys lie within a range K.',
+        options: ['O(N log N)', 'O(N + K)', 'O(N * K)', 'O(N^2)'],
+        correct: 1,
+        explanation: 'Iterates through N keys and maps elements to auxiliary index array K, giving linear O(N + K).'
+    }
+];
+
+let compState = {
+    index: 0,
+    score: 0,
+    streak: 0,
+    timeRemaining: 15,
+    timer: null,
+    active: false
+};
+
+const compStartBtn = document.getElementById('comp-start-btn');
+const compIntroScreen = document.getElementById('comp-intro-screen');
+const compRunScreen = document.getElementById('comp-run-screen');
+const compTimerFill = document.getElementById('comp-timer-fill');
+
+compStartBtn.addEventListener('click', initiateComplexityRun);
+
+function initiateComplexityRun() {
+    gameAudio.initCtx();
+    compIntroScreen.style.display = 'none';
+    compRunScreen.style.display = 'block';
+    
+    compState.index = 0;
+    compState.score = 0;
+    compState.streak = 0;
+    compState.active = true;
+    
+    document.getElementById('comp-score').textContent = '0';
+    document.getElementById('comp-streak').textContent = 'x0';
+    
+    loadComplexityQuestion();
+    beginComplexityTimer();
+}
+
+function beginComplexityTimer() {
+    clearInterval(compState.timer);
+    compState.timeRemaining = 15;
+    compTimerFill.style.width = '100%';
+    
+    compState.timer = setInterval(() => {
+        compState.timeRemaining -= 0.1;
+        const widthPercent = (compState.timeRemaining / 15) * 100;
+        compTimerFill.style.width = `${widthPercent}%`;
+        
+        if (compState.timeRemaining <= 0) {
+            clearInterval(compState.timer);
+            terminateComplexityGame('Time Limit Exceeded!');
+        }
+    }, 100);
+}
+
+function loadComplexityQuestion() {
+    if (compState.index >= COMPLEXITY_PUZZLES.length) {
+        clearInterval(compState.timer);
+        gameAudio.onLevelUp();
+        saveGameProgress('complexity', 1, Math.round(compState.score / 10));
+        showArcadeModal(
+            'Challenge Cleared!',
+            'Excellent Run! You solved all time complexity puzzles!',
+            compState.score,
+            'Finish Run',
+            () => {
+                revertComplexityIntro();
+            }
+        );
+        return;
+    }
+    
+    const puzzle = COMPLEXITY_PUZZLES[compState.index];
+    document.getElementById('comp-algo-badge').textContent = puzzle.title;
+    document.getElementById('comp-algo-desc').textContent = puzzle.desc;
+    
+    const choicesContainer = document.getElementById('comp-choices-grid');
+    choicesContainer.innerHTML = '';
+    
+    puzzle.options.forEach((opt, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'col-6';
+        
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-outline-info w-100 py-3 rounded-4 fw-bold fs-5';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => checkComplexityAnswer(index));
+        
+        wrapper.appendChild(btn);
+        choicesContainer.appendChild(wrapper);
+    });
+}
+
+function checkComplexityAnswer(selectedIndex) {
+    if (!compState.active) return;
+    
+    const puzzle = COMPLEXITY_PUZZLES[compState.index];
+    
+    if (selectedIndex === puzzle.correct) {
+        gameAudio.onSuccess();
+        compState.streak++;
+        const pointsAwarded = 100 * compState.streak;
+        compState.score += pointsAwarded;
+        
+        compState.timeRemaining = Math.min(15, compState.timeRemaining + 3.5); // Add time bonus
+        
+        document.getElementById('comp-score').textContent = compState.score;
+        document.getElementById('comp-streak').textContent = `x${compState.streak}`;
+        
+        compState.index++;
+        loadComplexityQuestion();
+    } else {
+        gameAudio.onFailure();
+        compState.streak = 0;
+        document.getElementById('comp-streak').textContent = 'x0';
+        
+        compState.timeRemaining = Math.max(0, compState.timeRemaining - 5); // Subtract time penalty
+        if (compState.timeRemaining <= 0) {
+            clearInterval(compState.timer);
+            terminateComplexityGame('Incorrect Choice Penalty!');
+        }
+    }
+}
+
+function terminateComplexityGame(reason) {
+    compState.active = false;
+    gameAudio.onFailure();
+    showArcadeModal(
+        'Game Over',
+        `Run ended! Reason: ${reason}`,
+        compState.score,
+        'Restart',
+        () => {
+            revertComplexityIntro();
+        }
+    );
+}
+
+function revertComplexityIntro() {
+    clearInterval(compState.timer);
+    compRunScreen.style.display = 'none';
+    compIntroScreen.style.display = 'block';
+}
+
+// ----------------------------------------------------
+// GAME 4: CODE REPAIR SHOP (PARSONS PUZZLE) LOGIC
+// ----------------------------------------------------
+const REPAIR_SHOP_PUZZLES = [
+    {
+        title: 'Reverse String (Python)',
+        desc: 'Reorder and indent the lines to reverse a string inside reverse(s).',
+        lines: [
+            { id: 0, text: 'def reverse(s):', targetIndent: 0 },
+            { id: 1, text: '    res = ""', targetIndent: 1 },
+            { id: 2, text: '    for char in s:', targetIndent: 1 },
+            { id: 3, text: '        res = char + res', targetIndent: 2 },
+            { id: 4, text: '    return res', targetIndent: 1 }
+        ],
+        explanation: 'Initializes accumulator, loops over s prepending characters, and returns the accumulated reverse string.'
+    },
+    {
+        title: 'Is Prime Verification (JavaScript)',
+        desc: 'Arrange blocks to check if a number is prime.',
+        lines: [
+            { id: 0, text: 'function isPrime(n) {', targetIndent: 0 },
+            { id: 1, text: '  if (n <= 1) return false;', targetIndent: 1 },
+            { id: 2, text: '  for (let i = 2; i * i <= n; i++) {', targetIndent: 1 },
+            { id: 3, text: '    if (n % i === 0) return false;', targetIndent: 2 },
+            { id: 4, text: '  }', targetIndent: 1 },
+            { id: 5, text: '  return true;', targetIndent: 1 },
+            { id: 6, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Check edge cases, search factors up to sqrt(n), return false on division match, else true.'
+    },
+    {
+        title: 'Binary Search (C++)',
+        desc: 'Reorder binary search array lookup.',
+        lines: [
+            { id: 0, text: 'int bSearch(int arr[], int n, int k) {', targetIndent: 0 },
+            { id: 1, text: '    int l = 0, r = n - 1;', targetIndent: 1 },
+            { id: 2, text: '    while (l <= r) {', targetIndent: 1 },
+            { id: 3, text: '        int m = l + (r - l) / 2;', targetIndent: 2 },
+            { id: 4, text: '        if (arr[m] == k) return m;', targetIndent: 2 },
+            { id: 5, text: '        if (arr[m] < k) l = m + 1;', targetIndent: 2 },
+            { id: 6, text: '        else r = m - 1;', targetIndent: 2 },
+            { id: 7, text: '    }', targetIndent: 1 },
+            { id: 8, text: '    return -1;', targetIndent: 1 },
+            { id: 9, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Initialize left & right pointers, check middle node matches, adapt bounds, return -1 if unfound.'
+    },
+    {
+        title: 'Recursive Factorial (Python)',
+        desc: 'Solve factorial of N recursively.',
+        lines: [
+            { id: 0, text: 'def fact(n):', targetIndent: 0 },
+            { id: 1, text: '    if n <= 1:', targetIndent: 1 },
+            { id: 2, text: '        return 1', targetIndent: 2 },
+            { id: 3, text: '    else:', targetIndent: 1 },
+            { id: 4, text: '        return n * fact(n - 1)', targetIndent: 2 }
+        ],
+        explanation: 'Defines base case returning 1 when n <= 1, otherwise forks branch recursively multiplying current factor.'
+    },
+    {
+        title: 'Bubble Sort In-Place (Python)',
+        desc: 'Bubble sort list values by swapping nodes.',
+        lines: [
+            { id: 0, text: 'def bubble_sort(arr):', targetIndent: 0 },
+            { id: 1, text: '    n = len(arr)', targetIndent: 1 },
+            { id: 2, text: '    for i in range(n):', targetIndent: 1 },
+            { id: 3, text: '        for j in range(0, n - i - 1):', targetIndent: 2 },
+            { id: 4, text: '            if arr[j] > arr[j + 1]:', targetIndent: 3 },
+            { id: 5, text: '                arr[j], arr[j + 1] = arr[j + 1], arr[j]', targetIndent: 4 }
+        ],
+        explanation: 'Double loops filter, checking adjacent list elements and swapping when sorting conditions trigger.'
+    },
+    {
+        title: 'Find Maximum in List (Python)',
+        desc: 'Reorder blocks to retrieve the highest integer.',
+        lines: [
+            { id: 0, text: 'def find_max(lst):', targetIndent: 0 },
+            { id: 1, text: '    m = lst[0]', targetIndent: 1 },
+            { id: 2, text: '    for val in lst:', targetIndent: 1 },
+            { id: 3, text: '        if val > m:', targetIndent: 2 },
+            { id: 4, text: '            m = val', targetIndent: 3 },
+            { id: 5, text: '    return m', targetIndent: 1 }
+        ],
+        explanation: 'Set first element as temp max, check all list elements, override if higher value matched.'
+    },
+    {
+        title: 'Count Vowels (JavaScript)',
+        desc: 'Reorder blocks to count vowels in string.',
+        lines: [
+            { id: 0, text: 'function countVowels(str) {', targetIndent: 0 },
+            { id: 1, text: '  let count = 0;', targetIndent: 1 },
+            { id: 2, text: '  for (let c of str.toLowerCase()) {', targetIndent: 1 },
+            { id: 3, text: '    if ("aeiou".includes(c)) {', targetIndent: 2 },
+            { id: 4, text: '      count++;', targetIndent: 3 },
+            { id: 5, text: '    }', targetIndent: 2 },
+            { id: 6, text: '  }', targetIndent: 1 },
+            { id: 7, text: '  return count;', targetIndent: 1 },
+            { id: 8, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Initialize counter, check characters matching lowercase vowels, return final sum.'
+    },
+    {
+        title: 'Swap Two Variables (C++)',
+        desc: 'Reorder statements to swap variable references.',
+        lines: [
+            { id: 0, text: 'void swap(int& a, int& b) {', targetIndent: 0 },
+            { id: 1, text: '    int temp = a;', targetIndent: 1 },
+            { id: 2, text: '    a = b;', targetIndent: 1 },
+            { id: 3, text: '    b = temp;', targetIndent: 1 },
+            { id: 4, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Stores references in intermediate buffer variables to perform non-destructive updates.'
+    },
+    {
+        title: 'Iterative Fibonacci (Python)',
+        desc: 'Assemble list generation loop.',
+        lines: [
+            { id: 0, text: 'def fib(n):', targetIndent: 0 },
+            { id: 1, text: '    a, b = 0, 1', targetIndent: 1 },
+            { id: 2, text: '    for _ in range(n):', targetIndent: 1 },
+            { id: 3, text: '        print(a)', targetIndent: 2 },
+            { id: 4, text: '        a, b = b, a + b', targetIndent: 2 }
+        ],
+        explanation: 'Double variables track current/next nodes, loop shifts references to sum elements.'
+    },
+    {
+        title: 'Palindrome Verification (JavaScript)',
+        desc: 'Check if a string matches when reversed.',
+        lines: [
+            { id: 0, text: 'function isPalindrome(str) {', targetIndent: 0 },
+            { id: 1, text: '  const rev = str.split("").reverse().join("");', targetIndent: 1 },
+            { id: 2, text: '  return str === rev;', targetIndent: 1 },
+            { id: 3, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Converts to array, flips characters, maps back to string, and performs direct comparisons.'
+    },
+    {
+        title: 'Sum of Digits (Python)',
+        desc: 'Compute the sum of single digits of number.',
+        lines: [
+            { id: 0, text: 'def sum_digits(n):', targetIndent: 0 },
+            { id: 1, text: '    s = 0', targetIndent: 1 },
+            { id: 2, text: '    while n > 0:', targetIndent: 1 },
+            { id: 3, text: '        s += n % 10', targetIndent: 2 },
+            { id: 4, text: '        n = n // 10', targetIndent: 2 },
+            { id: 5, text: '    return s', targetIndent: 1 }
+        ],
+        explanation: 'Modulo retrieves remaining end digit, integer division shifts decimal position.'
+    },
+    {
+        title: 'Linked List Length (C++)',
+        desc: 'Traverse list nodes to count size.',
+        lines: [
+            { id: 0, text: 'int getLength(Node* head) {', targetIndent: 0 },
+            { id: 1, text: '    int len = 0;', targetIndent: 1 },
+            { id: 2, text: '    Node* curr = head;', targetIndent: 1 },
+            { id: 3, text: '    while (curr != nullptr) {', targetIndent: 1 },
+            { id: 4, text: '        len++;', targetIndent: 2 },
+            { id: 5, text: '        curr = curr->next;', targetIndent: 2 },
+            { id: 6, text: '    }', targetIndent: 1 },
+            { id: 7, text: '    return len;', targetIndent: 1 },
+            { id: 8, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Uses traversing pointers, increments count at each node until null reference.'
+    },
+    {
+        title: 'Matrix Row Addition (Python)',
+        desc: 'Calculate row elements sum of matrix.',
+        lines: [
+            { id: 0, text: 'def row_sums(matrix):', targetIndent: 0 },
+            { id: 1, text: '    res = []', targetIndent: 1 },
+            { id: 2, text: '    for row in matrix:', targetIndent: 1 },
+            { id: 3, text: '        res.append(sum(row))', targetIndent: 2 },
+            { id: 4, text: '    return res', targetIndent: 1 }
+        ],
+        explanation: 'Loop parses nested list arrays, appends native sums of rows to accumulator.'
+    },
+    {
+        title: 'Filter Even Numbers (JavaScript)',
+        desc: 'Retrieve even numbers array.',
+        lines: [
+            { id: 0, text: 'function getEvens(arr) {', targetIndent: 0 },
+            { id: 1, text: '  return arr.filter(function(x) {', targetIndent: 1 },
+            { id: 2, text: '    return x % 2 === 0;', targetIndent: 2 },
+            { id: 3, text: '  });', targetIndent: 1 },
+            { id: 4, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Executes standard JS array filter with aggregate modulo truth statements.'
+    },
+    {
+        title: 'Linear Search index (C++)',
+        desc: 'Search target in array N.',
+        lines: [
+            { id: 0, text: 'int linSearch(int arr[], int n, int k) {', targetIndent: 0 },
+            { id: 1, text: '    for (int i = 0; i < n; i++) {', targetIndent: 1 },
+            { id: 2, text: '        if (arr[i] == k) return i;', targetIndent: 2 },
+            { id: 3, text: '    }', targetIndent: 1 },
+            { id: 4, text: '    return -1;', targetIndent: 1 },
+            { id: 5, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Linearly scans array index keys, returning pointer position on match, else -1.'
+    },
+    {
+        title: 'Read File Lines (Python)',
+        desc: 'Read lines of document files.',
+        lines: [
+            { id: 0, text: 'def read_log(path):', targetIndent: 0 },
+            { id: 1, text: '    with open(path, "r") as f:', targetIndent: 1 },
+            { id: 2, text: '        lines = f.readlines()', targetIndent: 2 },
+            { id: 3, text: '    return lines', targetIndent: 1 }
+        ],
+        explanation: 'Opens file context, reads arrays of lines safely, closing file descriptor automatically.'
+    },
+    {
+        title: 'Array Average (JavaScript)',
+        desc: 'Calculate average array values.',
+        lines: [
+            { id: 0, text: 'function getAverage(arr) {', targetIndent: 0 },
+            { id: 1, text: '  if (arr.length === 0) return 0;', targetIndent: 1 },
+            { id: 2, text: '  let sum = arr.reduce((a, b) => a + b, 0);', targetIndent: 1 },
+            { id: 3, text: '  return sum / arr.length;', targetIndent: 1 },
+            { id: 4, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Validates bounds, sums array values via reduce, divides by element length.'
+    },
+    {
+        title: 'BST Min Element Search (C++)',
+        desc: 'Find minimum BST tree value.',
+        lines: [
+            { id: 0, text: 'int getMin(Node* root) {', targetIndent: 0 },
+            { id: 1, text: '    Node* curr = root;', targetIndent: 1 },
+            { id: 2, text: '    while (curr->left != nullptr) {', targetIndent: 1 },
+            { id: 3, text: '        curr = curr->left;', targetIndent: 2 },
+            { id: 4, text: '    }', targetIndent: 1 },
+            { id: 5, text: '    return curr->data;', targetIndent: 1 },
+            { id: 6, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Traverses left node child links iteratively until leaf is found.'
+    },
+    {
+        title: 'String Uppercase (Python)',
+        desc: 'Filter string uppercase values.',
+        lines: [
+            { id: 0, text: 'def convert_list(lst):', targetIndent: 0 },
+            { id: 1, text: '    res = []', targetIndent: 1 },
+            { id: 2, text: '    for s in lst:', targetIndent: 1 },
+            { id: 3, text: '        res.append(s.upper())', targetIndent: 2 },
+            { id: 4, text: '    return res', targetIndent: 1 }
+        ],
+        explanation: 'Iterates text arrays, appends uppercase conversion strings to accumulator.'
+    },
+    {
+        title: 'Check Even Odd (JavaScript)',
+        desc: 'Return parity text of n.',
+        lines: [
+            { id: 0, text: 'function getParity(n) {', targetIndent: 0 },
+            { id: 1, text: '  if (n % 2 === 0) {', targetIndent: 1 },
+            { id: 2, text: '    return "Even";', targetIndent: 2 },
+            { id: 3, text: '  } else {', targetIndent: 1 },
+            { id: 4, text: '    return "Odd";', targetIndent: 2 },
+            { id: 5, text: '  }', targetIndent: 1 },
+            { id: 6, text: '}', targetIndent: 0 }
+        ],
+        explanation: 'Evaluates modulo conditions, returning strings based on parity check.'
+    }
+];
+
+let parsonsState = {
+    level: Math.max(0, Math.min({{ parsons_level|default:0 }}, REPAIR_SHOP_PUZZLES.length - 1)),
+    score: 0,
+    scrambled: [],
+    workspace: [],
+    active: false
+};
+
+function initParsonsGame() {
+    parsonsState.level = Math.max(0, Math.min({{ parsons_level|default:0 }}, REPAIR_SHOP_PUZZLES.length - 1));
+    parsonsState.score = 0;
+    parsonsState.active = true;
+    document.getElementById('parsons-score').textContent = '0';
+    document.getElementById('parsons-feedback-box').style.display = 'none';
+    loadParsonsPuzzle();
+}
+
+function loadParsonsPuzzle() {
+    if (parsonsState.level >= REPAIR_SHOP_PUZZLES.length) {
+        gameAudio.onLevelUp();
+        showArcadeModal(
+            'Victory!',
+            'Master Repair Assembler! You solved all code repair puzzles!',
+            parsonsState.score,
+            'Play Again',
+            () => {
+                initParsonsGame();
+            }
+        );
+        return;
+    }
+
+    const puzzle = REPAIR_SHOP_PUZZLES[parsonsState.level];
+    document.getElementById('parsons-stage-badge').textContent = `Level ${parsonsState.level + 1} / ${REPAIR_SHOP_PUZZLES.length}`;
+    document.getElementById('parsons-stage-title').textContent = puzzle.title;
+    document.getElementById('parsons-stage-desc').textContent = puzzle.desc;
+    document.getElementById('parsons-feedback-box').style.display = 'none';
+
+    // Scramble clone
+    const linesToScramble = puzzle.lines.map(line => {
+        return {
+            id: line.id,
+            text: line.text.trim(),
+            indent: 0
+        };
+    });
+
+    // Shuffle algorithm
+    for (let i = linesToScramble.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [linesToScramble[i], linesToScramble[j]] = [linesToScramble[j], linesToScramble[i]];
+    }
+
+    parsonsState.scrambled = linesToScramble;
+    parsonsState.workspace = [];
+
+    renderParsonsContainers();
+}
+
+function renderParsonsContainers() {
+    const scrambledBox = document.getElementById('parsons-scrambled-box');
+    const workspace = document.getElementById('parsons-workspace');
+
+    scrambledBox.innerHTML = '';
+    workspace.innerHTML = '';
+
+    parsonsState.scrambled.forEach((line, index) => {
+        const div = document.createElement('div');
+        div.className = 'repair-block';
+        div.innerHTML = `<span>${line.text}</span> <i class="bi bi-arrow-right-short text-muted fs-5"></i>`;
+        div.addEventListener('click', () => {
+            if (!parsonsState.active) return;
+            parsonsState.scrambled.splice(index, 1);
+            parsonsState.workspace.push(line);
+            gameAudio.playBeep(440, 'sine', 0.04);
+            renderParsonsContainers();
+        });
+        scrambledBox.appendChild(div);
+    });
+
+    parsonsState.workspace.forEach((line, index) => {
+        const div = document.createElement('div');
+        div.className = 'workspace-block';
+        div.style.paddingLeft = `${16 + line.indent * 32}px`;
+        
+        const textSpan = document.createElement('span');
+        textSpan.textContent = line.text;
+        div.appendChild(textSpan);
+
+        const btnGroup = document.createElement('div');
+        btnGroup.className = 'd-flex gap-1 align-items-center';
+
+        const btnOutdent = document.createElement('button');
+        btnOutdent.className = 'repair-controls-btn';
+        btnOutdent.innerHTML = '<i class="bi bi-arrow-left"></i>';
+        btnOutdent.title = 'Outdent';
+        btnOutdent.addEventListener('click', (e) => {
+            e.stopPropagation();
+            line.indent = Math.max(0, line.indent - 1);
+            gameAudio.playBeep(380, 'sine', 0.04);
+            renderParsonsContainers();
+        });
+
+        const btnIndent = document.createElement('button');
+        btnIndent.className = 'repair-controls-btn';
+        btnIndent.innerHTML = '<i class="bi bi-arrow-right"></i>';
+        btnIndent.title = 'Indent';
+        btnIndent.addEventListener('click', (e) => {
+            e.stopPropagation();
+            line.indent = Math.min(4, line.indent + 1);
+            gameAudio.playBeep(460, 'sine', 0.04);
+            renderParsonsContainers();
+        });
+
+        const btnUp = document.createElement('button');
+        btnUp.className = 'repair-controls-btn';
+        btnUp.innerHTML = '<i class="bi bi-arrow-up"></i>';
+        btnUp.title = 'Move Up';
+        btnUp.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (index > 0) {
+                parsonsState.workspace.splice(index, 1);
+                parsonsState.workspace.splice(index - 1, 0, line);
+                gameAudio.playBeep(490, 'sine', 0.04);
+                renderParsonsContainers();
+            }
+        });
+
+        const btnDown = document.createElement('button');
+        btnDown.className = 'repair-controls-btn';
+        btnDown.innerHTML = '<i class="bi bi-arrow-down"></i>';
+        btnDown.title = 'Move Down';
+        btnDown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (index < parsonsState.workspace.length - 1) {
+                parsonsState.workspace.splice(index, 1);
+                parsonsState.workspace.splice(index + 1, 0, line);
+                gameAudio.playBeep(420, 'sine', 0.04);
+                renderParsonsContainers();
+            }
+        });
+
+        const btnRemove = document.createElement('button');
+        btnRemove.className = 'repair-controls-btn btn-remove';
+        btnRemove.innerHTML = '<i class="bi bi-trash"></i>';
+        btnRemove.title = 'Remove';
+        btnRemove.addEventListener('click', (e) => {
+            e.stopPropagation();
+            parsonsState.workspace.splice(index, 1);
+            line.indent = 0;
+            parsonsState.scrambled.push(line);
+            gameAudio.playBeep(280, 'sine', 0.05);
+            renderParsonsContainers();
+        });
+
+        btnGroup.appendChild(btnOutdent);
+        btnGroup.appendChild(btnIndent);
+        btnGroup.appendChild(btnUp);
+        btnGroup.appendChild(btnDown);
+        btnGroup.appendChild(btnRemove);
+        
+        div.appendChild(btnGroup);
+        workspace.appendChild(div);
+    });
+}
+
+function verifyParsonsLayout() {
+    if (!parsonsState.active) return;
+
+    const puzzle = REPAIR_SHOP_PUZZLES[parsonsState.level];
+    const feedbackBox = document.getElementById('parsons-feedback-box');
+    const items = document.querySelectorAll('.workspace-block');
+
+    if (parsonsState.workspace.length !== puzzle.lines.length) {
+        gameAudio.onFailure();
+        shakeWorkspaceContainer();
+        showArcadeModal(
+            'Verification Failed',
+            'Move all code components into the workspace first.',
+            parsonsState.score,
+            'OK',
+            () => {}
+        );
+        return;
+    }
+
+    let hasError = false;
+    for (let i = 0; i < puzzle.lines.length; i++) {
+        const expected = puzzle.lines[i];
+        const actual = parsonsState.workspace[i];
+
+        if (expected.id !== actual.id || expected.targetIndent !== actual.indent) {
+            hasError = true;
+            items[i].classList.remove('line-correct');
+            items[i].classList.add('line-error');
+        } else {
+            items[i].classList.remove('line-error');
+            items[i].classList.add('line-correct');
+        }
+    }
+
+    if (!hasError) {
+        gameAudio.onSuccess();
+        parsonsState.score += 150;
+        document.getElementById('parsons-score').textContent = parsonsState.score;
+        document.getElementById('parsons-feedback-desc').textContent = puzzle.explanation;
+        feedbackBox.style.display = 'block';
+    } else {
+        gameAudio.onFailure();
+        shakeWorkspaceContainer();
+        showArcadeModal(
+            'Verification Failed',
+            'Check line orders or indentation guides.',
+            parsonsState.score,
+            'Try Again',
+            () => {}
+        );
+    }
+}
+
+function shakeWorkspaceContainer() {
+    const box = document.getElementById('parsons-workspace');
+    box.classList.add('shake-anim');
+    setTimeout(() => box.classList.remove('shake-anim'), 200);
+}
+
+document.getElementById('parsons-check-btn').addEventListener('click', verifyParsonsLayout);
+document.getElementById('parsons-next-btn').addEventListener('click', () => {
+    parsonsState.level++;
+    saveGameProgress('parsons', parsonsState.level, 75);
+    loadParsonsPuzzle();
+});
+
+// ----------------------------------------------------
+// GAME 5: OUTPUT PREDICTOR LOGIC
+// ----------------------------------------------------
+const OUTPUT_PUZZLES = [
+    {
+        lang: 'Python',
+        code: `x = [10, 20, 30, 40, 50]
+print(x[0:4:2])`,
+        question: 'What is the printed list result?',
+        options: [
+            '[10, 20]',
+            '[10, 30]',
+            '[20, 40]',
+            '[10, 30, 50]'
+        ],
+        correct: 1,
+        explanation: 'Slicing format [start:stop:step]. Index 0 is 10, index 2 is 30. Step of 2 skips odd indices. Stop index 4 limits search range.'
+    },
+    {
+        lang: 'JavaScript',
+        code: `console.log('1');
+setTimeout(() => console.log('2'), 0);
+Promise.resolve().then(() => console.log('3'));
+console.log('4');`,
+        question: 'What sequence gets outputted to the console?',
+        options: [
+            '1, 2, 3, 4',
+            '1, 4, 2, 3',
+            '1, 4, 3, 2',
+            '1, 3, 4, 2'
+        ],
+        correct: 2,
+        explanation: 'Synchronous scripts run first (1, 4). Microtasks like Promises run next (3), and macrotasks like setTimeout callbacks run last (2).'
+    },
+    {
+        lang: 'C++',
+        code: `int a = 5;
+int b = a++;
+std::cout << a << b;`,
+        question: 'What is the stream console output?',
+        options: [
+            '55',
+            '65',
+            '66',
+            '56'
+        ],
+        correct: 1,
+        explanation: 'Post-increment a++ assigns the initial value (5) to b, then increments a to 6. Outputting sequentially yields 65.'
+    },
+    {
+        lang: 'Java',
+        code: `int x = 4;
+int y = x << 1;
+System.out.println(y);`,
+        question: 'What does this statement output?',
+        options: [
+            '2',
+            '4',
+            '8',
+            '16'
+        ],
+        correct: 2,
+        explanation: 'Bitwise left shift x << 1 shifts binary 100 to 1000, which evaluates to decimal integer 8 (equivalent to x * 2).'
+    },
+    {
+        lang: 'Python',
+        code: `nums = [1, 2, 3, 4]
+squares = [x*x for x in nums if x % 2 == 0]
+print(squares)`,
+        question: 'Identify the printed list output:',
+        options: [
+            '[1, 9]',
+            '[4, 16]',
+            '[1, 4, 9, 16]',
+            '[4]'
+        ],
+        correct: 1,
+        explanation: 'List comprehension squares the items but filters only the even integers (2 and 4), yielding [4, 16].'
+    },
+    {
+        lang: 'JavaScript',
+        code: `console.log(typeof NaN);`,
+        question: 'What is the output of typeof NaN?',
+        options: [
+            '"number"',
+            '"nan"',
+            '"undefined"',
+            '"object"'
+        ],
+        correct: 0,
+        explanation: 'Despite standing for "Not-a-Number", NaN is a special numeric value, so its typeof evaluates to "number".'
+    },
+    {
+        lang: 'Python',
+        code: `print("abc" * 2)`,
+        question: 'What is the console output?',
+        options: [
+            'abcabc',
+            'abc2',
+            'TypeError',
+            'abc abc'
+        ],
+        correct: 0,
+        explanation: 'In Python, multiplying a string by an integer duplicates/repeats the string literal N times.'
+    },
+    {
+        lang: 'C++',
+        code: `int x = 5;
+int y = 2;
+std::cout << x / y;`,
+        question: 'What is the output of integer division x / y?',
+        options: [
+            '2.5',
+            '2',
+            '3',
+            '0'
+        ],
+        correct: 1,
+        explanation: 'Dividing two integers in C++ performs integer division, discarding the decimal fraction remainder.'
+    },
+    {
+        lang: 'Java',
+        code: `int a = 10;
+String res = (a > 5) ? "Yes" : "No";
+System.out.println(res);`,
+        question: 'What is outputted to the console?',
+        options: [
+            'Yes',
+            'No',
+            'null',
+            'True'
+        ],
+        correct: 0,
+        explanation: 'The ternary statement evaluates condition (a > 5). Since 10 > 5 is true, the first operand "Yes" is assigned.'
+    },
+    {
+        lang: 'Python',
+        code: `d = {"a": 1}
+d["a"] = 2
+print(d["a"])`,
+        question: 'What value is printed?',
+        options: [
+            '1',
+            '2',
+            'KeyError',
+            'None'
+        ],
+        correct: 1,
+        explanation: 'Dict keys represent unique index items. Re-assigning to key "a" overwrites the original value from 1 to 2.'
+    },
+    {
+        lang: 'JavaScript',
+        code: `let o = { val: 5 };
+function change(obj) {
+  obj.val = 10;
+}
+change(o);
+console.log(o.val);`,
+        question: 'What value is outputted?',
+        options: [
+            '5',
+            '10',
+            'undefined',
+            'ReferenceError'
+        ],
+        correct: 1,
+        explanation: 'Objects in JS are passed by reference sharing. Modifying property fields inside functions alters the parent object.'
+    },
+    {
+        lang: 'Python',
+        code: `def add(a, L=[]):
+    L.append(a)
+    return L
+add(1)
+print(add(2))`,
+        question: 'What is the console output?',
+        options: [
+            '[2]',
+            '[1, 2]',
+            'TypeError',
+            '[]'
+        ],
+        correct: 1,
+        explanation: 'Default arguments are evaluated once. The mutable default list L is shared and retains elements across calls.'
+    },
+    {
+        lang: 'C++',
+        code: `int arr[3] = {10, 20, 30};
+int* p = arr;
+std::cout << *(p + 1);`,
+        question: 'What is printed by dereferencing the pointer?',
+        options: [
+            '10',
+            '20',
+            '30',
+            'address offset'
+        ],
+        correct: 1,
+        explanation: 'Pointers support index math. (p + 1) points to the second element in the array (index 1), which is 20.'
+    },
+    {
+        lang: 'Java',
+        code: `String s = "Hello";
+s.concat(" World");
+System.out.println(s);`,
+        question: 'What is the printed String result?',
+        options: [
+            'Hello World',
+            'Hello',
+            'World',
+            'NullPointerException'
+        ],
+        correct: 1,
+        explanation: "String is immutable in Java. s.concat returns a new string but doesn't change the original variable s reference."
+    },
+    {
+        lang: 'Python',
+        code: `x = False or "Default"
+print(x)`,
+        question: 'Identify the printed variable output:',
+        options: [
+            'False',
+            'Default',
+            'True',
+            'None'
+        ],
+        correct: 1,
+        explanation: 'Logical OR operators return the first truthy value. Since False is falsy, it evaluates and returns "Default".'
+    },
+    {
+        lang: 'JavaScript',
+        code: `const a = [1, 2, 3];
+a.length = 2;
+console.log(a);`,
+        question: 'What is the resulting array content?',
+        options: [
+            '[1, 2, 3]',
+            '[1, 2]',
+            '[1, 2, null]',
+            'SyntaxError'
+        ],
+        correct: 1,
+        explanation: 'Manually setting array length in JS truncates trailing elements if new length is smaller than original.'
+    },
+    {
+        lang: 'C++',
+        code: `int x = 0;
+bool b = (x != 0) && (10 / x == 2);
+std::cout << b;`,
+        question: 'Why does this code output 0 without throwing division by zero crash?',
+        options: [
+            '0 is ignored.',
+            'Short-circuit: (x != 0) evaluates to false, causing && to skip evaluating the second division operand.',
+            'C++ supports 0 division.',
+            'bool defaults to false.'
+        ],
+        correct: 1,
+        explanation: 'Logical AND (&&) skips evaluating the right-side statement if the left-side is already false (Short-circuiting).'
+    },
+    {
+        lang: 'Python',
+        code: `lst = [1, 2, 3]
+lst.append([4, 5])
+print(len(lst))`,
+        question: 'What is the length value of the list?',
+        options: [
+            '5',
+            '4',
+            '3',
+            'TypeError'
+        ],
+        correct: 1,
+        explanation: 'list.append appends the nested list [4, 5] as a single element, increasing length from 3 to 4.'
+    },
+    {
+        lang: 'Java',
+        code: `float f = 5.7f;
+int i = (int)f;
+System.out.println(i);`,
+        question: 'What integer value gets outputted?',
+        options: [
+            '5',
+            '6',
+            '5.7',
+            'ClassCastException'
+        ],
+        correct: 0,
+        explanation: 'Explicitly casting float to int truncates the decimal values (rounding down to nearest integer 5).'
+    },
+    {
+        lang: 'JavaScript',
+        code: `console.log(NaN === NaN);`,
+        question: 'What does this statement evaluate to?',
+        options: [
+            'true',
+            'false',
+            'undefined',
+            'TypeError'
+        ],
+        correct: 1,
+        explanation: 'NaN is the only value in JavaScript that is not equal to itself under strict equality (===) comparison.'
+    }
+];
+
+let predState = {
+    level: Math.max(0, Math.min({{ predictor_level|default:0 }}, OUTPUT_PUZZLES.length - 1)),
+    score: 0,
+    lives: 3,
+    active: false
+};
+
+function initPredGame() {
+    predState.level = Math.max(0, Math.min({{ predictor_level|default:0 }}, OUTPUT_PUZZLES.length - 1));
+    predState.score = 0;
+    predState.lives = 3;
+    predState.active = true;
+    
+    document.getElementById('pred-score').textContent = '0';
+    document.getElementById('pred-lives').textContent = '❤️❤️❤️';
+    document.getElementById('pred-feedback-box').style.display = 'none';
+    
+    loadPredPuzzle();
+}
+
+function loadPredPuzzle() {
+    if (predState.level >= OUTPUT_PUZZLES.length) {
+        gameAudio.onLevelUp();
+        showArcadeModal(
+            'Victory!',
+            'Congratulations! You solved all Output Prediction levels!',
+            predState.score,
+            'Play Again',
+            () => {
+                initPredGame();
+            }
+        );
+        return;
+    }
+    
+    const puzzle = OUTPUT_PUZZLES[predState.level];
+    document.getElementById('pred-level-indicator').textContent = `Level ${predState.level + 1} / ${OUTPUT_PUZZLES.length}`;
+    document.getElementById('pred-lang-badge').textContent = puzzle.lang;
+    document.getElementById('pred-code-display').textContent = puzzle.code;
+    document.getElementById('pred-question-text').textContent = puzzle.question;
+    
+    const optionsContainer = document.getElementById('pred-options-box');
+    optionsContainer.innerHTML = '';
+    
+    document.getElementById('pred-feedback-box').style.display = 'none';
+    
+    puzzle.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'cyber-btn-choice pred-option-btn';
+        btn.innerHTML = `<span class="badge bg-info text-dark me-3 font-monospace" style="width:24px;">${String.fromCharCode(65 + index)}</span> ${opt}`;
+        btn.addEventListener('click', () => checkPredChoice(index));
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function checkPredChoice(selectedIndex) {
+    if (!predState.active) return;
+    
+    const puzzle = OUTPUT_PUZZLES[predState.level];
+    const optionBtns = document.querySelectorAll('.pred-option-btn');
+    
+    optionBtns.forEach(btn => btn.disabled = true);
+    
+    const feedbackHeader = document.getElementById('pred-feedback-header');
+    const explanationText = document.getElementById('pred-explanation-text');
+    const feedbackBox = document.getElementById('pred-feedback-box');
+    
+    if (selectedIndex === puzzle.correct) {
+        gameAudio.onSuccess();
+        predState.score += 100;
+        document.getElementById('pred-score').textContent = predState.score;
+        optionBtns[selectedIndex].classList.add('correct');
+        
+        feedbackHeader.innerHTML = '<span class="text-success"><i class="bi bi-patch-check-fill me-1"></i> Correct Prediction!</span>';
+    } else {
+        gameAudio.onFailure();
+        predState.lives--;
+        optionBtns[selectedIndex].classList.add('incorrect');
+        optionBtns[puzzle.correct].classList.add('correct');
+        
+        let hearts = '';
+        for (let i = 0; i < 3; i++) {
+            hearts += i < predState.lives ? '❤️' : '🖤';
+        }
+        document.getElementById('pred-lives').textContent = hearts;
+        
+        feedbackHeader.innerHTML = '<span class="text-danger"><i class="bi bi-patch-exclamation-fill me-1"></i> Wrong Prediction</span>';
+        
+        if (predState.lives <= 0) {
+            predState.active = false;
+            setTimeout(() => {
+                showArcadeModal(
+                    'Game Over',
+                    'Out of Lives! Review variable scopes and thread stacks.',
+                    predState.score,
+                    'Try Again',
+                    () => {
+                        initPredGame();
+                    }
+                );
+            }, 1000);
+            return;
+        }
+    }
+    
+    explanationText.textContent = puzzle.explanation;
+    feedbackBox.style.display = 'block';
+}
+
+document.getElementById('pred-next-btn').addEventListener('click', () => {
+    predState.level++;
+    saveGameProgress('predictor', predState.level, 50);
+    loadPredPuzzle();
+});
+
+// ----------------------------------------------------
+// Tab Navigation Handlers
+// ----------------------------------------------------
+function clearAllTimers() {
+    clearInterval(typerState.timer);
+    if (typerState.gameRunning) {
+        endTyperGame(false);
+    }
+    clearInterval(compState.timer);
+    revertComplexityIntro();
+    bugState.active = false;
+    parsonsState.active = false;
+    predState.active = false;
+}
+
+document.getElementById('typer-tab').addEventListener('click', () => {
+    clearAllTimers();
+    populateTyperSelect();
+    typerLevelSelect.value = typerState.level;
+    loadTyperLevel();
+});
+
+document.getElementById('bug-tab').addEventListener('click', () => {
+    clearAllTimers();
+    initBugGame();
+});
+
+document.getElementById('complexity-tab').addEventListener('click', () => {
+    clearAllTimers();
+});
+
+document.getElementById('parsons-tab').addEventListener('click', () => {
+    clearAllTimers();
+    initParsonsGame();
+});
+
+document.getElementById('predictor-tab').addEventListener('click', () => {
+    clearAllTimers();
+    initPredGame();
+});
+
+// Safe initialization handling DOMContentLoaded state
+function initArcadePage() {
+    populateTyperSelect();
+    if (typerLevelSelect) {
+        typerLevelSelect.value = typerState.level;
+    }
+    loadTyperLevel();
+}
+
+if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initArcadePage);
+} else {
+    initArcadePage();
+}
+</script>
 {% endblock %}
