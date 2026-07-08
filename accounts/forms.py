@@ -29,7 +29,7 @@ class ProfileForm(forms.ModelForm):
         fields = [
             'first_name', 'last_name', 'email', 'college', 'branch',
             'year', 'bio', 'skills_list', 'github_link', 'linkedin_link',
-            'profile_image',
+            'leetcode_username', 'profile_image',
         ]
 
     def __init__(self, *args, **kwargs):

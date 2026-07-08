@@ -1,0 +1,765 @@
+{% extends "base.html" %}
+{% block title %}Study Resources - SkillSphere{% endblock %}
+{% block page_title %}Study Resources{% endblock %}
+
+{% block extra_css %}
+<style>
+    .roadmap-list {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .roadmap-list li {
+        position: relative;
+        padding-left: 30px;
+        margin-bottom: 15px;
+    }
+    .roadmap-list li::before {
+        content: "\f26b";
+        font-family: "bootstrap-icons";
+        position: absolute;
+        left: 0;
+        top: 2px;
+        color: var(--primary);
+        font-size: 1.15rem;
+    }
+    .resource-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid rgba(0,0,0,0.06);
+    }
+    .resource-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .badge-diff {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+    
+    /* DSA Tracker Custom Styles */
+    .dsa-tracker-card {
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(244, 247, 251, 0.95) 100%);
+        border: 1px solid rgba(111, 66, 193, 0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    .dsa-problem-row {
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+    .dsa-problem-row:hover {
+        background-color: rgba(111, 66, 193, 0.03) !important;
+    }
+    .difficulty-easy {
+        color: #198754;
+        background-color: rgba(25, 135, 84, 0.1);
+        border: 1px solid rgba(25, 135, 84, 0.2);
+    }
+    .difficulty-medium {
+        color: #fd7e14;
+        background-color: rgba(253, 126, 20, 0.1);
+        border: 1px solid rgba(253, 126, 20, 0.2);
+    }
+    .difficulty-hard {
+        color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+    .sync-btn {
+        background: linear-gradient(135deg, var(--primary) 0%, #6f42c1 100%);
+        border: none;
+        color: white;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .sync-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(111, 66, 193, 0.4);
+        color: white;
+    }
+    .progress-bar-glow {
+        box-shadow: 0 0 12px rgba(111, 66, 193, 0.3);
+    }
+    .table-responsive {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card-custom p-4 mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <div class="rounded-circle bg-primary bg-opacity-10 p-3 text-primary">
+            <i class="bi bi-mortarboard-fill fs-2"></i>
+        </div>
+        <div>
+            <h4 class="fw-bold mb-1">Learning & Study Materials</h4>
+            <p class="text-muted mb-0">Curated resources, roadmaps, cheatsheets, and code templates to assist your growth and placement preparation.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Navigation Tabs -->
+    <div class="col-12 mb-3">
+        <div class="card-custom p-3">
+            <ul class="nav nav-pills nav-fill gap-2" id="materialTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active btn-sm" id="leetcode-tracker-tab" data-bs-toggle="tab" data-bs-target="#leetcode-tracker-content" type="button" role="tab"><i class="bi bi-award-fill me-2"></i>My DSA Tracker</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-sm" id="dsa-tab" data-bs-toggle="tab" data-bs-target="#dsa-content" type="button" role="tab"><i class="bi bi-diagram-3-fill me-2"></i>DSA Info</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-sm" id="coding-tab" data-bs-toggle="tab" data-bs-target="#coding-content" type="button" role="tab"><i class="bi bi-code-slash me-2"></i>Coding</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-sm" id="webdev-tab" data-bs-toggle="tab" data-bs-target="#webdev-content" type="button" role="tab"><i class="bi bi-globe me-2"></i>Web Dev</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-sm" id="aiml-tab" data-bs-toggle="tab" data-bs-target="#aiml-content" type="button" role="tab"><i class="bi bi-cpu-fill me-2"></i>AI / ML</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-sm" id="apt-tab" data-bs-toggle="tab" data-bs-target="#apt-content" type="button" role="tab"><i class="bi bi-pie-chart-fill me-2"></i>Aptitude</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-sm" id="comm-tab" data-bs-toggle="tab" data-bs-target="#comm-content" type="button" role="tab"><i class="bi bi-chat-left-quote-fill"></i> Comm</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="col-12">
+        <div class="tab-content" id="materialTabsContent">
+            <!-- LEETCODE DSA TRACKER TAB -->
+            <div class="tab-pane fade show active" id="leetcode-tracker-content" role="tabpanel">
+                {% if not is_own_sheet %}
+                <div class="alert alert-info border-0 rounded-4 p-3 mb-4 d-flex justify-content-between align-items-center shadow-sm bg-info bg-opacity-10 text-dark">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-info bg-opacity-20 p-2 rounded-circle text-info">
+                            <i class="bi bi-eye-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Viewing DSA Sheet: {{ viewed_user.display_name }}</h6>
+                            <p class="mb-0 small text-muted">You are viewing another user's progress sheet in read-only mode.</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'dashboard:study_materials' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold text-decoration-none">
+                        <i class="bi bi-arrow-left me-1"></i> Back to My Sheet
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Profile Status Card -->
+                <div class="card-custom p-4 mb-4 dsa-tracker-card border-0 shadow-sm bg-white">
+                    <div class="row align-items-center g-4">
+                        <div class="col-md-5">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle bg-primary bg-opacity-10 p-3 text-primary">
+                                    <i class="bi bi-lightning-charge-fill fs-2 text-warning"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">LeetCode Stats & Sync</h5>
+                                    {% if viewed_user.leetcode_username %}
+                                        <p class="mb-1 text-muted">Linked account: <span class="badge bg-dark fw-semibold text-white px-2 py-1"><i class="bi bi-person-fill"></i> {{ viewed_user.leetcode_username }}</span></p>
+                                        <div class="d-flex flex-wrap gap-2 mt-2">
+                                            <span class="badge bg-success-subtle text-success px-2 py-1"><i class="bi bi-check-circle-fill"></i> {{ viewed_user.leetcode_easy_solved }} Easy</span>
+                                            <span class="badge bg-warning-subtle text-warning px-2 py-1"><i class="bi bi-check-circle-fill"></i> {{ viewed_user.leetcode_medium_solved }} Medium</span>
+                                            <span class="badge bg-danger-subtle text-danger px-2 py-1"><i class="bi bi-check-circle-fill"></i> {{ viewed_user.leetcode_hard_solved }} Hard</span>
+                                        </div>
+                                        <p class="mb-0 mt-2 text-muted small">Total Solved: <strong>{{ viewed_user.leetcode_total_solved }}</strong> (Rank: #{{ viewed_user.leetcode_rank|default:"-" }})</p>
+                                    {% else %}
+                                        <p class="text-danger mb-0 small"><i class="bi bi-exclamation-triangle-fill"></i> No LeetCode username linked.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-2 d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-dark small">Curated Sheet Progress</span>
+                                <span class="badge bg-primary rounded-pill" id="overall-solved-badge">{{ overall_completed }} / {{ overall_total }} Solved</span>
+                            </div>
+                            <div class="progress rounded-pill bg-light" style="height: 12px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success progress-bar-glow" 
+                                     id="overall-progress-bar"
+                                     role="progressbar" 
+                                     style="width: {{ overall_percentage }}%;" 
+                                     aria-valuenow="{{ overall_percentage }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                            <div class="text-center mt-1">
+                                <small class="text-muted small" id="overall-percentage-text">{{ overall_percentage }}% Completed</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-md-end text-center">
+                            {% if is_own_sheet %}
+                                {% if viewed_user.leetcode_username %}
+                                    <a href="?sync=1" class="btn sync-btn px-4 py-2 rounded-pill fw-bold text-decoration-none d-inline-block">
+                                        <i class="bi bi-arrow-repeat me-1"></i> Sync Now
+                                    </a>
+                                    {% if viewed_user.leetcode_last_sync %}
+                                        <div class="small text-muted mt-2">
+                                            Last synced: {{ viewed_user.leetcode_last_sync|timesince }} ago
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="{% url 'accounts:profile' %}" class="btn btn-warning px-4 py-2 rounded-pill fw-bold text-decoration-none">
+                                        <i class="bi bi-link-45deg me-1"></i> Link Profile
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge bg-secondary p-3 rounded-pill fw-bold fs-6">
+                                    <i class="bi bi-lock-fill me-1"></i> Read-Only Sheet
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <hr class="my-3 opacity-10">
+                    
+                    <div class="alert alert-info border-0 rounded-3 mb-0 p-3 small d-flex gap-2 bg-info bg-opacity-10 text-dark">
+                        <i class="bi bi-info-circle-fill fs-5 text-info mt-1"></i>
+                        <div>
+                            <strong class="text-info-emphasis">Note on LeetCode Syncing:</strong> Since LeetCode's public API limits transaction downloads to the **most recent 20 submissions**, we pre-loaded this sheet with 80+ classic coding interview questions. You can manually check off your older solved problems (like the 363 you've already completed) to populate this tracker, while new problems you solve will automatically check off when you click "Sync Now".
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordions / Topic panels -->
+                <div class="row">
+                    {% for category in dsa_categories %}
+                        <div class="col-12 mb-4">
+                            <div class="card-custom border-0 shadow-sm overflow-hidden bg-white">
+                                <div class="p-3 bg-light border-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="rounded bg-primary bg-opacity-10 p-2 text-primary">
+                                            <i class="bi bi-folder2-open"></i>
+                                        </span>
+                                        <div>
+                                            <h6 class="fw-bold mb-0 text-dark">{{ category.name }}</h6>
+                                            <small class="text-muted" id="cat-solved-{{ category.slug }}" data-total="{{ category.total }}">{{ category.completed }} of {{ category.total }} completed</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3" style="width: 250px;">
+                                        <div class="progress rounded-pill w-100 bg-white border" style="height: 8px;">
+                                            <div class="progress-bar bg-primary" 
+                                                 id="cat-progress-{{ category.slug }}"
+                                                 role="progressbar" 
+                                                 style="width: {{ category.percentage }}%;" 
+                                                 aria-valuenow="{{ category.percentage }}" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <span class="fw-bold small text-muted text-nowrap" id="cat-percentage-{{ category.slug }}">{{ category.percentage }}%</span>
+                                    </div>
+                                </div>
+                                <div class="p-0">
+                                    <div class="table-responsive">
+                                        <table class="table align-middle mb-0">
+                                            <thead class="table-light table-sm">
+                                                <tr>
+                                                    <th style="width: 60px;" class="text-center">Status</th>
+                                                    <th>Problem Statement</th>
+                                                    <th style="width: 120px;" class="text-center">Difficulty</th>
+                                                    <th style="width: 150px;" class="text-center">Solve on LeetCode</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for problem in category.problems %}
+                                                    <tr class="dsa-problem-row">
+                                                        <td class="text-center">
+                                                            <div class="form-check d-flex justify-content-center p-0 m-0">
+                                                                <input class="form-check-input dsa-checkbox" 
+                                                                       type="checkbox" 
+                                                                       data-slug="{{ problem.slug }}"
+                                                                       data-category-slug="{{ category.slug }}"
+                                                                       id="chk-{{ problem.slug }}"
+                                                                       {% if problem.completed %}checked{% endif %}
+                                                                       {% if not is_own_sheet %}disabled{% endif %}
+                                                                       style="cursor: pointer; width: 18px; height: 18px;">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <label for="chk-{{ problem.slug }}" class="fw-semibold text-dark mb-0 ms-1" style="cursor: pointer;">
+                                                                {{ problem.title }}
+                                                            </label>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {% if problem.difficulty == 'Easy' %}
+                                                                <span class="badge difficulty-easy px-3 py-1 rounded-pill fw-semibold">{{ problem.difficulty }}</span>
+                                                            {% elif problem.difficulty == 'Medium' %}
+                                                                <span class="badge difficulty-medium px-3 py-1 rounded-pill fw-semibold">{{ problem.difficulty }}</span>
+                                                            {% else %}
+                                                                <span class="badge difficulty-hard px-3 py-1 rounded-pill fw-semibold">{{ problem.difficulty }}</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <a href="https://leetcode.com/problems/{{ problem.slug }}/" 
+                                                               target="_blank" 
+                                                               class="btn btn-outline-secondary btn-sm rounded-pill py-1 px-3 text-decoration-none">
+                                                                <i class="bi bi-box-arrow-up-right me-1"></i> Solve
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- DSA TAB -->
+            <div class="tab-pane fade" id="dsa-content" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-compass-fill me-2"></i>DSA Roadmap</h5>
+                            <ul class="roadmap-list">
+                                <li><strong>Arrays & Strings</strong>: Basic manipulation, two pointers, sliding window.</li>
+                                <li><strong>Linked Lists</strong>: Node definitions, reversal, cycle detection.</li>
+                                <li><strong>Stacks & Queues</strong>: LIFO/FIFO patterns, mononotic stacks.</li>
+                                <li><strong>Trees & Graphs</strong>: DFS, BFS, Binary Search Trees, Graph Traversals.</li>
+                                <li><strong>Dynamic Programming</strong>: Recursion memoization, knapsack, LCS.</li>
+                            </ul>
+                            <div class="alert alert-info mt-3 small mb-0">
+                                <i class="bi bi-lightbulb-fill me-1"></i> Consistent focus on Big-O space and time complexity is crucial for technical rounds.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-file-code-fill me-2"></i>Binary Search Template</h5>
+                            <pre class="bg-dark text-light p-3 rounded small mb-0" style="overflow:auto;"><code>def binary_search(arr, target):
+    low = 0
+    high = len(arr) - 1
+    
+    while low <= high:
+        mid = low + (high - low) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+            
+    return -1 # Not found</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card-custom p-4">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-grid-3x3-gap-fill text-warning me-2"></i>Top 5 Free Interactive DSA Sheets</h5>
+                            <div class="row row-cols-1 row-cols-lg-5 row-cols-md-3 g-3">
+                                <div class="col">
+                                    <a href="https://www.naukri.com/code360/problem-lists/striver-sde-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
+                                        <h6 class="fw-bold mb-1 text-dark">Striver's SDE Sheet</h6>
+                                        <p class="text-muted small mb-0">Interactive tracking sheet with 180+ curated interview problems.</p>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a href="https://neetcode.io/practice" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
+                                        <h6 class="fw-bold mb-1 text-dark">NeetCode 150</h6>
+                                        <p class="text-muted small mb-0">150 structured coding questions categorized by key patterns with free video solutions.</p>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a href="https://www.naukri.com/code360/problem-lists/love-babbar-dsa-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
+                                        <h6 class="fw-bold mb-1 text-dark">Love Babbar Sheet</h6>
+                                        <p class="text-muted small mb-0">Interactive tracker for the famous 450+ question cracking DSA sheet.</p>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a href="https://www.naukri.com/code360/problem-lists/fraz-dsa-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
+                                        <h6 class="fw-bold mb-1 text-dark">Fraz's DSA Sheet</h6>
+                                        <p class="text-muted small mb-0">Comprehensive tracking sheet from easy to hard algorithms.</p>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a href="https://www.naukri.com/code360/problem-lists/apna-college-dsa-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
+                                        <h6 class="fw-bold mb-1 text-dark">Apna College Sheet</h6>
+                                        <p class="text-muted small mb-0">375+ questions hand-selected for cracking technical placement rounds.</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CODING TAB -->
+            <div class="tab-pane fade" id="coding-content" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-shield-check me-2"></i>Clean Coding Habits</h5>
+                            <ul class="roadmap-list">
+                                <li><strong>Meaningful Names</strong>: Use descriptive variable, class, and method names.</li>
+                                <li><strong>Single Responsibility</strong>: Methods/Functions should execute only one action.</li>
+                                <li><strong>Dry Principle</strong>: Don't repeat yourself. Standardize reusable functions.</li>
+                                <li><strong>Edge Case Handling</strong>: Always validate parameters against `null`, negative numbers, and empty lists.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-file-code-fill me-2"></i>String Palindrome Verification</h5>
+                            <pre class="bg-dark text-light p-3 rounded small mb-0" style="overflow:auto;"><code>def is_palindrome(s):
+    # Normalize string
+    cleaned = "".join(c.lower() for c in s if c.isalnum())
+    
+    # Check using pointers
+    left, right = 0, len(cleaned) - 1
+    while left < right:
+        if cleaned[left] != cleaned[right]:
+            return False
+        left += 1
+        right -= 1
+        
+    return True</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card-custom p-4">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-link-45deg me-1"></i>Coding Platforms</h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <a href="https://www.hackerrank.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">HackerRank</h6>
+                                        <p class="text-muted small mb-0">Great for beginners learning syntaxes and fundamental scripts.</p>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="https://codeforces.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">Codeforces</h6>
+                                        <p class="text-muted small mb-0">Competitive programming contests and high-speed algorithm rounds.</p>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="https://www.codechef.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">CodeChef</h6>
+                                        <p class="text-muted small mb-0">Excellent monthly long/short contests for practice.</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEB DEV TAB -->
+            <div class="tab-pane fade" id="webdev-content" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-browser-chrome me-2"></i>Web Development Stack</h5>
+                            <ul class="roadmap-list">
+                                <li><strong>Frontend</strong>: HTML5, CSS3, Flexbox/Grid, Modern Javascript (ES6+), React or Vue framework.</li>
+                                <li><strong>Backend</strong>: Python (Django/Flask), Node.js (Express), or Java (Spring Boot) REST APIs.</li>
+                                <li><strong>Databases</strong>: Relational SQL (PostgreSQL, MySQL) and Document NoSQL (MongoDB).</li>
+                                <li><strong>DevOps</strong>: Git workflow, containerization (Docker), deployment basics (Render, Vercel).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-file-code-fill me-2"></i>Django View & URL Pattern</h5>
+                            <pre class="bg-dark text-light p-3 rounded small mb-0" style="overflow:auto;"><code># views.py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def hello_world(request):
+    return HttpResponse("Hello, Web Dev!")
+
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('hello/', views.hello_world, name='hello'),
+]</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card-custom p-4">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-link-45deg me-1"></i>Web Documentation & Tools</h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <a href="https://developer.mozilla.org/en-US/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">MDN Web Docs</h6>
+                                        <p class="text-muted small mb-0">The official reference for HTML, CSS, and JS APIs.</p>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="https://docs.djangoproject.com/en/stable/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">Django Documentation</h6>
+                                        <p class="text-muted small mb-0">Guide for models, views, templates, and admin configurations.</p>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="https://react.dev/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">React Docs</h6>
+                                        <p class="text-muted small mb-0">Complete reference for state management, hooks, and components.</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI / ML TAB -->
+            <div class="tab-pane fade" id="aiml-content" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-gear-fill me-2"></i>Machine Learning Workflow</h5>
+                            <ul class="roadmap-list">
+                                <li><strong>Pre-requisites</strong>: Linear Algebra, Probability, Calculus, and Python logic.</li>
+                                <li><strong>Data Preprocessing</strong>: NumPy array manipulation, Pandas dataframes, scaling, imputation.</li>
+                                <li><strong>Supervised Models</strong>: Linear/Logistic Regression, Decision Trees, Random Forests, SVMs.</li>
+                                <li><strong>Deep Learning</strong>: Neural Networks, Convolutional networks, PyTorch & Tensorflow.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-file-code-fill me-2"></i>Training a Simple Model (Scikit-Learn)</h5>
+                            <pre class="bg-dark text-light p-3 rounded small mb-0" style="overflow:auto;"><code>import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Sample mock dataset (Hours Studied vs score)
+X = np.array([[2], [4], [6], [8], [10]])
+y = np.array([25, 45, 60, 80, 95])
+
+# Fit Linear regression
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict score for 7 study hours
+hours = np.array([[7]])
+predicted_score = model.predict(hours)
+print(f"Predicted Score: {predicted_score[0]:.2f}")</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card-custom p-4">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-link-45deg me-1"></i>AI/ML Learning Hubs</h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <a href="https://www.kaggle.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">Kaggle Datasets & Notebooks</h6>
+                                        <p class="text-muted small mb-0">Engage in data science competitions and view notebooks.</p>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="https://scikit-learn.org/stable/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">Scikit-Learn Docs</h6>
+                                        <p class="text-muted small mb-0">API details for classification, regression, and clustering algorithms.</p>
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="https://www.fast.ai/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">Fast.ai</h6>
+                                        <p class="text-muted small mb-0">Practical deep learning courses for coders.</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APTITUDE TAB -->
+            <div class="tab-pane fade" id="apt-content" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-check2-circle me-2"></i>Quantitative Aptitude Topics</h5>
+                            <ul class="roadmap-list">
+                                <li><strong>Arithmetic</strong>: Percentages, Profit & Loss, Simple/Compound Interest, Averages.</li>
+                                <li><strong>Speed & Time</strong>: Time, Speed and Distance, Work and Time, Pipes and Cisterns.</li>
+                                <li><strong>Algebra</strong>: Linear/Quadratic equations, Sequences & Progressions, Functions.</li>
+                                <li><strong>Modern Math</strong>: Permutations & Combinations, Probability, Set Theory.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-patch-question-fill me-2"></i>Logical Reasoning Categories</h5>
+                            <ul class="roadmap-list">
+                                <li><strong>Data Interpretation</strong>: Bar charts, Pie charts, Line graphs, and Tabulation tables.</li>
+                                <li><strong>Logical Puzzles</strong>: Seating arrangements, Syllogisms, Blood Relations, and Direction sense.</li>
+                                <li><strong>Verbal Ability</strong>: Sentence correction, Reading Comprehension, Synonyms & Antonyms.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card-custom p-4">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-link-45deg me-1"></i>Aptitude Practice Sites</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <a href="https://www.indiabix.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">IndiaBIX</h6>
+                                        <p class="text-muted small mb-0">Large database of quantitative, logical, and verbal aptitude questions with solutions.</p>
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="https://www.geeksforgeeks.org/aptitude-questions-and-answers/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">GFG Aptitude</h6>
+                                        <p class="text-muted small mb-0">Topic-wise categorized practice test series and formula lists.</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMMUNICATION TAB -->
+            <div class="tab-pane fade" id="comm-content" role="tabpanel">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-people-fill me-2"></i>Placement Preparation Tips</h5>
+                            <ul class="roadmap-list">
+                                <li><strong>Group Discussions (GD)</strong>: Focus on structured arguments, coordinate arguments politely, avoid aggressive tones, and summarize clearly.</li>
+                                <li><strong>Resume Structuring</strong>: Highlight metrics (e.g. "improved performance by 15%"), list core projects, keep format simple, and limit to 1 page.</li>
+                                <li><strong>STAR Interview Method</strong>: Structure answers by detailing the <strong>S</strong>ituation, <strong>T</strong>ask, <strong>A</strong>ction, and <strong>R</strong>esult.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-custom p-4 h-100">
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-telephone-inbound-fill me-2"></i>Daily Soft Skill Practices</h5>
+                            <ul class="roadmap-list">
+                                <li><strong>Active Listening</strong>: Listen fully before responding. Empathize and summarize what you heard.</li>
+                                <li><strong>Body Language</strong>: Maintain professional posture and direct eye contact during virtual/physical interviews.</li>
+                                <li><strong>Pitch Practice</strong>: Refine a 1-minute elevator pitch answering: *"Tell me about yourself."*</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card-custom p-4">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-link-45deg me-1"></i>Self Growth & Communication Guides</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <a href="https://www.toastmasters.org/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">Toastmasters International</h6>
+                                        <p class="text-muted small mb-0">World leader in communication and leadership skills development.</p>
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="https://hbr.org/" target="_blank" class="card p-3 text-decoration-none resource-card">
+                                        <h6 class="fw-bold mb-1 text-dark">Harvard Business Review</h6>
+                                        <p class="text-muted small mb-0">Excellent advice on professional communication and workplace management.</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.dsa-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const slug = this.getAttribute('data-slug');
+            const categorySlug = this.getAttribute('data-category-slug');
+            const isChecked = this.checked;
+
+            fetch("{% url 'dashboard:toggle_dsa_problem' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    problem_slug: slug
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update client UI
+                    updateUI(categorySlug, isChecked);
+                } else {
+                    // Revert in case of error
+                    this.checked = !isChecked;
+                    alert('Error: ' + (data.message || 'Could not update problem status.'));
+                }
+            })
+            .catch(error => {
+                this.checked = !isChecked;
+                console.error('Error toggling problem:', error);
+                alert('Network error. Could not update problem status.');
+            });
+        });
+    });
+
+    function updateUI(categorySlug, isChecked) {
+        const delta = isChecked ? 1 : -1;
+
+        // 1. Update Category Level Solved Count
+        const solvedTextElem = document.getElementById(`cat-solved-${categorySlug}`);
+        if (solvedTextElem) {
+            const total = parseInt(solvedTextElem.getAttribute('data-total')) || 0;
+            const matches = solvedTextElem.textContent.match(/^(\d+)/);
+            if (matches) {
+                let currentSolved = parseInt(matches[1]) || 0;
+                currentSolved = Math.max(0, Math.min(total, currentSolved + delta));
+                solvedTextElem.textContent = `${currentSolved} of ${total} completed`;
+
+                // Update Category Progress Bar & Percentage
+                const percentage = total > 0 ? Math.round((currentSolved / total) * 100) : 0;
+                const progressBar = document.getElementById(`cat-progress-${categorySlug}`);
+                const percentageText = document.getElementById(`cat-percentage-${categorySlug}`);
+                if (progressBar) {
+                    progressBar.style.width = `${percentage}%`;
+                    progressBar.setAttribute('aria-valuenow', percentage);
+                }
+                if (percentageText) {
+                    percentageText.textContent = `${percentage}%`;
+                }
+            }
+        }
+
+        // 2. Update Overall Level Solved Count
+        const overallSolvedBadge = document.getElementById('overall-solved-badge');
+        if (overallSolvedBadge) {
+            const matches = overallSolvedBadge.textContent.match(/^(\d+)\s*\/\s*(\d+)/);
+            if (matches) {
+                let currentOverall = parseInt(matches[1]) || 0;
+                const totalOverall = parseInt(matches[2]) || 0;
+                currentOverall = Math.max(0, Math.min(totalOverall, currentOverall + delta));
+                overallSolvedBadge.textContent = `${currentOverall} / ${totalOverall} Solved`;
+
+                // Update Overall Progress Bar & Percentage
+                const overallPercentage = totalOverall > 0 ? Math.round((currentOverall / totalOverall) * 100) : 0;
+                const overallProgressBar = document.getElementById('overall-progress-bar');
+                const overallPercentageText = document.getElementById('overall-percentage-text');
+                if (overallProgressBar) {
+                    overallProgressBar.style.width = `${overallPercentage}%`;
+                    overallProgressBar.setAttribute('aria-valuenow', overallPercentage);
+                }
+                if (overallPercentageText) {
+                    overallPercentageText.textContent = `${overallPercentage}% Completed`;
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

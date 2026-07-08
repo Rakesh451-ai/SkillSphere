@@ -54,6 +54,28 @@ python manage.py runserver
 
 Visit `http://localhost:8000` to access the application.
 
+## PostgreSQL Local Setup (User-Space)
+
+Since the development environment (such as Ubuntu Core) may restrict global package installation or root access, a self-contained, user-space PostgreSQL setup is configured for this project.
+
+### Starting the PostgreSQL Database Server
+Run the following command to start the database server:
+```bash
+/home/rakesh/postgresql_bin/postgresql-18.4.0-x86_64-unknown-linux-gnu/bin/pg_ctl -D /home/rakesh/postgresql_data -o "-p 5432 -k /home/rakesh/postgresql_data" -l /home/rakesh/postgresql_data/postgres.log start
+```
+
+### Stopping the PostgreSQL Database Server
+Run the following command to stop the database server:
+```bash
+/home/rakesh/postgresql_bin/postgresql-18.4.0-x86_64-unknown-linux-gnu/bin/pg_ctl -D /home/rakesh/postgresql_data stop
+```
+
+### Accessing the Database Shell (psql)
+Run the following command to connect directly to the database:
+```bash
+/home/rakesh/postgresql_bin/postgresql-18.4.0-x86_64-unknown-linux-gnu/bin/psql -h localhost -p 5432 -U rakesh -d skillsphere
+```
+
 ## Project Structure
 
 ```

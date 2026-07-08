@@ -6,6 +6,7 @@
     <div class="btn-group">
         <a href="?sort=xp" class="btn btn-{% if sort_by == 'xp' %}primary{% else %}outline-primary{% endif %}">XP Points</a>
         <a href="?sort=hours" class="btn btn-{% if sort_by == 'hours' %}primary{% else %}outline-primary{% endif %}">Study Hours</a>
+        <a href="?sort=leetcode" class="btn btn-{% if sort_by == 'leetcode' %}primary{% else %}outline-primary{% endif %}">LeetCode Solved</a>
         <a href="?sort=streak" class="btn btn-{% if sort_by == 'streak' %}primary{% else %}outline-primary{% endif %}">Streaks</a>
     </div>
     <a href="{% url 'leaderboard:badges' %}" class="btn btn-outline-primary"><i class="bi bi-award"></i> Badges</a>
@@ -20,6 +21,7 @@
                     <th>Student</th>
                     <th>XP Points</th>
                     <th>Study Hours</th>
+                    <th>LeetCode (E/M/H)</th>
                     <th>Goals Done</th>
                     <th>Streak</th>
                 </tr>
@@ -36,26 +38,40 @@
                     </td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            {% if entry.user.profile_image %}
-                            <img src="{{ entry.user.profile_image.url }}" class="rounded-circle" width="32" height="32" style="object-fit:cover;">
-                            {% else %}
-                            <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
-                                <i class="bi bi-person-fill text-primary small"></i>
-                            </div>
-                            {% endif %}
-                            <div>
-                                <span class="fw-semibold">{{ entry.user.display_name }}</span>
-                                {% if entry.user == request.user %}<span class="badge bg-primary ms-1">You</span>{% endif %}
-                            </div>
+                            <a href="{% url 'accounts:profile' %}?username={{ entry.user.username }}" class="text-decoration-none text-dark d-flex align-items-center gap-2 hover-primary">
+                               {% if entry.user.profile_image %}
+                                <img src="{{ entry.user.profile_image.url }}" class="rounded-circle" width="32" height="32" style="object-fit:cover;">
+                                {% else %}
+                                <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
+                                    <i class="bi bi-person-fill text-primary small"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <span class="fw-semibold">{{ entry.user.display_name }}</span>
+                                    {% if entry.user == request.user %}<span class="badge bg-primary ms-1">You</span>{% endif %}
+                                </div>
+                            </a>
+                            <a href="{% url 'dashboard:study_materials' %}?username={{ entry.user.username }}" class="text-decoration-none ms-1" title="View DSA Sheet">
+                                <i class="bi bi-journal-check text-primary fs-5 align-middle"></i>
+                            </a>
                         </div>
                     </td>
                     <td><span class="badge badge-xp text-white px-2 py-1"><i class="bi bi-lightning-charge-fill"></i> {{ entry.user.xp_points }}</span></td>
                     <td>{{ entry.total_hours }}h</td>
+                    <td>
+                        {% if entry.user.leetcode_username %}
+                        <span class="text-success fw-semibold">{{ entry.user.leetcode_easy_solved }}</span> / 
+                        <span class="text-warning fw-semibold">{{ entry.user.leetcode_medium_solved }}</span> / 
+                        <span class="text-danger fw-semibold">{{ entry.user.leetcode_hard_solved }}</span>
+                        {% else %}
+                        <span class="text-muted small">Not Linked</span>
+                        {% endif %}
+                    </td>
                     <td>{{ entry.completed_goals }}</td>
                     <td><i class="bi bi-fire text-danger"></i> {{ entry.user.current_streak }}d</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="6" class="text-center text-muted py-4">No students registered yet.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-4">No students registered yet.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

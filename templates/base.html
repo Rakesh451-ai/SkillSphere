@@ -119,13 +119,18 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'study_materials' %}active{% endif %}" href="{% url 'dashboard:study_materials' %}">
+                    <i class="bi bi-book-half"></i> Study Resources
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}" href="{% url 'dashboard:analytics' %}">
                     <i class="bi bi-graph-up-arrow"></i> Analytics
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'cpp_calculator' %}active{% endif %}" href="{% url 'dashboard:cpp_calculator' %}">
-                    <i class="bi bi-calculator-fill"></i> C++ GUI Calculator
+                    <i class="bi bi-controller"></i> Coding Games Hub
                 </a>
             </li>
             <li class="nav-item">
@@ -156,6 +161,15 @@
                 <h5 class="mb-0">{% block page_title %}Dashboard{% endblock %}</h5>
             </div>
             <div class="d-flex align-items-center gap-3">
+                {% if user.leetcode_username %}
+                <a href="{% url 'leaderboard:leaderboard' %}?sort=leetcode" class="btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 text-decoration-none rounded-pill" style="border-color: rgba(0, 0, 0, 0.15);">
+                    <i class="bi bi-code-slash text-warning"></i>
+                    <span class="small text-muted d-none d-sm-inline">LeetCode Rank:</span>
+                    <span class="fw-bold text-dark">#{{ user.leetcode_rank }}</span>
+                    <span class="vr mx-1"></span>
+                    <span class="fw-semibold text-success">{{ user.leetcode_total_solved }} solved</span>
+                </a>
+                {% endif %}
                 <a href="{% url 'notifications:list' %}" class="btn btn-light position-relative">
                     <i class="bi bi-bell"></i>
                     {% if unread_notifications > 0 %}
