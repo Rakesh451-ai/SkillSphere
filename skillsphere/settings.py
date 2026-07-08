@@ -70,7 +70,7 @@ WSGI_APPLICATION = "skillsphere.wsgi.application"
 import dj_database_url
 
 db_url = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
-if db_url and db_url not in ("None", "null"):
+if db_url and "://" in db_url:
     DATABASES = {
         "default": dj_database_url.parse(
             db_url,
