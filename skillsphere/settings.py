@@ -69,9 +69,11 @@ WSGI_APPLICATION = "skillsphere.wsgi.application"
 
 import dj_database_url
 
-if os.environ.get("DATABASE_URL"):
+db_url = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
+if db_url and db_url not in ("None", "null"):
     DATABASES = {
         "default": dj_database_url.config(
+            default=db_url,
             conn_max_age=600,
             ssl_require=True,
         )
