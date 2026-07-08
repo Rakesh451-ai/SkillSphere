@@ -1,1 +1,1 @@
-gunicorn skillsphere.wsgi:application
+web: python manage.py migrate && gunicorn skillsphere.wsgi:application
