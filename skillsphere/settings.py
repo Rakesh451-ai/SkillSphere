@@ -75,27 +75,17 @@ if db_url and "://" in db_url:
         "default": dj_database_url.parse(
             db_url,
             conn_max_age=600,
-            ssl_require=True,
+            ssl_require=False if "localhost" in db_url or "127.0.0.1" in db_url else True,
         )
     }
-elif os.environ.get("RENDER") == "true":
+else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "skillsphere",
-            "USER": "rakesh",
-            "PASSWORD": "",
-            "HOST": "127.0.0.1",
-            "PORT": "5432",
-        }
-    }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
