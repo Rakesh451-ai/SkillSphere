@@ -1,0 +1,1415 @@
+[
+{
+  "model": "sessions.session",
+  "pk": "jmqix5b5s51sqlntf8x4fl0gwno0z02q",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pACMwx16d4zNMMAUjVtUtqV8e7apAvd_vfef6mBt7UOW8vLMCZ1VkadfrfI8sjTDtKdp9usZZ7WZYx6V_RBm77OKT8vh_t3ULnVbw2eTYg-dZjEWjSCVMhw6gO4DoFs5xxhISgZcy_OZwmEtgchDmBRvT-_xzbF:1wc1Is:W_Bdjgpa_2HrDaOdntbzBrsOSmWknciO8EoTWXkfPBA",
+    "expire_date": "2026-07-07T13:36:38.992Z"
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$aZt4fDi8uw7HGjvnMYMJwa$5otbFBoFOe8EsDHvaex2D+vhVmfzBSZsRPxyDpgky2I=",
+    "last_login": "2026-06-23T13:36:38.912Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Rakesh",
+    "last_name": "Yadav",
+    "email": "admin@admin.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-06-23T11:54:35.775Z",
+    "college": "School of Information Technology",
+    "branch": "CSBS",
+    "year": "1",
+    "bio": "First year CSBS student . Study coding .",
+    "skills_list": "DSA , Python , Java Scripts",
+    "github_link": "https://github.com/Rakesh451-ai",
+    "linkedin_link": "https://www.linkedin.com/in/rakesh-yadav-917318324/",
+    "profile_image": "profile_images/golden_retriever_puppy_1781968853695.jpg",
+    "xp_points": 1421,
+    "current_streak": 1,
+    "longest_streak": 1,
+    "last_activity_date": "2026-06-23",
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "Rakesh451",
+    "leetcode_easy_solved": 168,
+    "leetcode_medium_solved": 173,
+    "leetcode_hard_solved": 22,
+    "leetcode_last_sync": "2026-06-23T14:48:07.871Z",
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [
+      "n-th-tribonacci-number",
+      "house-robber-ii",
+      "maximum-number-of-balloons",
+      "house-robber"
+    ],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$N29GTzFXZQcyconGsuTo0F$S/UKS7CSrvaiig4P89zWAbgZj5OQ1m33SePNQaLsehM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_1",
+    "first_name": "Arjun",
+    "last_name": "Malhotra",
+    "email": "student_test_1@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T12:59:45.616Z",
+    "college": "NSUT Delhi",
+    "branch": "Information Technology",
+    "year": "1",
+    "bio": "Hey! I am Arjun, a student at NSUT Delhi studying Information Technology.",
+    "skills_list": "HTML, CSS, JavaScript",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_male_test.jpg",
+    "xp_points": 801,
+    "current_streak": 1,
+    "longest_streak": 7,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$G38CjFrzSObB0J0OqbswD6$gtUjy8OhnYGjcJPEOeLN902fwqXe7Ai76/fQDGzE6hw=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_2",
+    "first_name": "Reyansh",
+    "last_name": "Mehta",
+    "email": "student_test_2@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T12:59:47.701Z",
+    "college": "NSUT Delhi",
+    "branch": "Computer Science",
+    "year": "1",
+    "bio": "Hey! I am Reyansh, a student at NSUT Delhi studying Computer Science.",
+    "skills_list": "Aptitude, Communication",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_male_test.jpg",
+    "xp_points": 736,
+    "current_streak": 7,
+    "longest_streak": 7,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$t3Uh3dCSIG5lKT0hBkQS67$4rJLEKdpLMSwV85QVegcqFBEbXiibLWWTmC9ANLz2s0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_3",
+    "first_name": "Reyansh",
+    "last_name": "Mehta",
+    "email": "student_test_3@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T12:59:49.743Z",
+    "college": "BITS Pilani",
+    "branch": "Electrical Eng",
+    "year": "4",
+    "bio": "Hey! I am Reyansh, a student at BITS Pilani studying Electrical Eng.",
+    "skills_list": "Aptitude, Communication",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_male_test.jpg",
+    "xp_points": 686,
+    "current_streak": 3,
+    "longest_streak": 3,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$GpeziD6YzHDtaJ5DBoaHk5$4VFfURn4zorxdqUbC7IuUOFa6WM4Q2vIl/LdoVCIbVo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_4",
+    "first_name": "Aarav",
+    "last_name": "Sharma",
+    "email": "student_test_4@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T12:59:51.743Z",
+    "college": "NSUT Delhi",
+    "branch": "Electrical Eng",
+    "year": "1",
+    "bio": "Hey! I am Aarav, a student at NSUT Delhi studying Electrical Eng.",
+    "skills_list": "Python, Django, SQL",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_male_test.jpg",
+    "xp_points": 328,
+    "current_streak": 10,
+    "longest_streak": 10,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$iX1h5T2f31CGuinywfz96g$UIOhse2RDFRJ2BnJL8/ntsQr5IN3+Rt2QF5GX7qSwmU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_5",
+    "first_name": "Aanya",
+    "last_name": "Joshi",
+    "email": "student_test_5@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T12:59:54.010Z",
+    "college": "IIT Bombay",
+    "branch": "Computer Science",
+    "year": "1",
+    "bio": "Hey! I am Aanya, a student at IIT Bombay studying Computer Science.",
+    "skills_list": "Data Structures, C++, Java",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_female_test.jpg",
+    "xp_points": 662,
+    "current_streak": 10,
+    "longest_streak": 10,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$WgaTJl2Gq6cb4HVTrSAVqi$kyA5yF8WYZzCZgnp7wv9afCYivmo0c8TOaEgGlq8jLs=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_6",
+    "first_name": "Vihaan",
+    "last_name": "Verma",
+    "email": "student_test_6@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T12:59:56.135Z",
+    "college": "IIT Bombay",
+    "branch": "Electrical Eng",
+    "year": "2",
+    "bio": "Hey! I am Vihaan, a student at IIT Bombay studying Electrical Eng.",
+    "skills_list": "Machine Learning, PyTorch",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_male_test.jpg",
+    "xp_points": 729,
+    "current_streak": 1,
+    "longest_streak": 13,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Nfsi38PqvjdDAQpRR1xY6l$JUDPPrrT0APzg+DCMW6HBGDKsBdoG2LEuVNYw4xL+V8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_7",
+    "first_name": "Aanya",
+    "last_name": "Joshi",
+    "email": "student_test_7@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T12:59:58.135Z",
+    "college": "IIT Bombay",
+    "branch": "Electrical Eng",
+    "year": "2",
+    "bio": "Hey! I am Aanya, a student at IIT Bombay studying Electrical Eng.",
+    "skills_list": "Python, Django, SQL",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_female_test.jpg",
+    "xp_points": 815,
+    "current_streak": 10,
+    "longest_streak": 12,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$nFp6dCTtdTs5aH0mpfcsll$VUI1n9+45XEQREk/96lbHwfRpT45gKJgvqEhRIZwNkQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_8",
+    "first_name": "Aanya",
+    "last_name": "Joshi",
+    "email": "student_test_8@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T13:00:00.552Z",
+    "college": "Delhi Technological University",
+    "branch": "Electronics & Comm",
+    "year": "1",
+    "bio": "Hey! I am Aanya, a student at Delhi Technological University studying Electronics & Comm.",
+    "skills_list": "Machine Learning, PyTorch",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_female_test.jpg",
+    "xp_points": 418,
+    "current_streak": 0,
+    "longest_streak": 13,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$xxnGlEHTWA26s8i0c83Tbr$5oj+2PPNUbbXEpCu09bEam7XQ9hxZrfob4yT7W0qsmg=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_9",
+    "first_name": "Ishika",
+    "last_name": "Patel",
+    "email": "student_test_9@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T13:00:02.485Z",
+    "college": "NSUT Delhi",
+    "branch": "Electrical Eng",
+    "year": "1",
+    "bio": "Hey! I am Ishika, a student at NSUT Delhi studying Electrical Eng.",
+    "skills_list": "Machine Learning, PyTorch",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_female_test.jpg",
+    "xp_points": 299,
+    "current_streak": 0,
+    "longest_streak": 5,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$m1ziSC7wqeJD5H5It0lYLp$Usn+ZFY/oSh+SHGAQsYI9EwKTfUFnKZ32lKxnXbQcBU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "student_test_10",
+    "first_name": "Aarav",
+    "last_name": "Sharma",
+    "email": "student_test_10@skillsphere.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-23T13:00:04.427Z",
+    "college": "BITS Pilani",
+    "branch": "Computer Science",
+    "year": "1",
+    "bio": "Hey! I am Aarav, a student at BITS Pilani studying Computer Science.",
+    "skills_list": "HTML, CSS, JavaScript",
+    "github_link": "",
+    "linkedin_link": "",
+    "profile_image": "profile_images/student_avatar_male_test.jpg",
+    "xp_points": 232,
+    "current_streak": 0,
+    "longest_streak": 13,
+    "last_activity_date": null,
+    "game_typer_level": 0,
+    "game_bug_level": 0,
+    "game_complexity_level": 0,
+    "game_parsons_level": 0,
+    "game_predictor_level": 0,
+    "leetcode_username": "",
+    "leetcode_easy_solved": 0,
+    "leetcode_medium_solved": 0,
+    "leetcode_hard_solved": 0,
+    "leetcode_last_sync": null,
+    "leetcode_last_penalty_date": null,
+    "completed_dsa_problems": [],
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "student_test_1"
+    ],
+    "skill_name": "Web UI",
+    "category": "WEBDEV",
+    "hours_practiced": "37.0",
+    "level": "intermediate",
+    "progress": 98,
+    "last_updated": "2026-06-23T12:59:47.197Z",
+    "created_at": "2026-06-23T12:59:47.197Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "student_test_1"
+    ],
+    "skill_name": "JavaScript Basics",
+    "category": "WEBDEV",
+    "hours_practiced": "109.0",
+    "level": "advanced",
+    "progress": 21,
+    "last_updated": "2026-06-23T12:59:47.283Z",
+    "created_at": "2026-06-23T12:59:47.283Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "student_test_2"
+    ],
+    "skill_name": "Quant Prep",
+    "category": "APT",
+    "hours_practiced": "77.0",
+    "level": "intermediate",
+    "progress": 92,
+    "last_updated": "2026-06-23T12:59:49.263Z",
+    "created_at": "2026-06-23T12:59:49.263Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "student_test_2"
+    ],
+    "skill_name": "Public Speaking",
+    "category": "COMM",
+    "hours_practiced": "89.0",
+    "level": "intermediate",
+    "progress": 23,
+    "last_updated": "2026-06-23T12:59:49.333Z",
+    "created_at": "2026-06-23T12:59:49.333Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "student_test_3"
+    ],
+    "skill_name": "Quant Prep",
+    "category": "APT",
+    "hours_practiced": "27.0",
+    "level": "beginner",
+    "progress": 26,
+    "last_updated": "2026-06-23T12:59:51.397Z",
+    "created_at": "2026-06-23T12:59:51.397Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "student_test_3"
+    ],
+    "skill_name": "Public Speaking",
+    "category": "COMM",
+    "hours_practiced": "109.0",
+    "level": "advanced",
+    "progress": 82,
+    "last_updated": "2026-06-23T12:59:51.483Z",
+    "created_at": "2026-06-23T12:59:51.483Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "student_test_4"
+    ],
+    "skill_name": "Python",
+    "category": "WEBDEV",
+    "hours_practiced": "32.0",
+    "level": "intermediate",
+    "progress": 63,
+    "last_updated": "2026-06-23T12:59:53.314Z",
+    "created_at": "2026-06-23T12:59:53.314Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "student_test_4"
+    ],
+    "skill_name": "Django",
+    "category": "WEBDEV",
+    "hours_practiced": "107.0",
+    "level": "advanced",
+    "progress": 75,
+    "last_updated": "2026-06-23T12:59:53.400Z",
+    "created_at": "2026-06-23T12:59:53.400Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "student_test_4"
+    ],
+    "skill_name": "SQL",
+    "category": "CORE",
+    "hours_practiced": "36.0",
+    "level": "intermediate",
+    "progress": 22,
+    "last_updated": "2026-06-23T12:59:53.483Z",
+    "created_at": "2026-06-23T12:59:53.483Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "student_test_5"
+    ],
+    "skill_name": "DSA Basics",
+    "category": "DSA",
+    "hours_practiced": "71.0",
+    "level": "intermediate",
+    "progress": 59,
+    "last_updated": "2026-06-23T12:59:55.616Z",
+    "created_at": "2026-06-23T12:59:55.616Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "student_test_5"
+    ],
+    "skill_name": "C++ Programming",
+    "category": "CORE",
+    "hours_practiced": "20.0",
+    "level": "beginner",
+    "progress": 31,
+    "last_updated": "2026-06-23T12:59:55.717Z",
+    "created_at": "2026-06-23T12:59:55.717Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "student_test_5"
+    ],
+    "skill_name": "Java Basics",
+    "category": "CORE",
+    "hours_practiced": "19.0",
+    "level": "beginner",
+    "progress": 31,
+    "last_updated": "2026-06-23T12:59:55.800Z",
+    "created_at": "2026-06-23T12:59:55.800Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 13,
+  "fields": {
+    "user": [
+      "student_test_6"
+    ],
+    "skill_name": "ML Core",
+    "category": "AIML",
+    "hours_practiced": "50.0",
+    "level": "intermediate",
+    "progress": 25,
+    "last_updated": "2026-06-23T12:59:57.689Z",
+    "created_at": "2026-06-23T12:59:57.689Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 14,
+  "fields": {
+    "user": [
+      "student_test_6"
+    ],
+    "skill_name": "PyTorch",
+    "category": "AIML",
+    "hours_practiced": "85.0",
+    "level": "intermediate",
+    "progress": 84,
+    "last_updated": "2026-06-23T12:59:57.775Z",
+    "created_at": "2026-06-23T12:59:57.775Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 15,
+  "fields": {
+    "user": [
+      "student_test_7"
+    ],
+    "skill_name": "Python",
+    "category": "WEBDEV",
+    "hours_practiced": "103.0",
+    "level": "advanced",
+    "progress": 28,
+    "last_updated": "2026-06-23T12:59:59.931Z",
+    "created_at": "2026-06-23T12:59:59.931Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 16,
+  "fields": {
+    "user": [
+      "student_test_7"
+    ],
+    "skill_name": "Django",
+    "category": "WEBDEV",
+    "hours_practiced": "24.0",
+    "level": "beginner",
+    "progress": 41,
+    "last_updated": "2026-06-23T13:00:00.127Z",
+    "created_at": "2026-06-23T13:00:00.127Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 17,
+  "fields": {
+    "user": [
+      "student_test_7"
+    ],
+    "skill_name": "SQL",
+    "category": "CORE",
+    "hours_practiced": "11.0",
+    "level": "beginner",
+    "progress": 86,
+    "last_updated": "2026-06-23T13:00:00.208Z",
+    "created_at": "2026-06-23T13:00:00.209Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 18,
+  "fields": {
+    "user": [
+      "student_test_8"
+    ],
+    "skill_name": "ML Core",
+    "category": "AIML",
+    "hours_practiced": "21.0",
+    "level": "beginner",
+    "progress": 64,
+    "last_updated": "2026-06-23T13:00:02.064Z",
+    "created_at": "2026-06-23T13:00:02.064Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 19,
+  "fields": {
+    "user": [
+      "student_test_8"
+    ],
+    "skill_name": "PyTorch",
+    "category": "AIML",
+    "hours_practiced": "98.0",
+    "level": "intermediate",
+    "progress": 80,
+    "last_updated": "2026-06-23T13:00:02.143Z",
+    "created_at": "2026-06-23T13:00:02.144Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 20,
+  "fields": {
+    "user": [
+      "student_test_9"
+    ],
+    "skill_name": "ML Core",
+    "category": "AIML",
+    "hours_practiced": "38.0",
+    "level": "intermediate",
+    "progress": 31,
+    "last_updated": "2026-06-23T13:00:03.981Z",
+    "created_at": "2026-06-23T13:00:03.981Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 21,
+  "fields": {
+    "user": [
+      "student_test_9"
+    ],
+    "skill_name": "PyTorch",
+    "category": "AIML",
+    "hours_practiced": "18.0",
+    "level": "beginner",
+    "progress": 98,
+    "last_updated": "2026-06-23T13:00:04.067Z",
+    "created_at": "2026-06-23T13:00:04.067Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 22,
+  "fields": {
+    "user": [
+      "student_test_10"
+    ],
+    "skill_name": "Web UI",
+    "category": "WEBDEV",
+    "hours_practiced": "112.0",
+    "level": "advanced",
+    "progress": 31,
+    "last_updated": "2026-06-23T13:00:05.999Z",
+    "created_at": "2026-06-23T13:00:05.999Z"
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 23,
+  "fields": {
+    "user": [
+      "student_test_10"
+    ],
+    "skill_name": "JavaScript Basics",
+    "category": "WEBDEV",
+    "hours_practiced": "114.0",
+    "level": "advanced",
+    "progress": 62,
+    "last_updated": "2026-06-23T13:00:06.092Z",
+    "created_at": "2026-06-23T13:00:06.092Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "student_test_1"
+    ],
+    "topic": "Studying Web UI",
+    "hours": "4.0",
+    "productivity": 9,
+    "category": "WEBDEV",
+    "notes": "Logged study session for Web UI",
+    "date": "2026-06-22",
+    "created_at": "2026-06-23T12:59:47.367Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "student_test_1"
+    ],
+    "topic": "Studying Web UI",
+    "hours": "3.0",
+    "productivity": 6,
+    "category": "WEBDEV",
+    "notes": "Logged study session for Web UI",
+    "date": "2026-06-21",
+    "created_at": "2026-06-23T12:59:47.450Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "student_test_1"
+    ],
+    "topic": "Studying Web UI",
+    "hours": "4.0",
+    "productivity": 7,
+    "category": "WEBDEV",
+    "notes": "Logged study session for Web UI",
+    "date": "2026-06-19",
+    "created_at": "2026-06-23T12:59:47.533Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "student_test_2"
+    ],
+    "topic": "Studying Quant Prep",
+    "hours": "1.0",
+    "productivity": 5,
+    "category": "APT",
+    "notes": "Logged study session for Quant Prep",
+    "date": "2026-06-19",
+    "created_at": "2026-06-23T12:59:49.425Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "student_test_2"
+    ],
+    "topic": "Studying Quant Prep",
+    "hours": "1.0",
+    "productivity": 7,
+    "category": "APT",
+    "notes": "Logged study session for Quant Prep",
+    "date": "2026-06-18",
+    "created_at": "2026-06-23T12:59:49.566Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "student_test_3"
+    ],
+    "topic": "Studying Public Speaking",
+    "hours": "4.0",
+    "productivity": 10,
+    "category": "COMM",
+    "notes": "Logged study session for Public Speaking",
+    "date": "2026-06-22",
+    "created_at": "2026-06-23T12:59:51.567Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "student_test_4"
+    ],
+    "topic": "Studying SQL",
+    "hours": "1.0",
+    "productivity": 9,
+    "category": "CORE",
+    "notes": "Logged study session for SQL",
+    "date": "2026-06-22",
+    "created_at": "2026-06-23T12:59:53.575Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "student_test_4"
+    ],
+    "topic": "Studying Django",
+    "hours": "6.0",
+    "productivity": 5,
+    "category": "WEBDEV",
+    "notes": "Logged study session for Django",
+    "date": "2026-06-21",
+    "created_at": "2026-06-23T12:59:53.667Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "student_test_4"
+    ],
+    "topic": "Studying SQL",
+    "hours": "3.0",
+    "productivity": 7,
+    "category": "CORE",
+    "notes": "Logged study session for SQL",
+    "date": "2026-06-20",
+    "created_at": "2026-06-23T12:59:53.750Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "student_test_4"
+    ],
+    "topic": "Studying SQL",
+    "hours": "2.0",
+    "productivity": 6,
+    "category": "CORE",
+    "notes": "Logged study session for SQL",
+    "date": "2026-06-18",
+    "created_at": "2026-06-23T12:59:53.833Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "student_test_5"
+    ],
+    "topic": "Studying DSA Basics",
+    "hours": "4.0",
+    "productivity": 9,
+    "category": "DSA",
+    "notes": "Logged study session for DSA Basics",
+    "date": "2026-06-22",
+    "created_at": "2026-06-23T12:59:55.883Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 12,
+  "fields": {
+    "user": [
+      "student_test_5"
+    ],
+    "topic": "Studying DSA Basics",
+    "hours": "3.0",
+    "productivity": 10,
+    "category": "DSA",
+    "notes": "Logged study session for DSA Basics",
+    "date": "2026-06-21",
+    "created_at": "2026-06-23T12:59:55.967Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 13,
+  "fields": {
+    "user": [
+      "student_test_6"
+    ],
+    "topic": "Studying ML Core",
+    "hours": "2.0",
+    "productivity": 7,
+    "category": "AIML",
+    "notes": "Logged study session for ML Core",
+    "date": "2026-06-21",
+    "created_at": "2026-06-23T12:59:57.867Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 14,
+  "fields": {
+    "user": [
+      "student_test_6"
+    ],
+    "topic": "Studying ML Core",
+    "hours": "3.0",
+    "productivity": 6,
+    "category": "AIML",
+    "notes": "Logged study session for ML Core",
+    "date": "2026-06-20",
+    "created_at": "2026-06-23T12:59:57.950Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 15,
+  "fields": {
+    "user": [
+      "student_test_7"
+    ],
+    "topic": "Studying Django",
+    "hours": "4.0",
+    "productivity": 5,
+    "category": "WEBDEV",
+    "notes": "Logged study session for Django",
+    "date": "2026-06-22",
+    "created_at": "2026-06-23T13:00:00.292Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 16,
+  "fields": {
+    "user": [
+      "student_test_7"
+    ],
+    "topic": "Studying Python",
+    "hours": "6.0",
+    "productivity": 9,
+    "category": "WEBDEV",
+    "notes": "Logged study session for Python",
+    "date": "2026-06-21",
+    "created_at": "2026-06-23T13:00:00.385Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 17,
+  "fields": {
+    "user": [
+      "student_test_8"
+    ],
+    "topic": "Studying PyTorch",
+    "hours": "6.0",
+    "productivity": 10,
+    "category": "AIML",
+    "notes": "Logged study session for PyTorch",
+    "date": "2026-06-22",
+    "created_at": "2026-06-23T13:00:02.234Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 18,
+  "fields": {
+    "user": [
+      "student_test_8"
+    ],
+    "topic": "Studying ML Core",
+    "hours": "1.0",
+    "productivity": 6,
+    "category": "AIML",
+    "notes": "Logged study session for ML Core",
+    "date": "2026-06-20",
+    "created_at": "2026-06-23T13:00:02.317Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 19,
+  "fields": {
+    "user": [
+      "student_test_9"
+    ],
+    "topic": "Studying ML Core",
+    "hours": "6.0",
+    "productivity": 7,
+    "category": "AIML",
+    "notes": "Logged study session for ML Core",
+    "date": "2026-06-22",
+    "created_at": "2026-06-23T13:00:04.151Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 20,
+  "fields": {
+    "user": [
+      "student_test_9"
+    ],
+    "topic": "Studying ML Core",
+    "hours": "1.0",
+    "productivity": 10,
+    "category": "AIML",
+    "notes": "Logged study session for ML Core",
+    "date": "2026-06-20",
+    "created_at": "2026-06-23T13:00:04.243Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 21,
+  "fields": {
+    "user": [
+      "student_test_10"
+    ],
+    "topic": "Studying Web UI",
+    "hours": "5.0",
+    "productivity": 6,
+    "category": "WEBDEV",
+    "notes": "Logged study session for Web UI",
+    "date": "2026-06-22",
+    "created_at": "2026-06-23T13:00:06.176Z"
+  }
+},
+{
+  "model": "studylogs.studylog",
+  "pk": 22,
+  "fields": {
+    "user": [
+      "student_test_10"
+    ],
+    "topic": "Studying JavaScript Basics",
+    "hours": "2.0",
+    "productivity": 9,
+    "category": "WEBDEV",
+    "notes": "Logged study session for JavaScript Basics",
+    "date": "2026-06-21",
+    "created_at": "2026-06-23T13:00:06.276Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "student_test_1"
+    ],
+    "title": "Complete 50 LeetCode problems",
+    "description": "",
+    "goal_type": "weekly",
+    "status": "completed",
+    "progress": 100,
+    "deadline": "2026-07-03",
+    "created_at": "2026-06-23T12:59:47.618Z",
+    "updated_at": "2026-06-23T12:59:47.618Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "student_test_2"
+    ],
+    "title": "Practice Aptitude quantitative section",
+    "description": "",
+    "goal_type": "daily",
+    "status": "pending",
+    "progress": 26,
+    "deadline": "2026-07-04",
+    "created_at": "2026-06-23T12:59:49.658Z",
+    "updated_at": "2026-06-23T12:59:49.658Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "student_test_3"
+    ],
+    "title": "Practice Aptitude quantitative section",
+    "description": "",
+    "goal_type": "weekly",
+    "status": "in_progress",
+    "progress": 23,
+    "deadline": "2026-06-24",
+    "created_at": "2026-06-23T12:59:51.661Z",
+    "updated_at": "2026-06-23T12:59:51.661Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "student_test_4"
+    ],
+    "title": "Submit resume version 2.0",
+    "description": "",
+    "goal_type": "monthly",
+    "status": "completed",
+    "progress": 100,
+    "deadline": "2026-07-07",
+    "created_at": "2026-06-23T12:59:53.925Z",
+    "updated_at": "2026-06-23T12:59:53.925Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "student_test_5"
+    ],
+    "title": "Build a Django personal portfolio",
+    "description": "",
+    "goal_type": "weekly",
+    "status": "completed",
+    "progress": 100,
+    "deadline": "2026-07-01",
+    "created_at": "2026-06-23T12:59:56.050Z",
+    "updated_at": "2026-06-23T12:59:56.050Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "student_test_6"
+    ],
+    "title": "Complete 50 LeetCode problems",
+    "description": "",
+    "goal_type": "daily",
+    "status": "pending",
+    "progress": 43,
+    "deadline": "2026-06-27",
+    "created_at": "2026-06-23T12:59:58.042Z",
+    "updated_at": "2026-06-23T12:59:58.042Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "student_test_7"
+    ],
+    "title": "Build a Django personal portfolio",
+    "description": "",
+    "goal_type": "weekly",
+    "status": "pending",
+    "progress": 62,
+    "deadline": "2026-07-08",
+    "created_at": "2026-06-23T13:00:00.467Z",
+    "updated_at": "2026-06-23T13:00:00.467Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "student_test_8"
+    ],
+    "title": "Practice Aptitude quantitative section",
+    "description": "",
+    "goal_type": "monthly",
+    "status": "completed",
+    "progress": 100,
+    "deadline": "2026-07-04",
+    "created_at": "2026-06-23T13:00:02.400Z",
+    "updated_at": "2026-06-23T13:00:02.401Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "student_test_9"
+    ],
+    "title": "Revise operating systems notes",
+    "description": "",
+    "goal_type": "weekly",
+    "status": "in_progress",
+    "progress": 57,
+    "deadline": "2026-07-03",
+    "created_at": "2026-06-23T13:00:04.334Z",
+    "updated_at": "2026-06-23T13:00:04.334Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "student_test_10"
+    ],
+    "title": "Complete 50 LeetCode problems",
+    "description": "",
+    "goal_type": "weekly",
+    "status": "pending",
+    "progress": 4,
+    "deadline": "2026-07-08",
+    "created_at": "2026-06-23T13:00:06.377Z",
+    "updated_at": "2026-06-23T13:00:06.377Z"
+  }
+},
+{
+  "model": "goals.goal",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "title": "DSA",
+    "description": "Revision",
+    "goal_type": "daily",
+    "status": "in_progress",
+    "progress": 30,
+    "deadline": "2026-06-25",
+    "created_at": "2026-06-23T13:03:10.887Z",
+    "updated_at": "2026-06-23T13:03:10.887Z"
+  }
+},
+{
+  "model": "recommendations.recommendation",
+  "pk": 9,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "message": "You have not added any skills to track. Go to the Skills section to add your target skills.",
+    "category": "Skills",
+    "priority": "medium",
+    "is_read": false,
+    "created_at": "2026-06-23T12:34:11.931Z"
+  }
+},
+{
+  "model": "recommendations.recommendation",
+  "pk": 10,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "message": "Welcome to SkillSphere! Start your learning journey by logging your first study session to get personalized AI insights.",
+    "category": "Consistency",
+    "priority": "high",
+    "is_read": false,
+    "created_at": "2026-06-23T12:34:12.031Z"
+  }
+},
+{
+  "model": "recommendations.recommendation",
+  "pk": 11,
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "message": "You haven't analyzed your resume yet. Upload it in the Resume Analyzer to get score feedback and suggestions.",
+    "category": "Resume",
+    "priority": "medium",
+    "is_read": false,
+    "created_at": "2026-06-23T12:34:12.139Z"
+  }
+}
+]
