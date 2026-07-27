@@ -69,14 +69,14 @@ WSGI_APPLICATION = "skillsphere.wsgi.application"
 
 import dj_database_url
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
 
-if DATABASE_URL:
+if DATABASE_URL and "://" in DATABASE_URL:
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
             conn_max_age=600,
-            ssl_require=True,
+            ssl_require=os.environ.get("DB_SSL_REQUIRE", "False").lower() in ("true", "1", "yes"),
         )
     }
 else:
@@ -86,8 +86,6 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
-DATABASES["default"] = dj_database_url.parse("postgresql://skillsphere_db_ocvn_user:89Sibj31tscCHUhd3QbD7fkHDcAtnIuJ@dpg-d978ha58nd3s73ca0o6g-a.oregon-postgres.render.com/skillsphere_db_ocvn")  # pyright: ignore[reportArgumentType]
 
 
 AUTH_PASSWORD_VALIDATORS = [
