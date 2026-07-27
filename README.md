@@ -121,6 +121,8 @@ skillsphere/
 | `DJANGO_DEBUG` | Debug mode | `True` |
 | `DJANGO_ALLOWED_HOSTS` | Comma-separated hosts | `*` |
 
+This whole project is made using AI
+
 ### Production (Render/Railway)
 
 1. Set environment variables
