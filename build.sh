@@ -6,5 +6,5 @@ pip install -r requirements.txt
 
 python manage.py collectstatic --noinput
 python manage.py migrate --noinput
-python manage.py seed_db
+python manage.py loaddata seed_data.json || python manage.py seed_db
 python create_superuser.py
