@@ -8,9 +8,6 @@ from django.db.models import Sum, Avg, Count
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
-from goals.models import Goal
-from skills.models import Skill
-from studylogs.models import StudyLog
 from recommendations.models import Recommendation
 
 
@@ -25,7 +22,6 @@ class DecimalEncoder(json.JSONEncoder):
 def home(request):
     user = request.user
     now = timezone.now()
-    today = now.date()
 
     # Sync Leetcode stats if user has linked their account
     if user.leetcode_username:
@@ -36,58 +32,15 @@ def home(request):
             except Exception:
                 pass
 
-    # Study stats
-    all_logs = StudyLog.objects.filter(user=user)
-    total_hours = all_logs.aggregate(total=Sum('hours'))['total'] or 0
-
-    # Weekly data (last 7 days)
-    weekly_data = []
-    weekly_labels = []
-    for i in range(6, -1, -1):
-        day = today - timedelta(days=i)
-        day_hours = all_logs.filter(date=day).aggregate(total=Sum('hours'))['total'] or 0
-        weekly_data.append(float(day_hours))
-        weekly_labels.append(day.strftime('%a'))
-
-    # Skill data
-    skills = Skill.objects.filter(user=user)
-    skill_names = [s.skill_name[:15] for s in skills[:8]]
-    skill_hours = [float(s.hours_practiced) for s in skills[:8]]
-
-    # Goals stats
-    goals = Goal.objects.filter(user=user)
-    completed_goals = goals.filter(status='completed').count()
-    total_goals = goals.count()
-
-    # Productivity data (last 7 days)
-    productivity_data = []
-    for i in range(6, -1, -1):
-        day = today - timedelta(days=i)
-        avg_prod = all_logs.filter(date=day).aggregate(avg=Avg('productivity'))['avg'] or 0
-        productivity_data.append(round(float(avg_prod), 1))
-
-    # Monthly analytics (last 4 weeks)
-    monthly_labels = []
-    monthly_hours = []
-    for i in range(3, -1, -1):
-        week_start = today - timedelta(weeks=i + 1)
-        week_end = today - timedelta(weeks=i)
-        hours = all_logs.filter(date__gte=week_start, date__lt=week_end).aggregate(
-            total=Sum('hours'))['total'] or 0
-        monthly_labels.append(f'Week {4 - i}')
-        monthly_hours.append(float(hours))
+    # DSA Sheet progress
+    from .views import DSA_SHEET
+    completed_dsa = user.completed_dsa_problems or []
+    total_dsa_problems = sum(len(problems) for problems in DSA_SHEET.values())
+    completed_dsa_count = len(completed_dsa)
+    dsa_rate = round((completed_dsa_count / total_dsa_problems * 100)) if total_dsa_problems > 0 else 0
 
     # Placement readiness
     placement_score = calculate_placement_readiness(user)
-
-    # Productivity score
-    recent_logs = all_logs.filter(date__gte=today - timedelta(days=7))
-    productivity_score = recent_logs.aggregate(avg=Avg('productivity'))['avg'] or 0
-    productivity_score = round(float(productivity_score) * 10, 1)
-
-    # Most improved and weakest skills
-    most_improved = skills.order_by('-hours_practiced').first()
-    weakest = skills.order_by('hours_practiced').first()
 
     # Recent recommendations
     recommendations = Recommendation.objects.filter(user=user)
@@ -97,22 +50,20 @@ def home(request):
         recommendations = Recommendation.objects.filter(user=user)
     recommendations = recommendations[:3]
 
+    # Games max level sum
+    total_game_level = (
+        user.game_typer_level + user.game_bug_level +
+        user.game_complexity_level + user.game_parsons_level +
+        user.game_predictor_level
+    )
+
     context = {
-        'total_hours': float(total_hours),
         'current_streak': user.current_streak,
         'placement_score': placement_score,
-        'completed_goals': completed_goals,
-        'total_goals': total_goals,
-        'productivity_score': productivity_score,
-        'weekly_labels': json.dumps(weekly_labels),
-        'weekly_data': json.dumps(weekly_data),
-        'skill_names': json.dumps(skill_names),
-        'skill_hours': json.dumps(skill_hours),
-        'productivity_data': json.dumps(productivity_data),
-        'monthly_labels': json.dumps(monthly_labels),
-        'monthly_hours': json.dumps(monthly_hours),
-        'most_improved': most_improved,
-        'weakest': weakest,
+        'completed_dsa_count': completed_dsa_count,
+        'total_dsa_problems': total_dsa_problems,
+        'dsa_rate': dsa_rate,
+        'total_game_level': total_game_level,
         'recommendations': recommendations,
         'xp_points': user.xp_points,
     }
@@ -123,106 +74,53 @@ def calculate_placement_readiness(user):
     score = 0
     max_score = 100
 
-    # Skill levels (30 points)
-    skills = Skill.objects.filter(user=user)
-    if skills.exists():
-        advanced = skills.filter(level='advanced').count()
-        intermediate = skills.filter(level='intermediate').count()
-        skill_score = min((advanced * 10 + intermediate * 5), 30)
-        score += skill_score
+    # LeetCode Solved (35 points)
+    total_leetcode = user.leetcode_total_solved
+    score += min(int(total_leetcode * 0.7), 35)
 
-    # Study consistency (20 points)
+    # Study consistency / Streak (25 points)
     if user.current_streak >= 14:
-        score += 20
+        score += 25
     elif user.current_streak >= 7:
-        score += 15
+        score += 18
     elif user.current_streak >= 3:
-        score += 10
+        score += 12
     elif user.current_streak >= 1:
-        score += 5
+        score += 6
 
-    # Goal completion (20 points)
-    goals = Goal.objects.filter(user=user)
-    if goals.exists():
-        completed = goals.filter(status='completed').count()
-        total = goals.count()
-        score += int((completed / total) * 20)
+    # Games Levels (20 points)
+    total_game_level = (
+        user.game_typer_level + user.game_bug_level +
+        user.game_complexity_level + user.game_parsons_level +
+        user.game_predictor_level
+    )
+    score += min(int(total_game_level * 1.5), 20)
 
-    # Resume quality (15 points)
+    # Resume quality (20 points)
     from resumeanalyzer.models import ResumeAnalysis
     latest_resume = ResumeAnalysis.objects.filter(user=user).first()
     if latest_resume:
-        score += int(latest_resume.score * 0.15)
-
-    # Study hours (15 points)
-    total_hours = StudyLog.objects.filter(user=user).aggregate(
-        total=Sum('hours'))['total'] or 0
-    if total_hours >= 200:
-        score += 15
-    elif total_hours >= 100:
-        score += 10
-    elif total_hours >= 50:
-        score += 7
-    elif total_hours >= 20:
-        score += 4
+        score += int(latest_resume.score * 0.20)
 
     return min(score, max_score)
 
 
-@login_required
-def analytics(request):
-    user = request.user
-    today = timezone.now().date()
-    all_logs = StudyLog.objects.filter(user=user)
-
-    # Category distribution
-    category_data = {}
-    for log in all_logs:
-        cat = log.get_category_display()
-        category_data[cat] = category_data.get(cat, 0) + float(log.hours)
-
-    # Daily heatmap data (last 30 days)
-    heatmap_data = []
-    for i in range(29, -1, -1):
-        day = today - timedelta(days=i)
-        hours = all_logs.filter(date=day).aggregate(total=Sum('hours'))['total'] or 0
-        heatmap_data.append({
-            'date': day.strftime('%Y-%m-%d'),
-            'day_name': day.strftime('%a'),
-            'hours': float(hours),
-        })
-
-    # Goal completion rate by type
-    goals = Goal.objects.filter(user=user)
-    goal_stats = {}
-    for goal_type, label in Goal.TYPE_CHOICES:
-        type_goals = goals.filter(goal_type=goal_type)
-        total = type_goals.count()
-        completed = type_goals.filter(status='completed').count()
-        goal_stats[label] = {
-            'total': total,
-            'completed': completed,
-            'rate': round(completed / total * 100) if total > 0 else 0,
-        }
-
-    context = {
-        'category_labels': json.dumps(list(category_data.keys())),
-        'category_data': json.dumps(list(category_data.values())),
-        'heatmap_data': json.dumps(heatmap_data),
-        'goal_stats': goal_stats,
-    }
-    return render(request, 'dashboard/analytics.html', context)
+from .models import GameHistory
 
 
 @login_required
 def cpp_calculator(request):
     user = request.user
+    game_histories = GameHistory.objects.filter(user=user).order_by('-played_at')[:50]
+    total_games_played = GameHistory.objects.filter(user=user).count()
     context = {
         'typer_level': user.game_typer_level,
         'bug_level': user.game_bug_level,
         'complexity_level': user.game_complexity_level,
         'parsons_level': user.game_parsons_level,
         'predictor_level': user.game_predictor_level,
+        'game_histories': game_histories,
+        'total_games_played': total_games_played,
     }
     return render(request, 'dashboard/cpp_calculator.html', context)
 
@@ -258,6 +156,14 @@ def update_game_progress(request):
             # Award XP points
             user.xp_points += score
             user.save()
+
+            # Record Game History entry
+            history_entry = GameHistory.objects.create(
+                user=user,
+                game_type=game_type,
+                level=level,
+                score=score,
+            )
             
             return JsonResponse({
                 'status': 'success', 
@@ -267,11 +173,19 @@ def update_game_progress(request):
                 'complexity_level': user.game_complexity_level,
                 'parsons_level': user.game_parsons_level,
                 'predictor_level': user.game_predictor_level,
+                'history_item': {
+                    'game_type': history_entry.game_type,
+                    'game_display_name': history_entry.game_display_name,
+                    'level': history_entry.level,
+                    'score': history_entry.score,
+                    'played_at': history_entry.played_at.strftime('%b %d, %Y %I:%M %p'),
+                }
             })
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
             
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
 
 
 DSA_SHEET = {
@@ -497,3 +411,791 @@ def toggle_dsa_problem(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
             
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q, Sum
+from accounts.models import User
+
+
+def staff_required(view_func):
+    def check_user(user):
+        return user.is_authenticated and (user.is_staff or user.is_superuser)
+    return user_passes_test(check_user, login_url='landing')(view_func)
+
+
+@staff_required
+def admin_user_dashboard(request):
+    q = request.GET.get('q', '').strip()
+    role_filter = request.GET.get('role', 'all')
+    status_filter = request.GET.get('status', 'all')
+
+    users = User.objects.all().order_by('-date_joined')
+
+    if q:
+        users = users.filter(
+            Q(username__icontains=q) |
+            Q(email__icontains=q) |
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q) |
+            Q(college__icontains=q) |
+            Q(branch__icontains=q)
+        )
+
+    if role_filter == 'admin':
+        users = users.filter(Q(is_staff=True) | Q(is_superuser=True))
+    elif role_filter == 'student':
+        users = users.filter(is_staff=False, is_superuser=False)
+
+    if status_filter == 'active':
+        users = users.filter(is_active=True)
+    elif status_filter == 'inactive':
+        users = users.filter(is_active=False)
+
+    total_users_count = User.objects.count()
+    staff_users_count = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True)).count()
+    active_users_count = User.objects.filter(is_active=True).count()
+    inactive_users_count = User.objects.filter(is_active=False).count()
+    total_xp_sum = User.objects.aggregate(tot=Sum('xp_points'))['tot'] or 0
+
+    paginator = Paginator(users, 15)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    from notifications.models import Notification
+    recent_notifications = Notification.objects.select_related('user').order_by('-created_at')[:10]
+    total_notifications_sent = Notification.objects.count()
+
+    context = {
+        'page_obj': page_obj,
+        'q': q,
+        'role_filter': role_filter,
+        'status_filter': status_filter,
+        'total_users_count': total_users_count,
+        'staff_users_count': staff_users_count,
+        'active_users_count': active_users_count,
+        'inactive_users_count': inactive_users_count,
+        'total_xp_sum': total_xp_sum,
+        'year_choices': User.YEAR_CHOICES,
+        'recent_notifications': recent_notifications,
+        'total_notifications_sent': total_notifications_sent,
+        'notification_type_choices': Notification.TYPE_CHOICES,
+    }
+    return render(request, 'dashboard/admin_user_dashboard.html', context)
+
+
+@staff_required
+def admin_send_broadcast_notification(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        message = request.POST.get('message', '').strip()
+        notification_type = request.POST.get('notification_type', 'system')
+        target_group = request.POST.get('target_group', 'all')
+        target_user_id = request.POST.get('target_user_id')
+
+        if not title or not message:
+            messages.error(request, 'Title and Message are required.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        if target_group == 'single' and target_user_id:
+            target_users = User.objects.filter(id=target_user_id)
+        elif target_group == 'active':
+            target_users = User.objects.filter(is_active=True)
+        elif target_group == 'students':
+            target_users = User.objects.filter(is_staff=False, is_superuser=False, is_active=True)
+        elif target_group == 'staff':
+            target_users = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True), is_active=True)
+        else:
+            target_users = User.objects.all()
+
+        user_count = target_users.count()
+        if user_count == 0:
+            messages.warning(request, 'No users found for selected audience.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        from notifications.models import Notification
+        notifications_to_create = [
+            Notification(
+                user=user,
+                title=title,
+                message=message,
+                notification_type=notification_type
+            )
+            for user in target_users
+        ]
+        
+        Notification.objects.bulk_create(notifications_to_create)
+        
+        if target_group == 'single' and target_users.first():
+            recipient_name = f"@{target_users.first().username}"
+            messages.success(request, f'Notification sent to {recipient_name}.')
+        else:
+            messages.success(request, f'Notification sent to {user_count} user(s).')
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+
+@staff_required
+def admin_user_create(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        college = request.POST.get('college', '').strip()
+        branch = request.POST.get('branch', '').strip()
+        year = request.POST.get('year', '')
+        xp_points = request.POST.get('xp_points', 0)
+        is_staff = request.POST.get('is_staff') == 'on'
+
+        if not username or not password:
+            messages.error(request, 'Username and Password are required.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, f'Username "{username}" is already taken.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        try:
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name,
+                college=college,
+                branch=branch,
+                year=year,
+                is_staff=is_staff,
+            )
+            if xp_points:
+                user.xp_points = int(xp_points)
+                user.save()
+            messages.success(request, f'User "{username}" created successfully!')
+        except Exception as e:
+            messages.error(request, f'Error creating user: {str(e)}')
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+@staff_required
+def admin_user_edit(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        college = request.POST.get('college', '').strip()
+        branch = request.POST.get('branch', '').strip()
+        year = request.POST.get('year', '')
+        xp_points = request.POST.get('xp_points', target_user.xp_points)
+        is_staff = request.POST.get('is_staff') == 'on'
+        is_active = request.POST.get('is_active') == 'on'
+
+        if target_user == request.user and not is_active:
+            messages.warning(request, "You cannot set your own account to inactive.")
+            is_active = True
+
+        target_user.email = email
+        target_user.first_name = first_name
+        target_user.last_name = last_name
+        target_user.college = college
+        target_user.branch = branch
+        target_user.year = year
+        target_user.is_staff = is_staff
+        target_user.is_active = is_active
+        try:
+            target_user.xp_points = int(xp_points)
+        except ValueError:
+            pass
+
+        target_user.save()
+        messages.success(request, f'User details for "{target_user.username}" updated successfully!')
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+@staff_required
+def admin_user_toggle_status(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if target_user == request.user:
+            messages.warning(request, "You cannot modify your own administrative or active status.")
+            return redirect('dashboard:admin_user_dashboard')
+
+        if action == 'toggle_active':
+            target_user.is_active = not target_user.is_active
+            target_user.save()
+            status_str = "activated" if target_user.is_active else "deactivated (suspended)"
+            messages.success(request, f'User "{target_user.username}" was successfully {status_str}.')
+        elif action == 'toggle_staff':
+            target_user.is_staff = not target_user.is_staff
+            target_user.save()
+            role_str = "promoted to Staff" if target_user.is_staff else "demoted from Staff"
+            messages.success(request, f'User "{target_user.username}" was {role_str}.')
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+@staff_required
+def admin_user_delete(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    if target_user == request.user:
+        messages.error(request, "You cannot delete your own account from the admin panel.")
+        return redirect('dashboard:admin_user_dashboard')
+
+    username = target_user.username
+    try:
+        from django.db import connection
+        with connection.cursor() as cursor:
+            # Clean up all user relations before deleting target user
+            cursor.execute("DELETE FROM dashboard_gamehistory WHERE user_id = %s", [user_id])
+            cursor.execute("DELETE FROM leaderboard_userbadge WHERE user_id = %s", [user_id])
+            cursor.execute("DELETE FROM leaderboard_achievement WHERE user_id = %s", [user_id])
+            cursor.execute("DELETE FROM notifications_notification WHERE user_id = %s", [user_id])
+            cursor.execute("DELETE FROM recommendations_recommendation WHERE user_id = %s", [user_id])
+            cursor.execute("DELETE FROM resumeanalyzer_resumeanalysis WHERE user_id = %s", [user_id])
+
+        target_user.delete()
+        messages.success(request, f'User account "@{username}" has been deleted successfully.')
+    except Exception as e:
+        messages.error(request, f'Error deleting user account "@{username}": {str(e)}')
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+from .models import DiscussionPost, DiscussionReply
+
+
+@login_required
+def discussions_list(request):
+    q = request.GET.get('q', '').strip()
+    post_type = request.GET.get('type', 'all')
+    category = request.GET.get('category', 'all')
+
+    posts = DiscussionPost.objects.all().select_related('user').prefetch_related('replies', 'upvoted_users')
+
+    if q:
+        posts = posts.filter(
+            Q(title__icontains=q) |
+            Q(content__icontains=q) |
+            Q(code_snippet__icontains=q) |
+            Q(user__username__icontains=q)
+        )
+
+    if post_type != 'all':
+        posts = posts.filter(post_type=post_type)
+
+    if category != 'all':
+        posts = posts.filter(category__iexact=category)
+
+    # Pre-seed default discussions if none exist
+    if not DiscussionPost.objects.exists():
+        admin_user = User.objects.filter(is_staff=True).first() or request.user
+        p1 = DiscussionPost.objects.create(
+            user=admin_user,
+            title="Welcome to SkillSphere Discussion & Problem Sharing Hub!",
+            content="Use this hub to ask questions, discuss algorithm solutions, share code snippets, or chat directly with peers and administrators.",
+            post_type="announcement",
+            category="General"
+        )
+        p2 = DiscussionPost.objects.create(
+            user=admin_user,
+            title="Problem: Two Sum with O(n) Time Complexity",
+            content="Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. Share your optimal HashMap solution below!",
+            code_snippet="vector<int> twoSum(vector<int>& nums, int target) {\n    unordered_map<int, int> mp;\n    for(int i=0; i<nums.size(); i++) {\n        int complement = target - nums[i];\n        if(mp.count(complement)) return {mp[complement], i};\n        mp[nums[i]] = i;\n    }\n    return {};\n}",
+            post_type="problem",
+            category="DSA"
+        )
+        DiscussionReply.objects.create(
+            post=p2,
+            user=request.user,
+            content="Here is the C++ solution using Hash Table for O(N) time and O(N) space complexity.",
+            code_solution="// Time: O(N), Space: O(N)\n// Hash table lookup takes O(1) average time.",
+            is_solution=True
+        )
+    # Load chat messages for the live chat panel
+    if not ChatMessage.objects.exists():
+        admin_user = User.objects.filter(is_staff=True).first() or request.user
+        ChatMessage.objects.create(
+            user=admin_user,
+            message="Welcome to the General Community Chat! Connect with peers and administrators here."
+        )
+
+    chat_messages = list(ChatMessage.objects.all().select_related('user').order_by('created_at')[:100])
+    last_chat_id = chat_messages[-1].id if chat_messages else 0
+
+    context = {
+        'posts': posts,
+        'chat_messages': chat_messages,
+        'last_chat_id': last_chat_id,
+        'q': q,
+        'post_type': post_type,
+        'category': category,
+        'type_choices': DiscussionPost.POST_TYPES,
+    }
+    return render(request, 'dashboard/discussions.html', context)
+
+
+@login_required
+def discussion_create(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        content = request.POST.get('content', '').strip()
+        code_snippet = request.POST.get('code_snippet', '').strip()
+        post_type = request.POST.get('post_type', 'problem')
+        category = request.POST.get('category', 'General').strip()
+
+        if title and content:
+            if post_type == 'announcement' and not (request.user.is_staff or request.user.is_superuser):
+                post_type = 'chat'
+
+            post = DiscussionPost.objects.create(
+                user=request.user,
+                title=title,
+                content=content,
+                code_snippet=code_snippet if code_snippet else None,
+                post_type=post_type,
+                category=category if category else 'General',
+            )
+
+            request.user.xp_points += 15
+            request.user.save()
+            messages.success(request, 'Your post has been published successfully! (+15 XP awarded)')
+        else:
+            messages.error(request, 'Please provide both a title and content for your post.')
+
+    return redirect('dashboard:discussions')
+
+
+@login_required
+def discussion_detail(request, post_id):
+    post = get_object_or_404(DiscussionPost.objects.select_related('user'), id=post_id)
+    replies = post.replies.select_related('user').all()
+    context = {
+        'post': post,
+        'replies': replies,
+    }
+    return render(request, 'dashboard/discussion_detail.html', context)
+
+
+@login_required
+def discussion_reply(request, post_id):
+    post = get_object_or_404(DiscussionPost, id=post_id)
+    if request.method == 'POST':
+        content = request.POST.get('content', '').strip()
+        code_solution = request.POST.get('code_solution', '').strip()
+        is_solution = request.POST.get('is_solution') == 'on'
+
+        if content:
+            reply = DiscussionReply.objects.create(
+                post=post,
+                user=request.user,
+                content=content,
+                code_solution=code_solution if code_solution else None,
+                is_solution=is_solution if (request.user == post.user or request.user.is_staff) else False
+            )
+            request.user.xp_points += 10
+            request.user.save()
+            messages.success(request, 'Reply submitted! (+10 XP awarded)')
+        else:
+            messages.error(request, 'Reply content cannot be empty.')
+
+    return redirect('dashboard:discussions')
+
+
+@login_required
+def discussion_upvote(request, post_id):
+    post = get_object_or_404(DiscussionPost, id=post_id)
+    if request.user in post.upvoted_users.all():
+        post.upvoted_users.remove(request.user)
+        post.upvotes = max(0, post.upvotes - 1)
+        post.save()
+        messages.info(request, 'Upvote removed.')
+    else:
+        post.upvoted_users.add(request.user)
+        post.upvotes += 1
+        post.save()
+        messages.success(request, 'Post upvoted!')
+
+    return redirect('dashboard:discussions')
+
+
+@login_required
+def discussion_delete(request, post_id):
+    post = get_object_or_404(DiscussionPost, id=post_id)
+    if post.user == request.user or request.user.is_staff or request.user.is_superuser:
+        post.delete()
+        messages.success(request, 'Post deleted successfully.')
+    else:
+        messages.error(request, 'You do not have permission to delete this post.')
+
+    return redirect('dashboard:discussions')
+
+
+from .models import ChatMessage
+from django.http import JsonResponse
+
+
+@login_required
+def general_chat(request):
+    if not ChatMessage.objects.exists():
+        admin_user = User.objects.filter(is_staff=True).first() or request.user
+        ChatMessage.objects.create(
+            user=admin_user,
+            message="Welcome to the General Chat Room! Feel free to talk about projects, ask quick questions, or say hello to fellow developers."
+        )
+        ChatMessage.objects.create(
+            user=request.user,
+            message="Hey everyone! Excited to connect and collaborate here."
+        )
+
+    messages_list = ChatMessage.objects.all().select_related('user').order_by('created_at')[:100]
+    return render(request, 'dashboard/general_chat.html', {'chat_messages': messages_list})
+
+
+@login_required
+def chat_api_messages(request):
+    last_id = request.GET.get('last_id', 0)
+    try:
+        last_id = int(last_id)
+    except ValueError:
+        last_id = 0
+
+    messages_qs = ChatMessage.objects.filter(id__gt=last_id).select_related('user').order_by('created_at')[:100]
+    data = []
+    for msg in messages_qs:
+        data.append({
+            'id': msg.id,
+            'username': msg.user.username,
+            'display_name': msg.user.display_name,
+            'is_staff': msg.user.is_staff or msg.user.is_superuser,
+            'is_self': msg.user == request.user,
+            'avatar_letter': msg.user.username[:1].upper(),
+            'message': msg.message,
+            'code_snippet': msg.code_snippet,
+            'timestamp': msg.created_at.strftime('%I:%M %p'),
+        })
+
+    return JsonResponse({'status': 'success', 'messages': data})
+
+
+@login_required
+def chat_api_send(request):
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body)
+            msg_text = body.get('message', '').strip()
+            code_snippet = body.get('code_snippet', '').strip()
+        except Exception:
+            msg_text = request.POST.get('message', '').strip()
+            code_snippet = request.POST.get('code_snippet', '').strip()
+
+        if msg_text:
+            msg = ChatMessage.objects.create(
+                user=request.user,
+                message=msg_text,
+                code_snippet=code_snippet if code_snippet else None,
+            )
+            request.user.xp_points += 2
+            request.user.save()
+
+            return JsonResponse({
+                'status': 'success',
+                'message': {
+                    'id': msg.id,
+                    'username': msg.user.username,
+                    'display_name': msg.user.display_name,
+                    'is_staff': msg.user.is_staff or msg.user.is_superuser,
+                    'is_self': True,
+                    'avatar_letter': msg.user.username[:1].upper(),
+                    'message': msg.message,
+                    'code_snippet': msg.code_snippet,
+                    'timestamp': msg.created_at.strftime('%I:%M %p'),
+                }
+            })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid message content'}, status=400)
+
+
+@login_required
+def chat_message_delete(request, message_id):
+    msg = get_object_or_404(ChatMessage, id=message_id)
+    if msg.user == request.user or request.user.is_staff or request.user.is_superuser:
+        msg.delete()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error', 'message': 'Permission denied'}, status=403)
+
+
+from .models import Quiz, QuizQuestion, QuizSubmission
+from django.utils.dateparse import parse_datetime
+
+
+@login_required
+def quiz_list(request):
+    if not Quiz.objects.exists():
+        now = timezone.now()
+        q1 = Quiz.objects.create(
+            title="SkillSphere Weekly Live Coding & DSA Quiz",
+            description="Test your algorithm, time complexity & system design capabilities in this timed challenge!",
+            start_time=now - timezone.timedelta(minutes=5),
+            end_time=now + timezone.timedelta(days=2),
+            is_live=True,
+            total_xp=150
+        )
+        QuizQuestion.objects.create(
+            quiz=q1,
+            question_text="What is the worst-case time complexity of Quick Sort?",
+            question_type="single",
+            option_a="O(N)",
+            option_b="O(N log N)",
+            option_c="O(N^2)",
+            option_d="O(1)",
+            correct_answer="C",
+            explanation="In the worst case (e.g. sorted array with poor pivot selection), QuickSort degenerates to O(N^2).",
+            points=10
+        )
+        QuizQuestion.objects.create(
+            quiz=q1,
+            question_text="Which of the following data structures maintain elements in LIFO (Last In First Out) order? (Select all that apply)",
+            question_type="multiple",
+            option_a="Stack",
+            option_b="Call Stack",
+            option_c="Queue",
+            option_d="Deque",
+            correct_answer="A,B",
+            explanation="Stack and Call Stack operate under LIFO order.",
+            points=15
+        )
+        QuizQuestion.objects.create(
+            quiz=q1,
+            question_text="What method in Python dictionary is used to safely retrieve a value without throwing a KeyError if the key is missing?",
+            question_type="text",
+            correct_answer="get",
+            explanation="dict.get(key, default) returns default or None if the key is not present.",
+            points=10
+        )
+
+    quizzes = Quiz.objects.all().prefetch_related('questions', 'submissions')
+    user_submissions = {s.quiz_id: s for s in QuizSubmission.objects.filter(user=request.user)}
+
+    context = {
+        'quizzes': quizzes,
+        'user_submissions': user_submissions,
+    }
+    return render(request, 'dashboard/quiz_list.html', context)
+
+
+@login_required
+def quiz_take(request, quiz_id):
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions'), id=quiz_id)
+
+    submission = QuizSubmission.objects.filter(quiz=quiz, user=request.user).first()
+    if submission:
+        return redirect('dashboard:quiz_result', quiz_id=quiz.id)
+
+    if quiz.status != 'live':
+        messages.error(request, f"This quiz is currently {quiz.status_display}. You cannot take it at this time.")
+        return redirect('dashboard:quiz_list')
+
+    context = {
+        'quiz': quiz,
+        'questions': quiz.questions.all(),
+    }
+    return render(request, 'dashboard/quiz_take.html', context)
+
+
+@login_required
+def quiz_submit(request, quiz_id):
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions'), id=quiz_id)
+
+    existing = QuizSubmission.objects.filter(quiz=quiz, user=request.user).first()
+    if existing:
+        return redirect('dashboard:quiz_result', quiz_id=quiz.id)
+
+    if request.method == 'POST':
+        score = 0
+        total_possible = 0
+        questions = quiz.questions.all()
+
+        for q in questions:
+            total_possible += q.points
+            if q.question_type == 'single':
+                ans = request.POST.get(f'q_{q.id}', '').strip().upper()
+                if ans == q.correct_answer.strip().upper():
+                    score += q.points
+            elif q.question_type == 'multiple':
+                ans_list = request.POST.getlist(f'q_{q.id}')
+                user_ans = ','.join(sorted([a.strip().upper() for a in ans_list]))
+                correct_ans = ','.join(sorted([c.strip().upper() for c in q.correct_answer.split(',')]))
+                if user_ans == correct_ans:
+                    score += q.points
+            elif q.question_type == 'text':
+                user_text = request.POST.get(f'q_{q.id}', '').strip().lower()
+                correct_text = q.correct_answer.strip().lower()
+                acceptable = [k.strip() for k in correct_text.replace('|', ',').split(',')]
+                if user_text in acceptable or any(k in user_text for k in acceptable if k):
+                    score += q.points
+
+        pct = (score / total_possible) if total_possible > 0 else 0
+        earned_xp = int(quiz.total_xp * pct)
+
+        submission = QuizSubmission.objects.create(
+            quiz=quiz,
+            user=request.user,
+            score=score,
+            total_possible=total_possible,
+            xp_awarded=earned_xp
+        )
+
+        request.user.xp_points += earned_xp
+        request.user.save()
+
+        messages.success(request, f'Quiz submitted! Score: {score}/{total_possible} (+{earned_xp} XP awarded)')
+        return redirect('dashboard:quiz_result', quiz_id=quiz.id)
+
+    return redirect('dashboard:quiz_list')
+
+
+@login_required
+def quiz_result(request, quiz_id):
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions'), id=quiz_id)
+    submission = get_object_or_404(QuizSubmission, quiz=quiz, user=request.user)
+    all_submissions = quiz.submissions.select_related('user').all()[:20]
+
+    context = {
+        'quiz': quiz,
+        'submission': submission,
+        'all_submissions': all_submissions,
+        'questions': quiz.questions.all(),
+    }
+    return render(request, 'dashboard/quiz_result.html', context)
+
+
+# Admin Quiz Management Views
+@staff_required
+def admin_quiz_list(request):
+    quizzes = Quiz.objects.all().prefetch_related('questions', 'submissions')
+    context = {
+        'quizzes': quizzes,
+    }
+    return render(request, 'dashboard/admin_quiz_list.html', context)
+
+
+@staff_required
+def admin_quiz_create(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        description = request.POST.get('description', '').strip()
+        start_time_str = request.POST.get('start_time')
+        end_time_str = request.POST.get('end_time')
+        total_xp = request.POST.get('total_xp', 100)
+        is_live = request.POST.get('is_live') == 'on'
+
+        start_time = parse_datetime(start_time_str) if start_time_str else timezone.now()
+        end_time = parse_datetime(end_time_str) if end_time_str else (timezone.now() + timezone.timedelta(days=1))
+
+        if title:
+            quiz = Quiz.objects.create(
+                title=title,
+                description=description,
+                start_time=start_time,
+                end_time=end_time,
+                total_xp=int(total_xp),
+                is_live=is_live
+            )
+            messages.success(request, f'Quiz "{title}" created! Now add questions to the quiz.')
+            return redirect('dashboard:admin_quiz_edit', quiz_id=quiz.id)
+        else:
+            messages.error(request, 'Quiz title is required.')
+
+    return redirect('dashboard:admin_quiz_list')
+
+
+@staff_required
+def admin_quiz_edit(request, quiz_id):
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions', 'submissions'), id=quiz_id)
+
+    if request.method == 'POST':
+        quiz.title = request.POST.get('title', quiz.title).strip()
+        quiz.description = request.POST.get('description', quiz.description).strip()
+        start_time_str = request.POST.get('start_time')
+        end_time_str = request.POST.get('end_time')
+        if start_time_str: quiz.start_time = parse_datetime(start_time_str) or quiz.start_time
+        if end_time_str: quiz.end_time = parse_datetime(end_time_str) or quiz.end_time
+        quiz.total_xp = int(request.POST.get('total_xp', quiz.total_xp))
+        quiz.is_live = request.POST.get('is_live') == 'on'
+        quiz.save()
+        messages.success(request, 'Quiz details updated successfully.')
+        return redirect('dashboard:admin_quiz_edit', quiz_id=quiz.id)
+
+    context = {
+        'quiz': quiz,
+        'questions': quiz.questions.all(),
+        'submissions': quiz.submissions.select_related('user').all(),
+    }
+    return render(request, 'dashboard/admin_quiz_edit.html', context)
+
+
+@staff_required
+def admin_quiz_add_question(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    if request.method == 'POST':
+        question_text = request.POST.get('question_text', '').strip()
+        question_type = request.POST.get('question_type', 'single')
+        option_a = request.POST.get('option_a', '').strip()
+        option_b = request.POST.get('option_b', '').strip()
+        option_c = request.POST.get('option_c', '').strip()
+        option_d = request.POST.get('option_d', '').strip()
+        correct_answer = request.POST.get('correct_answer', '').strip()
+        explanation = request.POST.get('explanation', '').strip()
+        points = request.POST.get('points', 10)
+
+        if question_text and correct_answer:
+            QuizQuestion.objects.create(
+                quiz=quiz,
+                question_text=question_text,
+                question_type=question_type,
+                option_a=option_a,
+                option_b=option_b,
+                option_c=option_c,
+                option_d=option_d,
+                correct_answer=correct_answer,
+                explanation=explanation,
+                points=int(points)
+            )
+            messages.success(request, 'Question added to quiz!')
+        else:
+            messages.error(request, 'Please provide question text and correct answer.')
+
+    return redirect('dashboard:admin_quiz_edit', quiz_id=quiz.id)
+
+
+@staff_required
+def admin_quiz_delete_question(request, question_id):
+    q = get_object_or_404(QuizQuestion, id=question_id)
+    quiz_id = q.quiz_id
+    q.delete()
+    messages.success(request, 'Question deleted successfully.')
+    return redirect('dashboard:admin_quiz_edit', quiz_id=quiz_id)
+
+
+@staff_required
+def admin_quiz_delete(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    title = quiz.title
+    quiz.delete()
+    messages.success(request, f'Quiz "{title}" deleted.')
+    return redirect('dashboard:admin_quiz_list')
+
+
+@login_required
+def dsa_visualizer(request):
+    return render(request, 'dashboard/dsa_visualizer.html')
+

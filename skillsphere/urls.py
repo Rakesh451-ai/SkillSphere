@@ -17,9 +17,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
-    path('skills/', include('skills.urls')),
-    path('studylogs/', include('studylogs.urls')),
-    path('goals/', include('goals.urls')),
     path('recommendations/', include('recommendations.urls')),
     path('resume/', include('resumeanalyzer.urls')),
     path('leaderboard/', include('leaderboard.urls')),
@@ -29,3 +26,5 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+

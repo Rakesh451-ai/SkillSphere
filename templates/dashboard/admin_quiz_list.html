@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Admin Quiz Management Portal - SkillSphere{% endblock %}
+{% block page_title %}Admin Quiz Management Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-quiz-card {
+        background-color: var(--card-bg) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <!-- Header Banner -->
+    <div class="col-12">
+        <div class="admin-quiz-card p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <h3 class="fw-bold mb-1"><i class="bi bi-shield-lock-fill text-warning me-2"></i>Admin Quiz Conduct Portal</h3>
+                <p class="text-muted mb-0">Create single-choice, multiple-choice, or text-answer quizzes, schedule start/end times, and broadcast live to all students.</p>
+            </div>
+            <div>
+                <button class="btn btn-warning px-4 py-2 rounded-3 fw-bold" data-bs-toggle="modal" data-bs-target="#createQuizModal">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Create New Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Quizzes List -->
+    <div class="col-12">
+        <div class="admin-quiz-card overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark small text-uppercase">
+                        <tr>
+                            <th scope="col" class="py-3 ps-4">Quiz Title</th>
+                            <th scope="col" class="py-3">Status</th>
+                            <th scope="col" class="py-3">Start Time</th>
+                            <th scope="col" class="py-3">End Time</th>
+                            <th scope="col" class="py-3">Questions</th>
+                            <th scope="col" class="py-3">Submissions</th>
+                            <th scope="col" class="py-3 text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for q in quizzes %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-white">{{ q.title }}</div>
+                                <div class="small text-muted">{{ q.description|truncatewords:8 }}</div>
+                            </td>
+                            <td>
+                                {% if q.status == 'live' %}
+                                    <span class="badge bg-success px-3 py-2 rounded-pill fw-bold"><i class="bi bi-broadcast me-1"></i>Live Now</span>
+                                {% elif q.status == 'upcoming' %}
+                                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold"><i class="bi bi-clock-history me-1"></i>Upcoming</span>
+                                {% elif q.status == 'draft' %}
+                                    <span class="badge bg-secondary px-3 py-2 rounded-pill"><i class="bi bi-pencil me-1"></i>Draft</span>
+                                {% else %}
+                                    <span class="badge bg-dark px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i>Ended</span>
+                                {% endif %}
+                            </td>
+                            <td class="small">{{ q.start_time|date:"Y-m-d H:i" }}</td>
+                            <td class="small">{{ q.end_time|date:"Y-m-d H:i" }}</td>
+                            <td class="fw-bold text-info">{{ q.questions.count }} Qs</td>
+                            <td class="fw-bold text-warning">{{ q.submissions.count }} Users</td>
+                            <td class="text-end pe-4">
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <a href="{% url 'dashboard:admin_quiz_edit' q.id %}" class="btn btn-sm btn-outline-info rounded-pill px-3">
+                                        <i class="bi bi-pencil-square me-1"></i>Edit & Questions
+                                    </a>
+                                    <form method="POST" action="{% url 'dashboard:admin_quiz_delete' q.id %}" onsubmit="return confirm('Delete this quiz?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                No quizzes created yet. Click "Create New Quiz" to conduct your first quiz!
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Create New Quiz -->
+<div class="modal fade" id="createQuizModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content admin-quiz-card p-2">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-patch-question-fill text-warning me-2"></i>Conduct New Live Quiz</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'dashboard:admin_quiz_create' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label small fw-semibold">Quiz Title *</label>
+                            <input type="text" name="title" class="form-control" placeholder="e.g. Speed DSA & System Design Live Quiz" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label small fw-semibold">Description</label>
+                            <textarea name="description" class="form-control" rows="3" placeholder="Brief details or rules for students..."></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Start Date & Time *</label>
+                            <input type="datetime-local" name="start_time" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">End Date & Time *</label>
+                            <input type="datetime-local" name="end_time" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Total XP Awarded</label>
+                            <input type="number" name="total_xp" class="form-control" value="150">
+                        </div>
+                        <div class="col-md-6 pt-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="is_live" id="createLiveCheck" checked>
+                                <label class="form-check-label fw-semibold" for="createLiveCheck">Publish & Make Live to Students</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning rounded-3 fw-bold">Create Quiz & Add Questions</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

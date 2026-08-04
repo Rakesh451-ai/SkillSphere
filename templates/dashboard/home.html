@@ -1,139 +1,253 @@
 {% extends "base.html" %}
 {% block title %}Dashboard - SkillSphere{% endblock %}
-{% block page_title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block extra_css %}
+<style>
+    @keyframes pulseGlow {
+        0% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.25); }
+        50% { box-shadow: 0 0 35px rgba(99, 102, 241, 0.6); }
+        100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.25); }
+    }
+    @keyframes rainbowBorder {
+        0% { border-color: #6366f1; }
+        33% { border-color: #06b6d4; }
+        66% { border-color: #f59e0b; }
+        100% { border-color: #6366f1; }
+    }
+    @keyframes shimmerText {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+    }
+    @keyframes iconSpin {
+        0% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(180deg) scale(1.15); }
+        100% { transform: rotate(360deg) scale(1); }
+    }
+    .hero-wishing-card {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(6, 182, 212, 0.12) 50%, rgba(245, 158, 11, 0.12) 100%) !important;
+        border: 2px solid #6366f1 !important;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        animation: rainbowBorder 8s infinite linear, pulseGlow 4s infinite ease-in-out;
+        position: relative;
+        overflow: hidden;
+    }
+    .shimmer-title {
+        background: linear-gradient(90deg, #6366f1, #06b6d4, #f59e0b, #ec4899, #6366f1);
+        background-size: 200% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: shimmerText 5s linear infinite;
+        font-weight: 800;
+    }
+    .clock-badge {
+        background-color: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        padding: 10px 20px;
+    }
+    .animated-clock-icon {
+        display: inline-block;
+        animation: iconSpin 12s infinite linear;
+    }
+    .special-badge {
+        background: linear-gradient(135deg, #ef4444 0%, #f97316 50%, #eab308 100%);
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
+<!-- Hero Wishing & Working Live Date/Time Banner -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="hero-wishing-card p-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <!-- Left: Greeting & Special Day Highlight -->
+                <div>
+                    <div id="hero-special-day-banner" class="mb-2" style="display: none;">
+                        <span class="badge special-badge px-3 py-2 rounded-pill mb-2 d-inline-flex align-items-center gap-1 fs-6">
+                            <i class="bi bi-stars"></i> <span id="hero-special-day-title">Special Event</span>
+                        </span>
+                        <p id="hero-special-day-msg" class="text-body small mb-0 fw-semibold"></p>
+                    </div>
+
+                    <h2 class="shimmer-title mb-1" id="hero-greeting-text" data-user-name="{{ user.display_name }}">
+                        Welcome, {{ user.display_name }}! 👋
+                    </h2>
+                </div>
+
+                <!-- Right: Animated Working Clock & Date -->
+                <div class="clock-badge d-flex align-items-center gap-3 shadow-sm">
+                    <div class="fs-3 text-warning animated-clock-icon">
+                        <i class="bi bi-clock-fill"></i>
+                    </div>
+                    <div>
+                        <div class="fs-4 fw-bold font-monospace text-primary text-nowrap" id="hero-live-time">
+                            00:00:00 AM
+                        </div>
+                        <div class="extra-small text-muted text-uppercase fw-semibold text-nowrap" id="hero-live-date">
+                            Loading Date...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Stats Cards -->
 <div class="row g-4 mb-4">
-    <div class="col-md-4 col-lg-2-4">
+    <div class="col-md-6 col-lg-3">
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="text-muted mb-1 small">Total Study Hours</p>
-                    <div class="stat-value text-primary">{{ total_hours }}</div>
+                    <p class="text-muted mb-1 small fw-medium">Placement Readiness</p>
+                    <div class="stat-value text-info">{{ placement_score }}%</div>
                 </div>
-                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-clock-fill"></i></div>
+                <div class="stat-icon bg-info bg-opacity-10 text-info"><i class="bi bi-briefcase-fill"></i></div>
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-lg-2-4">
+    <div class="col-md-6 col-lg-3">
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="text-muted mb-1 small">Current Streak</p>
-                    <div class="stat-value" style="color:#e17055;">{{ current_streak }} <small class="fs-6">days</small></div>
+                    <p class="text-muted mb-1 small fw-medium">Active Streak</p>
+                    <div class="stat-value text-warning">{{ current_streak }} <small class="fs-6">days</small></div>
                 </div>
-                <div class="stat-icon" style="background:#e1705510;color:#e17055;"><i class="bi bi-fire"></i></div>
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-fire"></i></div>
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-lg-2-4">
+    <div class="col-md-6 col-lg-3">
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="text-muted mb-1 small">Placement Readiness</p>
-                    <div class="stat-value" style="color:#00cec9;">{{ placement_score }}%</div>
+                    <p class="text-muted mb-1 small fw-medium">DSA Problems Solved</p>
+                    <div class="stat-value text-success">{{ completed_dsa_count }} <small class="fs-6 text-muted">/{{ total_dsa_problems }}</small></div>
                 </div>
-                <div class="stat-icon" style="background:#00cec910;color:#00cec9;"><i class="bi bi-briefcase-fill"></i></div>
+                <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-code-square"></i></div>
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-lg-2-4">
+    <div class="col-md-6 col-lg-3">
         <div class="stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="text-muted mb-1 small">Goals Completed</p>
-                    <div class="stat-value" style="color:#6c5ce7;">{{ completed_goals }}<small class="fs-6 text-muted">/{{ total_goals }}</small></div>
+                    <p class="text-muted mb-1 small fw-medium">Games Level Reached</p>
+                    <div class="stat-value text-primary">Level {{ total_game_level }}</div>
                 </div>
-                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-bullseye"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-lg-2-4">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small">Productivity Score</p>
-                    <div class="stat-value" style="color:#fd79a8;">{{ productivity_score }}%</div>
-                </div>
-                <div class="stat-icon" style="background:#fd79a810;color:#fd79a8;"><i class="bi bi-speedometer2"></i></div>
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-controller"></i></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Charts Row -->
-<div class="row g-4 mb-4">
-    <div class="col-lg-8">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3">Weekly Study Hours</h6>
-            <canvas id="weeklyChart" height="200"></canvas>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3">Skill Progress</h6>
-            <canvas id="skillChart" height="200"></canvas>
-        </div>
-    </div>
-</div>
-
-<div class="row g-4 mb-4">
-    <div class="col-lg-6">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3">Productivity Trend</h6>
-            <canvas id="productivityChart" height="180"></canvas>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3">Monthly Analytics</h6>
-            <canvas id="monthlyChart" height="180"></canvas>
-        </div>
-    </div>
-</div>
-
-<!-- Insights -->
+<!-- Main Content Grid -->
 <div class="row g-4">
-    <div class="col-lg-4">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3"><i class="bi bi-arrow-up-circle-fill text-success"></i> Most Improved</h6>
-            {% if most_improved %}
-            <p class="mb-1 fw-semibold">{{ most_improved.skill_name }}</p>
-            <p class="text-muted small">{{ most_improved.hours_practiced }} hours practiced</p>
-            <div class="progress" style="height:8px;">
-                <div class="progress-bar" style="width:{{ most_improved.progress }}%;"></div>
+    <!-- Quick Access Hub -->
+    <div class="col-lg-8">
+        <div class="card-custom p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0"><i class="bi bi-rocket-takeoff-fill text-warning me-2"></i>Preparation Hub</h5>
+                <a href="{% url 'dashboard:study_materials' %}" class="btn btn-sm btn-outline-info rounded-pill px-3">View All Resources</a>
             </div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 rounded-4 border border-secondary border-opacity-25 bg-body-tertiary">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fs-2 text-warning"><i class="bi bi-book-half"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">DSA & Problem Sheets</h6>
+                                <p class="text-muted small mb-0">{{ completed_dsa_count }} of {{ total_dsa_problems }} topics completed ({{ dsa_rate }}%)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded-4 border border-secondary border-opacity-25 bg-body-tertiary">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fs-2 text-primary"><i class="bi bi-controller"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Coding Games Arcade</h6>
+                                <p class="text-muted small mb-0">Speed Typer, Bug Hunter & Big-O Master</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-custom p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-bar-chart-line-fill text-info me-2"></i>LeetCode Performance</h5>
+            {% if user.leetcode_username %}
+                <div class="d-flex align-items-center gap-4 flex-wrap">
+                    <div>
+                        <span class="hud-label d-block small">Rank</span>
+                        <span class="fs-3 fw-bold text-warning">#{{ user.leetcode_rank }}</span>
+                    </div>
+                    <div>
+                        <span class="hud-label d-block small">Easy Solved</span>
+                        <span class="fs-4 fw-bold text-success">{{ user.leetcode_easy_solved }}</span>
+                    </div>
+                    <div>
+                        <span class="hud-label d-block small">Medium Solved</span>
+                        <span class="fs-4 fw-bold text-warning">{{ user.leetcode_medium_solved }}</span>
+                    </div>
+                    <div>
+                        <span class="hud-label d-block small">Hard Solved</span>
+                        <span class="fs-4 fw-bold text-danger">{{ user.leetcode_hard_solved }}</span>
+                    </div>
+                </div>
             {% else %}
-            <p class="text-muted">Add skills to see insights</p>
+                <p class="text-muted mb-2">Link your LeetCode username in Leaderboard to automatically sync solved problem stats.</p>
+                <a href="{% url 'leaderboard:leaderboard' %}" class="btn btn-sm btn-outline-warning rounded-pill">Link LeetCode Account</a>
             {% endif %}
         </div>
     </div>
+
+    <!-- Right Column: AI Recommendations -->
     <div class="col-lg-4">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3"><i class="bi bi-arrow-down-circle-fill text-danger"></i> Needs Improvement</h6>
-            {% if weakest %}
-            <p class="mb-1 fw-semibold">{{ weakest.skill_name }}</p>
-            <p class="text-muted small">{{ weakest.hours_practiced }} hours practiced</p>
-            <div class="progress" style="height:8px;">
-                <div class="progress-bar bg-danger" style="width:{{ weakest.progress }}%;"></div>
+        <div class="card-custom p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0"><i class="bi bi-robot text-primary me-2"></i>AI Recommendations</h5>
+                <a href="{% url 'resumeanalyzer:upload' %}" class="btn btn-sm btn-link text-decoration-none">View All</a>
             </div>
-            {% else %}
-            <p class="text-muted">Add skills to see insights</p>
-            {% endif %}
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3"><i class="bi bi-lightbulb-fill text-warning"></i> AI Recommendations</h6>
             {% for rec in recommendations %}
-            <div class="d-flex align-items-start mb-2">
-                <span class="badge bg-{{ rec.priority|default:'medium' }} me-2" style="{% if rec.priority == 'high' %}background:#e17055!important;{% elif rec.priority == 'low' %}background:#00cec9!important;{% else %}background:#fdcb6e!important;color:#333!important;{% endif %}">{{ rec.priority }}</span>
-                <small>{{ rec.message }}</small>
+            <div class="p-3 mb-3 rounded-3 border border-secondary border-opacity-25 bg-body-tertiary">
+                <div class="d-flex align-items-center justify-content-between gap-2 mb-1">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge rounded-pill {% if rec.priority == 'high' %}bg-danger{% elif rec.priority == 'medium' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                            {{ rec.priority|title }}
+                        </span>
+                        <span class="small fw-semibold text-muted">{{ rec.category }}</span>
+                    </div>
+                    {% if rec.impact_badge %}
+                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill extra-small px-2 py-1">
+                        {{ rec.impact_badge }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% if rec.title %}
+                <h6 class="fw-bold text-body small mt-2 mb-1"><i class="bi {{ rec.icon|default:'bi-lightbulb-fill' }} text-warning me-1"></i>{{ rec.title }}</h6>
+                {% endif %}
+                <small class="d-block text-muted small mb-2">{{ rec.message }}</small>
+                {% if rec.action_url %}
+                <a href="{{ rec.action_url }}" class="btn btn-sm btn-outline-primary rounded-pill py-0 px-2 extra-small fw-semibold">
+                    {{ rec.action_text|default:"Take Action" }} <i class="bi bi-arrow-right-short"></i>
+                </a>
+                {% endif %}
             </div>
             {% empty %}
-            <p class="text-muted small">No recommendations yet. Log some study sessions first!</p>
+            <p class="text-muted small">No active recommendations right now. Keep practicing!</p>
             {% endfor %}
-            <a href="{% url 'recommendations:list' %}" class="btn btn-sm btn-outline-primary mt-2">View All</a>
         </div>
     </div>
 </div>
@@ -141,68 +255,99 @@
 
 {% block extra_js %}
 <script>
-const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
-new Chart(weeklyCtx, {
-    type: 'bar',
-    data: {
-        labels: {{ weekly_labels|safe }},
-        datasets: [{
-            label: 'Hours',
-            data: {{ weekly_data|safe }},
-            backgroundColor: 'rgba(108, 92, 231, 0.7)',
-            borderRadius: 8,
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
+    function updateDateTimeAndWishing() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = String(hours % 12 || 12).padStart(2, '0');
+
+        const timeString = `${displayHours}:${minutes}:${seconds} ${ampm}`;
+
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' };
+        const dateString = now.toLocaleDateString('en-US', options);
+
+        const heroTime = document.getElementById('hero-live-time');
+        const heroDate = document.getElementById('hero-live-date');
+        if (heroTime) heroTime.textContent = timeString;
+        if (heroDate) heroDate.textContent = dateString;
+
+        // Dynamic Time-based Greeting
+        let greetingText = "Hello";
+        let greetingEmoji = "👋";
+        if (hours >= 5 && hours < 12) {
+            greetingText = "Good Morning";
+            greetingEmoji = "☀️";
+        } else if (hours >= 12 && hours < 17) {
+            greetingText = "Good Afternoon";
+            greetingEmoji = "🌤️";
+        } else if (hours >= 17 && hours < 21) {
+            greetingText = "Good Evening";
+            greetingEmoji = "🌆";
+        } else {
+            greetingText = "Late Night Coding Session";
+            greetingEmoji = "🌙";
+        }
+
+        const greetingElement = document.getElementById('hero-greeting-text');
+        if (greetingElement) {
+            const userName = greetingElement.getAttribute('data-user-name') || '';
+            greetingElement.innerHTML = `${greetingText}, ${userName}! ${greetingEmoji}`;
+        }
+
+        // Special Days Detector Engine
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        const monthDayKey = `${month}-${day}`;
+
+        const specialDays = {
+            '1-1': { title: 'New Year\'s Day 🎉', msg: 'Happy New Year! Wishing you code success & top placement rankings!' },
+            '2-14': { title: 'Valentine\'s Day 💖', msg: 'Happy Valentine\'s Day! Code with passion, precision & love!' },
+            '3-8': { title: 'International Women\'s Day 👩‍💻', msg: 'Celebrating women engineers & tech innovators worldwide!' },
+            '4-22': { title: 'Earth Day 🌿', msg: 'Write green, optimized algorithms for a sustainable digital world!' },
+            '5-1': { title: 'Worker\'s & Labor Day 🛠️', msg: 'Saluting hard work, engineering dedication & continuous building!' },
+            '6-5': { title: 'World Environment Day 🌍', msg: 'Build clean, high-performance technology for tomorrow!' },
+            '8-2': { title: 'International Developer & Friendship Day 🚀', msg: 'Happy Friendship & Developer Day! Celebrate coding, teamwork & achievements!' },
+            '8-15': { title: 'Independence Day 🎆', msg: 'Celebrating Freedom, Leadership & Technology Innovation!' },
+            '9-15': { title: 'National Engineers\' Day ⚙️', msg: 'Happy Engineers\' Day! Keep innovating & building great software!' },
+            '10-2': { title: 'Gandhi Jayanti ☮️', msg: 'Promoting peace, truth, and ethical software development!' },
+            '10-31': { title: 'Halloween Day 🎃', msg: 'Happy Halloween! Beware of spooky bugs lurking in production!' },
+            '11-14': { title: 'Youth & Children Developer Day 🚀', msg: 'Inspiring future software engineers & tech leaders!' },
+            '12-25': { title: 'Christmas Day 🎄', msg: 'Merry Christmas! Joy, happiness & zero bug deployment to all!' },
+            '12-31': { title: 'New Year\'s Eve 🥂', msg: 'Cheers to another year of accomplishments & code mastery!' }
+        };
+
+        const specialDayBanner = document.getElementById('hero-special-day-banner');
+        const specialDayTitle = document.getElementById('hero-special-day-title');
+        const specialDayMsg = document.getElementById('hero-special-day-msg');
+
+        if (specialDays[monthDayKey]) {
+            const event = specialDays[monthDayKey];
+            if (specialDayTitle) specialDayTitle.textContent = event.title;
+            if (specialDayMsg) specialDayMsg.textContent = event.msg;
+            if (specialDayBanner) specialDayBanner.style.display = 'block';
+        } else if (specialDayBanner) {
+            const dayOfWeek = now.getDay();
+            const dailyMotivations = [
+                { title: 'Sunday Coding Sprint 🚀', msg: 'Perfect day to sharpen your DSA skills & prepare for placements!' },
+                { title: 'Monday Kickoff 🔥', msg: 'Start your week strong with a new coding challenge!' },
+                { title: 'Tech Tuesday 💻', msg: 'Keep the momentum high & conquer LeetCode problem sheets!' },
+                { title: 'Wisdom Wednesday 💡', msg: 'Refactor code, optimize time complexity & master algorithms!' },
+                { title: 'Thriving Thursday ⚡', msg: 'You are close to your weekly targets — push forward!' },
+                { title: 'Feature Friday 🎨', msg: 'Test your problem solving in the Coding Games Arcade!' },
+                { title: 'Super Saturday 🏆', msg: 'Review your weekly progress & climb the leaderboard!' }
+            ];
+            const todayMotiv = dailyMotivations[dayOfWeek];
+            if (specialDayTitle) specialDayTitle.textContent = todayMotiv.title;
+            if (specialDayMsg) specialDayMsg.textContent = todayMotiv.msg;
+            if (specialDayBanner) specialDayBanner.style.display = 'block';
+        }
     }
-});
 
-const skillCtx = document.getElementById('skillChart').getContext('2d');
-new Chart(skillCtx, {
-    type: 'doughnut',
-    data: {
-        labels: {{ skill_names|safe }},
-        datasets: [{
-            data: {{ skill_hours|safe }},
-            backgroundColor: ['#6c5ce7','#00cec9','#fd79a8','#fdcb6e','#e17055','#0984e3','#55efc4','#a29bfe'],
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } } }
-});
-
-const prodCtx = document.getElementById('productivityChart').getContext('2d');
-new Chart(prodCtx, {
-    type: 'line',
-    data: {
-        labels: {{ weekly_labels|safe }},
-        datasets: [{
-            label: 'Productivity',
-            data: {{ productivity_data|safe }},
-            borderColor: '#fd79a8',
-            backgroundColor: 'rgba(253,121,168,0.1)',
-            fill: true,
-            tension: 0.4,
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 10 } } }
-});
-
-const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-new Chart(monthlyCtx, {
-    type: 'bar',
-    data: {
-        labels: {{ monthly_labels|safe }},
-        datasets: [{
-            label: 'Hours',
-            data: {{ monthly_hours|safe }},
-            backgroundColor: 'rgba(0, 206, 201, 0.7)',
-            borderRadius: 8,
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-});
+    document.addEventListener('DOMContentLoaded', () => {
+        updateDateTimeAndWishing();
+        setInterval(updateDateTimeAndWishing, 1000);
+    });
 </script>
 {% endblock %}

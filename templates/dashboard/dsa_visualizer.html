@@ -1,0 +1,628 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}DSA Topic 2D Visual Diagrams & Architecture Studio - SkillSphere{% endblock %}
+{% block page_title %}DSA Topic 2D Visual Diagrams & Architecture Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Topic Sidebar List Styling */
+    .topic-list-item {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 14px 18px;
+        transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+    .topic-list-item:hover {
+        background: rgba(99, 102, 241, 0.15);
+        border-color: rgba(99, 102, 241, 0.45);
+        transform: translateX(5px);
+    }
+    .topic-list-item.active {
+        background: linear-gradient(90deg, rgba(99, 102, 241, 0.28) 0%, rgba(6, 182, 212, 0.16) 100%) !important;
+        border-left: 4px solid #6366f1 !important;
+        border-color: rgba(99, 102, 241, 0.6);
+        box-shadow: 0 4px 18px rgba(99, 102, 241, 0.2);
+    }
+
+    /* 2D Visual Diagram Banner & Scrollable Viewport */
+    .diagram-preview-card {
+        border-radius: 16px;
+        border: 1px solid rgba(99, 102, 241, 0.35);
+        background: #060913;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+    }
+    .diagram-viewport {
+        max-height: 560px;
+        min-height: 340px;
+        overflow: auto;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at center, rgba(30, 41, 59, 0.45) 0%, rgba(6, 9, 18, 0.98) 100%);
+        border-radius: 14px;
+        position: relative;
+    }
+    .diagram-img {
+        max-width: 100%;
+        height: auto;
+        object-fit: contain !important;
+        border-radius: 12px;
+        transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), width 0.22s ease;
+        transform-origin: center center;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
+    }
+    .diagram-controls-bar {
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 12px 20px;
+    }
+
+    .topic-list-scroll {
+        max-height: 680px;
+        overflow-y: auto;
+        padding-right: 6px;
+    }
+
+    /* Image Gallery & Asset Thumbnail Cards */
+    .gallery-thumb-card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: all 0.22s ease;
+        cursor: pointer;
+    }
+    .gallery-thumb-card:hover {
+        border-color: #6366f1;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+    }
+    .gallery-thumb-img {
+        height: 140px;
+        width: 100%;
+        object-fit: cover;
+        background: #080c16;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Title Header -->
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+        <h4 class="fw-bold mb-1"><i class="bi bi-image-fill text-warning me-2"></i>DSA Visual Diagram & Image Studio</h4>
+        <p class="text-muted mb-0 small">High-Definition Visual Diagrams, 2D Architecture Schematics, Memory Layout Models & Algorithmic Flowcharts across 15 Core DSA Topics.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-info rounded-pill px-3 py-2 btn-sm fw-semibold" id="btnToggleSideBySide" onclick="toggleSideBySideMode()">
+            <i class="bi bi-layout-split me-1"></i>Toggle Side-by-Side Diagram Mode
+        </button>
+        <span class="badge bg-primary bg-opacity-20 text-primary rounded-pill px-3 py-2 fw-semibold">
+            <i class="bi bi-camera-fill me-1 text-warning"></i> 100% Image-Driven Studio
+        </span>
+    </div>
+</div>
+
+<!-- Search & Active Topic Bar -->
+<div class="card-custom p-3 mb-4">
+    <div class="row g-3 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-body-tertiary border-secondary border-opacity-25"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" class="form-control bg-body-tertiary border-secondary border-opacity-25 text-body" id="topicSearchInput" placeholder="Search visual diagrams (e.g. Array, Binary Tree, Heap, Graph, DP)..." onkeyup="searchTopics()">
+            </div>
+        </div>
+        <div class="col-md-7 text-end">
+            <small class="text-muted fw-semibold me-2">Active Visual Catalog Topic:</small>
+            <span class="badge bg-primary bg-opacity-20 text-primary rounded-pill px-3 py-2 extra-small fw-bold" id="activeTopicBadge">Array Data Structure</span>
+        </div>
+    </div>
+</div>
+
+<!-- Main Studio Workspace (Visual Images & 2D Diagrams Studio) -->
+<div class="row g-4">
+    <!-- Left Column: 15 Core Topics Sidebar -->
+    <div class="col-lg-4">
+        <div class="card-custom p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0"><i class="bi bi-images text-warning me-2"></i>15 Core DSA Topics</h6>
+                <span class="badge bg-secondary bg-opacity-25 text-body rounded-pill px-3 py-1 extra-small">2D Diagram Catalog</span>
+            </div>
+
+            <!-- Scrollable Topic List Container -->
+            <div class="topic-list-scroll" id="topicListContainer">
+                <!-- Topic list items populate dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Visual Diagram Studio & Images Section -->
+    <div class="col-lg-8" id="rightWorkspaceColumn">
+        
+        <!-- Active Topic Overview & Category Header -->
+        <div class="card-custom p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                <h5 class="fw-bold mb-0" id="topicTitle"><i class="bi bi-grid-fill text-warning me-2"></i>Array Data Structure</h5>
+                <span class="badge bg-primary bg-opacity-20 text-primary rounded-pill px-3 py-1 extra-small fw-bold" id="topicCategoryTag">Contiguous Memory Layout</span>
+            </div>
+            <p class="text-body small mb-0" id="topicOverview">
+                High-definition visual representations detailing memory allocation, address offset calculations, and structural array invariants.
+            </p>
+        </div>
+
+        <!-- Single Viewport Container / Side-by-Side Container -->
+        <div class="row g-4" id="viewportsContainer">
+
+            <!-- Primary 2D Data Structure Architecture Diagram Viewport -->
+            <div class="col-12" id="primaryDiagramCol">
+                <div class="card-custom p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <h6 class="fw-bold mb-0 text-info"><i class="bi bi-file-image-fill me-2"></i>2D Data Structure Memory & Architecture Diagram</h6>
+                        <span class="badge bg-info bg-opacity-15 text-info rounded-pill px-3 py-1 extra-small fw-bold">2D Vector Schematic</span>
+                    </div>
+
+                    <!-- Diagram Controls Bar -->
+                    <div class="diagram-controls-bar d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="small text-muted fw-bold me-1"><i class="bi bi-zoom-in text-warning me-1"></i>Zoom:</span>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle" onclick="changeZoom(-25)" title="Zoom Out (-25%)">
+                                <i class="bi bi-dash-lg"></i>
+                            </button>
+                            <span class="badge bg-primary bg-opacity-25 text-primary px-3 py-2 rounded-pill fw-bold" id="zoomLevelBadge">100%</span>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle" onclick="changeZoom(25)" title="Zoom In (+25%)">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning rounded-pill px-3 ms-1" onclick="resetZoom()" title="Reset Size">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="small text-muted d-none d-sm-inline">Scale:</span>
+                                <input type="range" class="form-range" id="zoomRangeSlider" min="50" max="300" step="10" value="100" style="width: 130px;" oninput="onZoomSliderInput(this.value)">
+                            </div>
+                            <button class="btn btn-sm btn-primary rounded-pill px-3 fw-bold" data-bs-toggle="modal" data-bs-target="#diagramFullscreenModal">
+                                <i class="bi bi-arrows-fullscreen me-1"></i>Full Screen
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scrollable Diagram Viewport -->
+                    <div class="diagram-preview-card">
+                        <div class="diagram-viewport" id="diagramViewport">
+                            <img src="/static/images/dsa/array.jpg" class="diagram-img" id="topicDiagramImg" alt="DSA 2D Diagram">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2 px-1 flex-wrap gap-2">
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Scrollable HD diagram viewport. Use slider to zoom up to 300% magnification.</small>
+                        <small class="text-info fw-semibold"><i class="bi bi-check-circle-fill text-success me-1"></i>Uncropped High-Definition Image</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Algorithmic Execution Flowchart Viewport -->
+            <div class="col-12" id="secondaryFlowchartCol">
+                <div class="card-custom p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <h6 class="fw-bold mb-0 text-warning"><i class="bi bi-diagram-3-fill me-2"></i>Algorithmic Execution Flowchart Diagram</h6>
+                        <span class="badge bg-warning bg-opacity-15 text-warning rounded-pill px-3 py-1 extra-small fw-bold">Visual Execution Flowchart</span>
+                    </div>
+
+                    <!-- Flowchart Controls Bar -->
+                    <div class="diagram-controls-bar d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="small text-muted fw-bold me-1"><i class="bi bi-zoom-in text-warning me-1"></i>Zoom:</span>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle" onclick="changeFlowchartZoom(-25)" title="Zoom Out (-25%)">
+                                <i class="bi bi-dash-lg"></i>
+                            </button>
+                            <span class="badge bg-warning bg-opacity-25 text-warning px-3 py-2 rounded-pill fw-bold" id="flowchartZoomBadge">100%</span>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle" onclick="changeFlowchartZoom(25)" title="Zoom In (+25%)">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning rounded-pill px-3 ms-1" onclick="resetFlowchartZoom()" title="Reset Size">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="small text-muted d-none d-sm-inline">Scale:</span>
+                                <input type="range" class="form-range" id="flowchartZoomSlider" min="50" max="300" step="10" value="100" style="width: 130px;" oninput="onFlowchartSliderInput(this.value)">
+                            </div>
+                            <button class="btn btn-sm btn-warning rounded-pill px-3 fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#flowchartFullscreenModal">
+                                <i class="bi bi-arrows-fullscreen me-1"></i>Full Screen
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scrollable Flowchart Viewport -->
+                    <div class="diagram-preview-card">
+                        <div class="diagram-viewport" id="flowchartViewport" style="max-height: 560px;">
+                            <img src="/static/images/dsa/array_flowchart.jpg" class="diagram-img" id="topicFlowchartImg" alt="DSA Execution Flowchart">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2 px-1 flex-wrap gap-2">
+                        <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Step-by-step logic decision tree and algorithmic execution flowchart diagram.</small>
+                        <small class="text-warning fw-semibold"><i class="bi bi-check-circle-fill text-success me-1"></i>High-Resolution Flowchart</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dedicated Images & Visual Assets Section Gallery -->
+        <div class="card-custom p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0 text-success"><i class="bi bi-images me-2"></i>Active Topic Visual Image Gallery & Diagram Sheets</h6>
+                <span class="badge bg-success bg-opacity-15 text-success rounded-pill px-3 py-1 extra-small fw-bold">Image Assets</span>
+            </div>
+            
+            <div class="row g-3" id="topicImageGalleryGrid">
+                <!-- Gallery items populate dynamically -->
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal: Fullscreen 2D Diagram Viewer -->
+<div class="modal fade" id="diagramFullscreenModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content admin-card p-2">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-info" id="modalDiagramTitle"><i class="bi bi-diagram-3-fill me-2"></i>2D Diagram - Full HD View</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-3">
+                <div style="max-height: 82vh; overflow: auto; border-radius: 12px; background: #060912; padding: 20px;">
+                    <img src="/static/images/dsa/array.jpg" id="modalDiagramImg" style="max-width: 100%; height: auto; object-fit: contain; border-radius: 10px;" alt="Full Diagram">
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 justify-content-between">
+                <span class="small text-muted"><i class="bi bi-check-circle-fill text-success me-1"></i>Showing 100% full uncropped architecture diagram</span>
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Fullscreen Algorithmic Flowchart Viewer -->
+<div class="modal fade" id="flowchartFullscreenModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content admin-card p-2">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-warning" id="modalFlowchartTitle"><i class="bi bi-diagram-3-fill me-2"></i>Topic Flowchart - Full HD View</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-3">
+                <div style="max-height: 82vh; overflow: auto; border-radius: 12px; background: #060912; padding: 20px;">
+                    <img src="/static/images/dsa/array_flowchart.jpg" id="modalFlowchartImg" style="max-width: 100%; height: auto; object-fit: contain; border-radius: 10px;" alt="Full Flowchart">
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0 justify-content-between">
+                <span class="small text-muted"><i class="bi bi-check-circle-fill text-success me-1"></i>Full resolution algorithmic flowchart image</span>
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const STATIC_BASE = "{% static 'images/dsa/' %}";
+
+    // Comprehensive 15 DSA Topics Database with 2D Visual Diagram Images and Flowcharts
+    const TOPIC_THEORY_DATA = {
+        'array': {
+            title: 'Array Data Structure',
+            icon: 'bi-grid-fill text-warning',
+            categoryTag: 'Contiguous Memory Layout',
+            img: STATIC_BASE + 'array.jpg',
+            flowchartImg: STATIC_BASE + 'array_flowchart.jpg',
+            overview: 'An Array stores elements of identical data types in contiguous memory locations, offering instantaneous O(1) random index access.'
+        },
+        'string': {
+            title: 'String Processing & Matching',
+            icon: 'bi-fonts text-info',
+            categoryTag: 'Character Array & Encoded Byte Buffer',
+            img: STATIC_BASE + 'array.jpg',
+            flowchartImg: STATIC_BASE + 'array_flowchart.jpg',
+            overview: 'Strings store sequential characters as contiguous byte arrays, optimized for pattern matching (KMP, Rabin-Karp, Z-algorithm).'
+        },
+        'pointer': {
+            title: 'Pointers & Memory Allocation',
+            icon: 'bi-cursor-fill text-danger',
+            categoryTag: 'Memory Address Arithmetic',
+            img: STATIC_BASE + 'linkedlist.jpg',
+            flowchartImg: STATIC_BASE + 'linkedlist_flowchart.jpg',
+            overview: 'Pointers hold memory address locations in stack or dynamic heap memory, essential for pointer arithmetic and reference safety.'
+        },
+        'recursion': {
+            title: 'Recursion & Call Stack Trees',
+            icon: 'bi-diagram-3-fill text-warning',
+            categoryTag: 'Execution Call Stack Frames',
+            img: STATIC_BASE + 'stack_queue.jpg',
+            flowchartImg: STATIC_BASE + 'dp_flowchart.jpg',
+            overview: 'Recursion creates call stack frames for state space tree exploration, base case termination, and tail call optimization.'
+        },
+        'linkedlist': {
+            title: 'Linked List Data Structure',
+            icon: 'bi-link-45deg text-primary',
+            categoryTag: 'Dynamic Pointer Chains',
+            img: STATIC_BASE + 'linkedlist.jpg',
+            flowchartImg: STATIC_BASE + 'linkedlist_flowchart.jpg',
+            overview: 'Linked lists chain dynamically allocated heap nodes via next/prev pointers without contiguous memory restrictions.'
+        },
+        'stack': {
+            title: 'Stack Data Structure',
+            icon: 'bi-layers-fill text-warning',
+            categoryTag: 'LIFO Execution Buffer',
+            img: STATIC_BASE + 'stack_queue.jpg',
+            flowchartImg: STATIC_BASE + 'stack_queue_flowchart.jpg',
+            overview: 'A Stack is a Last-In First-Out (LIFO) linear structure used in expression parsing, call stacks, and monotonic span queries.'
+        },
+        'queue': {
+            title: 'Queue & Priority Queue',
+            icon: 'bi-segmented-nav text-info',
+            categoryTag: 'FIFO Scheduling Buffer',
+            img: STATIC_BASE + 'stack_queue.jpg',
+            flowchartImg: STATIC_BASE + 'stack_queue_flowchart.jpg',
+            overview: 'A Queue enforces First-In First-Out (FIFO) processing, circular modulo indexing, BFS traversals, and Binary Heap priority queues.'
+        },
+        'sliding_window': {
+            title: 'Sliding Window & Two Pointers',
+            icon: 'bi-border-style text-success',
+            categoryTag: 'Window Range Invariants',
+            img: STATIC_BASE + 'array.jpg',
+            flowchartImg: STATIC_BASE + 'array_flowchart.jpg',
+            overview: 'Sliding window converts O(N^2) brute force loops into linear O(N) time by maintaining moving sub-segment boundary invariants.'
+        },
+        'tree': {
+            title: 'General Trees & Traversals',
+            icon: 'bi-diagram-2-fill text-danger',
+            categoryTag: 'Hierarchical Node Networks',
+            img: STATIC_BASE + 'tree.jpg',
+            flowchartImg: STATIC_BASE + 'tree_flowchart.jpg',
+            overview: 'Trees represent non-linear hierarchical node relationships explored via DFS (Inorder, Preorder, Postorder) and BFS Level-Order.'
+        },
+        'binary_tree': {
+            title: 'Binary Tree Architecture',
+            icon: 'bi-diagram-2 text-info',
+            categoryTag: 'Degree-2 Node Hierarchy',
+            img: STATIC_BASE + 'tree.jpg',
+            flowchartImg: STATIC_BASE + 'tree_flowchart.jpg',
+            overview: 'Binary trees restrict nodes to at most 2 children, featuring full, complete, perfect, and vertical column layouts.'
+        },
+        'bst': {
+            title: 'Binary Search Tree (BST)',
+            icon: 'bi-node-plus-fill text-success',
+            categoryTag: 'Sorted Left-Root-Right Invariant',
+            img: STATIC_BASE + 'tree.jpg',
+            flowchartImg: STATIC_BASE + 'tree_flowchart.jpg',
+            overview: 'BST enforces Left < Root < Right key ordering, enabling O(log N) average search, insert, delete, and LCA operations.'
+        },
+        'avl_tree': {
+            title: 'AVL Tree (Self-Balancing)',
+            icon: 'bi-shield-check text-warning',
+            categoryTag: 'Height Balance Factor Rotations',
+            img: STATIC_BASE + 'tree.jpg',
+            flowchartImg: STATIC_BASE + 'tree_flowchart.jpg',
+            overview: 'AVL trees enforce strict height balance factor |left_h - right_h| <= 1 using single (LL, RR) and double (LR, RL) rotations.'
+        },
+        'heap': {
+            title: 'Heap & Priority Queues',
+            icon: 'bi-pyramid text-warning',
+            categoryTag: 'Min/Max Heap-Order Trees',
+            img: STATIC_BASE + 'tree.jpg',
+            flowchartImg: STATIC_BASE + 'tree_flowchart.jpg',
+            overview: 'Binary Heaps maintain complete tree height O(log N) in arrays with linear O(N) heapify for priority queues and Heap Sort.'
+        },
+        'graph': {
+            title: 'Graph Theory & Networks',
+            icon: 'bi-geo-alt-fill text-warning',
+            categoryTag: 'Vertex & Edge Networks',
+            img: STATIC_BASE + 'graph.jpg',
+            flowchartImg: STATIC_BASE + 'graph_flowchart.jpg',
+            overview: 'Graphs model complex network topology via Adjacency Lists/Matrices, BFS, DFS, Dijkstra, Kahn Topological Sort, and MST.'
+        },
+        'dp': {
+            title: 'Dynamic Programming (DP)',
+            icon: 'bi-cpu-fill text-success',
+            categoryTag: 'Optimal Substructure Matrix',
+            img: STATIC_BASE + 'dp.jpg',
+            flowchartImg: STATIC_BASE + 'dp_flowchart.jpg',
+            overview: 'DP solves complex optimization problems by breaking them into overlapping subproblems cached in memoization tables or tabulation matrices.'
+        }
+    };
+
+    let currentTopicKey = 'array';
+    let isSideBySide = false;
+
+    function renderTopicList() {
+        const container = document.getElementById('topicListContainer');
+        let html = '';
+        const keys = Object.keys(TOPIC_THEORY_DATA);
+
+        keys.forEach((key, idx) => {
+            const topic = TOPIC_THEORY_DATA[key];
+            const isActive = key === currentTopicKey ? 'active' : '';
+
+            html += `
+                <div class="topic-list-item ${isActive} topic-card-item" data-key="${key}" onclick="selectTopic('${key}', this)">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-bold text-body small"><i class="bi ${topic.icon} me-2"></i>${topic.title}</span>
+                        <span class="badge bg-primary bg-opacity-20 text-primary rounded-pill px-2 py-1 extra-small">${idx + 1}/15</span>
+                    </div>
+                    <small class="text-muted d-block extra-small text-truncate">${topic.categoryTag} • 2D Visual Diagram</small>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    let currentZoom = 100;
+    function setZoom(level) {
+        currentZoom = Math.min(Math.max(level, 50), 300);
+        const img = document.getElementById('topicDiagramImg');
+        const badge = document.getElementById('zoomLevelBadge');
+        const slider = document.getElementById('zoomRangeSlider');
+
+        if (img) {
+            if (currentZoom > 100) {
+                img.style.maxWidth = 'none';
+                img.style.width = `${currentZoom}%`;
+            } else {
+                img.style.maxWidth = '100%';
+                img.style.width = `${currentZoom}%`;
+            }
+        }
+        if (badge) badge.textContent = `${currentZoom}%`;
+        if (slider) slider.value = currentZoom;
+    }
+    function changeZoom(delta) { setZoom(currentZoom + delta); }
+    function onZoomSliderInput(val) { setZoom(parseInt(val, 10)); }
+    function resetZoom() { setZoom(100); }
+
+    let currentFlowchartZoom = 100;
+    function setFlowchartZoom(level) {
+        currentFlowchartZoom = Math.min(Math.max(level, 50), 300);
+        const img = document.getElementById('topicFlowchartImg');
+        const badge = document.getElementById('flowchartZoomBadge');
+        const slider = document.getElementById('flowchartZoomSlider');
+
+        if (img) {
+            if (currentFlowchartZoom > 100) {
+                img.style.maxWidth = 'none';
+                img.style.width = `${currentFlowchartZoom}%`;
+            } else {
+                img.style.maxWidth = '100%';
+                img.style.width = `${currentFlowchartZoom}%`;
+            }
+        }
+        if (badge) badge.textContent = `${currentFlowchartZoom}%`;
+        if (slider) slider.value = currentFlowchartZoom;
+    }
+    function changeFlowchartZoom(delta) { setFlowchartZoom(currentFlowchartZoom + delta); }
+    function onFlowchartSliderInput(val) { setFlowchartZoom(parseInt(val, 10)); }
+    function resetFlowchartZoom() { setFlowchartZoom(100); }
+
+    function selectTopic(key, element) {
+        currentTopicKey = key;
+
+        document.querySelectorAll('.topic-list-item').forEach(c => c.classList.remove('active'));
+        if (element) {
+            element.classList.add('active');
+        } else {
+            const activeCard = document.querySelector(`.topic-card-item[data-key="${key}"]`);
+            if (activeCard) activeCard.classList.add('active');
+        }
+
+        const data = TOPIC_THEORY_DATA[key];
+        if (!data) return;
+
+        resetZoom();
+        resetFlowchartZoom();
+
+        document.getElementById('topicTitle').innerHTML = `<i class="bi ${data.icon} me-2"></i>${data.title}`;
+        document.getElementById('topicOverview').textContent = data.overview;
+        document.getElementById('topicCategoryTag').textContent = data.categoryTag;
+        document.getElementById('activeTopicBadge').textContent = data.title;
+        document.getElementById('topicDiagramImg').src = data.img;
+        document.getElementById('topicFlowchartImg').src = data.flowchartImg || data.img;
+
+        const modalImg = document.getElementById('modalDiagramImg');
+        if (modalImg) modalImg.src = data.img;
+        const modalTitle = document.getElementById('modalDiagramTitle');
+        if (modalTitle) modalTitle.innerHTML = `<i class="bi ${data.icon} me-2"></i>${data.title} - 2D HD Diagram`;
+
+        const modalFCImg = document.getElementById('modalFlowchartImg');
+        if (modalFCImg) modalFCImg.src = data.flowchartImg || data.img;
+        const modalFCTitle = document.getElementById('modalFlowchartTitle');
+        if (modalFCTitle) modalFCTitle.innerHTML = `<i class="bi ${data.icon} me-2"></i>${data.title} - Algorithmic Flowchart`;
+
+        renderGalleryGrid(data);
+    }
+
+    function renderGalleryGrid(data) {
+        const grid = document.getElementById('topicImageGalleryGrid');
+        const items = [
+            { title: '2D Data Structure Memory Layout', img: data.img, badge: 'Memory Model' },
+            { title: 'Algorithmic Execution Flowchart', img: data.flowchartImg || data.img, badge: 'Logic Flowchart' },
+            { title: 'Time & Space Complexity Grid', img: STATIC_BASE + 'complexity.jpg', badge: 'Asymptotic Analysis' }
+        ];
+
+        let html = '';
+        items.forEach(item => {
+            html += `
+                <div class="col-md-4">
+                    <div class="gallery-thumb-card p-2" onclick="previewGalleryImage('${item.img}', '${item.title}')">
+                        <img src="${item.img}" class="gallery-thumb-img rounded-3 mb-2" alt="${item.title}">
+                        <div class="px-1">
+                            <span class="badge bg-primary bg-opacity-20 text-primary extra-small mb-1">${item.badge}</span>
+                            <h6 class="fw-bold text-body small mb-0 text-truncate">${item.title}</h6>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        grid.innerHTML = html;
+    }
+
+    function previewGalleryImage(src, title) {
+        const modalImg = document.getElementById('modalDiagramImg');
+        const modalTitle = document.getElementById('modalDiagramTitle');
+        if (modalImg) modalImg.src = src;
+        if (modalTitle) modalTitle.innerHTML = `<i class="bi bi-image-fill me-2 text-warning"></i>${title}`;
+        const modal = new bootstrap.Modal(document.getElementById('diagramFullscreenModal'));
+        modal.show();
+    }
+
+    function toggleSideBySideMode() {
+        isSideBySide = !isSideBySide;
+        const primaryCol = document.getElementById('primaryDiagramCol');
+        const secondaryCol = document.getElementById('secondaryFlowchartCol');
+        const btn = document.getElementById('btnToggleSideBySide');
+
+        if (isSideBySide) {
+            primaryCol.className = 'col-lg-6';
+            secondaryCol.className = 'col-lg-6';
+            btn.classList.replace('btn-outline-info', 'btn-info');
+            btn.innerHTML = `<i class="bi bi-square me-1"></i>Single Full Viewport`;
+        } else {
+            primaryCol.className = 'col-12';
+            secondaryCol.className = 'col-12';
+            btn.classList.replace('btn-info', 'btn-outline-info');
+            btn.innerHTML = `<i class="bi bi-layout-split me-1"></i>Toggle Side-by-Side Diagram Mode`;
+        }
+    }
+
+    function searchTopics() {
+        const query = document.getElementById('topicSearchInput').value.toLowerCase();
+        const items = document.querySelectorAll('.topic-card-item');
+
+        items.forEach(item => {
+            const key = item.getAttribute('data-key');
+            const data = TOPIC_THEORY_DATA[key];
+            const text = (data.title + ' ' + data.categoryTag + ' ' + data.overview).toLowerCase();
+
+            if (text.includes(query)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderTopicList();
+        selectTopic('array');
+    });
+</script>
+{% endblock %}

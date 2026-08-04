@@ -4,17 +4,19 @@
 {% block public_content %}
 <style>
     .hero-section {
-        background: linear-gradient(135deg, #6c5ce7 0%, #4834d4 50%, #a29bfe 100%);
+        background: linear-gradient(135deg, #4f46e5 0%, #312e81 60%, #4338ca 100%);
         min-height: 100vh;
         color: white;
     }
     .feature-card {
-        background: #fff;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
         border-radius: 16px;
         padding: 32px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-        transition: transform 0.3s;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s ease, background-color 0.3s ease;
         height: 100%;
+        color: var(--text-color);
     }
     .feature-card:hover { transform: translateY(-8px); }
     .feature-icon {
@@ -25,8 +27,8 @@
         margin-bottom: 16px;
     }
     .nav-landing { background: transparent; padding: 16px 0; }
-    .stats-section { background: #f8f9fa; }
-    .cta-section { background: linear-gradient(135deg, #6c5ce7, #fd79a8); }
+    .stats-section { background: var(--bg-body); color: var(--text-color); transition: background-color 0.3s ease; }
+    .cta-section { background: linear-gradient(135deg, #4f46e5, #ec4899); }
 </style>
 
 <!-- Navbar -->

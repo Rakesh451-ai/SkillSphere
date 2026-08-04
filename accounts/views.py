@@ -66,18 +66,9 @@ def profile_view(request):
     else:
         form = ProfileForm(instance=user)
         
-    from django.db.models import Sum
-    from goals.models import Goal
-    from studylogs.models import StudyLog
-    
-    goals_completed = Goal.objects.filter(user=user, status='completed').count()
-    study_hours = StudyLog.objects.filter(user=user).aggregate(total=Sum('hours'))['total'] or 0
-    
     context = {
         'profile_user': user,
         'is_own_profile': is_own_profile,
         'form': form,
-        'goals_completed': goals_completed,
-        'study_hours': study_hours,
     }
     return render(request, 'accounts/profile.html', context)

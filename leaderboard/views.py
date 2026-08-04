@@ -3,8 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count
 
 from accounts.models import User
-from studylogs.models import StudyLog
-from goals.models import Goal
 from .models import Badge, UserBadge
 
 
@@ -26,15 +24,7 @@ def leaderboard_view(request):
 
     users = User.objects.filter(is_active=True, is_staff=False)
 
-    if sort_by == 'hours':
-        users = users.annotate(
-            total_hours=Sum('study_logs__hours')
-        ).order_by('-total_hours')
-    elif sort_by == 'goals':
-        users = users.annotate(
-            completed_goals=Count('goals', filter=Goal.objects.filter(status='completed').query.where)
-        ).order_by('-completed_goals') if False else users.order_by('-xp_points')
-    elif sort_by == 'streak':
+    if sort_by == 'streak':
         users = users.order_by('-current_streak')
     elif sort_by == 'leetcode':
         from django.db.models import F
@@ -47,14 +37,9 @@ def leaderboard_view(request):
     # Add rank numbers
     ranked_users = []
     for i, user in enumerate(users[:50], 1):
-        total_hours = StudyLog.objects.filter(user=user).aggregate(
-            total=Sum('hours'))['total'] or 0
-        completed_goals = Goal.objects.filter(user=user, status='completed').count()
         ranked_users.append({
             'rank': i,
             'user': user,
-            'total_hours': total_hours,
-            'completed_goals': completed_goals,
         })
 
     return render(request, 'leaderboard/leaderboard.html', {

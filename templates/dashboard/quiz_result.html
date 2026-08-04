@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Quiz Results: {{ quiz.title }} - SkillSphere{% endblock %}
+{% block page_title %}Quiz Results & Explanations{% endblock %}
+
+{% block extra_css %}
+<style>
+    .result-card {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    .explanation-box {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <!-- Score Summary Banner -->
+    <div class="col-12">
+        <div class="result-card p-4 text-center">
+            <div class="d-inline-flex align-items-center gap-2 bg-success bg-opacity-20 text-success px-4 py-2 rounded-pill fw-bold mb-3">
+                <i class="bi bi-check-circle-fill"></i> Quiz Completed Successfully
+            </div>
+            <h2 class="fw-bold mb-2 text-white">{{ quiz.title }}</h2>
+            <p class="text-muted small mb-3">Topic: <strong class="text-primary">{{ quiz.topic }}</strong> &bull; Total Questions: <strong>25 Questions</strong></p>
+            
+            <div class="row g-3 justify-content-center my-3">
+                <div class="col-md-3 col-6">
+                    <div class="p-3 bg-body-tertiary rounded-3 border border-secondary border-opacity-25">
+                        <small class="text-muted d-block extra-small text-uppercase fw-bold">Your Score</small>
+                        <h3 class="fw-bold text-warning mb-0">{{ submission.score }} <span class="fs-6 text-muted">/ {{ submission.total_possible }}</span></h3>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-3 bg-body-tertiary rounded-3 border border-secondary border-opacity-25">
+                        <small class="text-muted d-block extra-small text-uppercase fw-bold">XP Awarded</small>
+                        <h3 class="fw-bold text-success mb-0">+{{ submission.xp_awarded }} XP</h3>
+                    </div>
+                </div>
+            </div>
+
+            <a href="{% url 'dashboard:quiz_list' %}" class="btn btn-primary rounded-pill px-4 fw-bold me-2">
+                <i class="bi bi-arrow-left me-1"></i>Back to Quiz Lobby
+            </a>
+            <a href="{% url 'dashboard:dsa_visualizer' %}" class="btn btn-outline-warning rounded-pill px-4 fw-bold">
+                <i class="bi bi-diagram-3-fill me-1"></i>Review Topic 2D Visual Studio
+            </a>
+        </div>
+    </div>
+
+    <!-- Questions Detailed Solutions & Explanations (All 25 Questions) -->
+    <div class="col-lg-7">
+        <div class="result-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0 text-white"><i class="bi bi-journal-text text-info me-2"></i>Detailed Question Solutions & Explanations</h5>
+                <span class="badge bg-secondary bg-opacity-25 text-body rounded-pill px-3 py-1 extra-small">25 Questions</span>
+            </div>
+
+            {% for q in questions %}
+            <div class="explanation-box">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                    <h6 class="fw-bold text-white mb-0">
+                        <span class="badge bg-primary rounded-pill px-2 me-2">Q{{ forloop.counter }}</span> {{ q.question_text }}
+                    </h6>
+                    <span class="badge bg-warning bg-opacity-20 text-warning px-2 py-1 extra-small fw-bold">{{ q.points }} pts</span>
+                </div>
+
+                {% if q.question_type == 'single' %}
+                <div class="small mb-2 ps-1">
+                    {% if q.option_a %}<div class="text-muted extra-small">A. {{ q.option_a }}</div>{% endif %}
+                    {% if q.option_b %}<div class="text-muted extra-small">B. {{ q.option_b }}</div>{% endif %}
+                    {% if q.option_c %}<div class="text-muted extra-small">C. {{ q.option_c }}</div>{% endif %}
+                    {% if q.option_d %}<div class="text-muted extra-small">D. {{ q.option_d }}</div>{% endif %}
+                </div>
+                {% endif %}
+
+                <div class="p-2 bg-success bg-opacity-15 border border-success border-opacity-30 rounded-3 small text-success fw-bold mb-2">
+                    <i class="bi bi-check-circle-fill me-1"></i>Correct Answer: Option {{ q.correct_answer }}
+                </div>
+
+                {% if q.explanation %}
+                <div class="extra-small text-body bg-body-tertiary p-2 rounded-3 border border-secondary border-opacity-10">
+                    <strong class="text-warning"><i class="bi bi-lightbulb-fill me-1"></i>Explanation:</strong> {{ q.explanation }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="col-lg-5">
+        <div class="result-card p-4 h-100">
+            <h5 class="fw-bold mb-3 text-white"><i class="bi bi-trophy-fill text-warning me-2"></i>Topic Quiz Leaderboard</h5>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 extra-small">
+                    <thead class="table-secondary text-uppercase text-muted">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Student</th>
+                            <th>Score</th>
+                            <th>XP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sub in all_submissions %}
+                        <tr>
+                            <td class="fw-bold">#{{ forloop.counter }}</td>
+                            <td>
+                                <div class="fw-bold text-white">{{ sub.user.display_name|default:sub.user.username }}</div>
+                                <div class="text-muted">@{{ sub.user.username }}</div>
+                            </td>
+                            <td class="fw-bold text-info">{{ sub.score }} pts</td>
+                            <td class="fw-bold text-warning">+{{ sub.xp_awarded }} XP</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">No other submissions recorded yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -6,8 +6,20 @@ from .forms import ResumeUploadForm
 from .analyzer import analyze_resume
 
 
+from recommendations.models import Recommendation
+from recommendations.engine import generate_recommendations
+
+
 @login_required
 def resume_upload(request):
+    if request.GET.get('refresh_recs') == '1':
+        generate_recommendations(request.user)
+
+    recommendations = Recommendation.objects.filter(user=request.user)
+    if not recommendations.exists():
+        generate_recommendations(request.user)
+        recommendations = Recommendation.objects.filter(user=request.user)
+
     analyses = ResumeAnalysis.objects.filter(user=request.user)[:5]
     if request.method == 'POST':
         form = ResumeUploadForm(request.POST, request.FILES)
@@ -15,7 +27,11 @@ def resume_upload(request):
             file = request.FILES['resume_file']
             if not file.name.endswith('.pdf'):
                 messages.error(request, 'Please upload a PDF file.')
-                return render(request, 'resumeanalyzer/upload.html', {'form': form, 'analyses': analyses})
+                return render(request, 'resumeanalyzer/upload.html', {
+                    'form': form,
+                    'analyses': analyses,
+                    'recommendations': recommendations
+                })
 
             result = analyze_resume(file)
             file.seek(0)
@@ -30,10 +46,17 @@ def resume_upload(request):
                 missing_sections=result['missing_sections'],
             )
             messages.success(request, f'Resume analyzed! Score: {analysis.score}/100')
-            return render(request, 'resumeanalyzer/result.html', {'analysis': analysis})
+            return render(request, 'resumeanalyzer/result.html', {
+                'analysis': analysis,
+                'recommendations': recommendations
+            })
     else:
         form = ResumeUploadForm()
-    return render(request, 'resumeanalyzer/upload.html', {'form': form, 'analyses': analyses})
+    return render(request, 'resumeanalyzer/upload.html', {
+        'form': form,
+        'analyses': analyses,
+        'recommendations': recommendations
+    })
 
 
 @login_required

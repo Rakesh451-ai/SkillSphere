@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}DSA Algorithm Quizzes - SkillSphere{% endblock %}
+{% block page_title %}DSA Algorithm Quizzes (15 Topics • 25 Questions Each){% endblock %}
+
+{% block extra_css %}
+<style>
+    .quiz-card {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .quiz-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(99, 102, 241, 0.45) !important;
+        box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2);
+    }
+    .badge-status-live {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: #ffffff !important;
+        font-weight: 800;
+        animation: pulseLive 2s infinite ease-in-out;
+    }
+    @keyframes pulseLive {
+        0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .topic-filter-btn {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-muted);
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .topic-filter-btn:hover, .topic-filter-btn.active {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: #ffffff;
+        border-color: #6366f1;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    }
+
+    .stat-pill-card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 16px 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Overview Banner -->
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <div class="quiz-card p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <h3 class="fw-bold mb-1"><i class="bi bi-patch-question-fill text-warning me-2"></i>Structured DSA Topic Quiz Portal</h3>
+                    <p class="text-muted mb-0">Master all 15 Core Data Structures & Algorithms topics! Each topic contains <strong>25 structured questions</strong> covering basic, medium, and advanced concepts.</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-warning bg-opacity-15 text-warning px-3 py-2 rounded-pill fw-bold fs-6">
+                        <i class="bi bi-award-fill me-1"></i> 375 Total Questions
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Bar -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="stat-pill-card d-flex align-items-center gap-3">
+            <div class="p-3 bg-primary bg-opacity-15 rounded-3 text-primary">
+                <i class="bi bi-journal-check fs-4"></i>
+            </div>
+            <div>
+                <small class="text-muted d-block extra-small text-uppercase fw-bold">Topics Available</small>
+                <h5 class="fw-bold mb-0">15 Topics</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-pill-card d-flex align-items-center gap-3">
+            <div class="p-3 bg-success bg-opacity-15 rounded-3 text-success">
+                <i class="bi bi-question-square-fill fs-4"></i>
+            </div>
+            <div>
+                <small class="text-muted d-block extra-small text-uppercase fw-bold">Questions / Topic</small>
+                <h5 class="fw-bold mb-0">25 Questions</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-pill-card d-flex align-items-center gap-3">
+            <div class="p-3 bg-warning bg-opacity-15 rounded-3 text-warning">
+                <i class="bi bi-lightning-charge-fill fs-4"></i>
+            </div>
+            <div>
+                <small class="text-muted d-block extra-small text-uppercase fw-bold">XP Per Quiz</small>
+                <h5 class="fw-bold mb-0">250 XP</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-pill-card d-flex align-items-center gap-3">
+            <div class="p-3 bg-info bg-opacity-15 rounded-3 text-info">
+                <i class="bi bi-trophy-fill fs-4"></i>
+            </div>
+            <div>
+                <small class="text-muted d-block extra-small text-uppercase fw-bold">User XP Earned</small>
+                <h5 class="fw-bold mb-0 text-info">{{ request.user.xp_points }} XP</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Filters & Search -->
+<div class="card-custom p-3 mb-4">
+    <div class="row g-3 align-items-center">
+        <div class="col-md-7">
+            <div class="d-flex flex-wrap gap-2">
+                <button class="topic-filter-btn active" onclick="filterCategory('all', this)">All Topics (15)</button>
+                <button class="topic-filter-btn" onclick="filterCategory('linear', this)">Linear DS</button>
+                <button class="topic-filter-btn" onclick="filterCategory('tree', this)">Trees & Heaps</button>
+                <button class="topic-filter-btn" onclick="filterCategory('graph', this)">Graph & DP</button>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-body-tertiary border-secondary border-opacity-25"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" class="form-control bg-body-tertiary border-secondary border-opacity-25 text-body" id="quizSearchInput" placeholder="Search quiz topic (e.g. Array, LinkedList, Graph, DP)..." onkeyup="searchQuizzes()">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quizzes Grid -->
+<div class="row g-4" id="quizzesGridContainer">
+    {% for q in quizzes %}
+    <div class="col-md-6 col-lg-4 quiz-item-col" data-topic="{{ q.topic|lower }}" data-title="{{ q.title|lower }}">
+        <div class="quiz-card p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-pill extra-small fw-bold">
+                        <i class="bi bi-tag-fill me-1"></i>{{ q.topic }}
+                    </span>
+                    <span class="badge bg-warning bg-opacity-20 text-warning px-3 py-1 rounded-pill extra-small fw-bold">
+                        <i class="bi bi-lightning-charge-fill me-1"></i>{{ q.total_xp }} XP
+                    </span>
+                </div>
+
+                <h5 class="fw-bold mb-2 text-body">{{ q.title }}</h5>
+                <p class="text-muted small mb-3">{{ q.description|default:"Structured 25-question DSA challenge covering basic to advanced concepts." }}</p>
+
+                <div class="p-3 bg-body-tertiary rounded-3 border border-secondary border-opacity-10 mb-3 extra-small">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted"><i class="bi bi-list-check me-1"></i>Questions:</span>
+                        <span class="fw-bold text-success">25 Questions</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted"><i class="bi bi-bar-chart-steps me-1"></i>Level:</span>
+                        <span class="fw-bold text-warning">Basic to Advanced</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted"><i class="bi bi-check2-circle me-1"></i>Status:</span>
+                        {% if q.id in user_submissions %}
+                            <span class="fw-bold text-success"><i class="bi bi-check-all me-1"></i>Completed</span>
+                        {% else %}
+                            <span class="fw-bold text-info"><i class="bi bi-play-fill me-1"></i>Ready to Take</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                {% if q.id in user_submissions %}
+                    <a href="{% url 'dashboard:quiz_result' q.id %}" class="btn btn-outline-success w-100 rounded-pill fw-bold">
+                        <i class="bi bi-bar-chart-line-fill me-2"></i>View Score & Explanations
+                    </a>
+                {% else %}
+                    <a href="{% url 'dashboard:quiz_take' q.id %}" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
+                        <i class="bi bi-play-circle-fill me-2"></i>Start 25-Question Quiz
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="quiz-card p-5 text-center text-muted">
+            <i class="bi bi-card-checklist fs-1 d-block mb-3 text-secondary"></i>
+            <h5>No quizzes found.</h5>
+            <p>Use the refresh button or reset search criteria.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function filterCategory(cat, btn) {
+        document.querySelectorAll('.topic-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const items = document.querySelectorAll('.quiz-item-col');
+        items.forEach(item => {
+            const topic = item.getAttribute('data-topic') || '';
+            if (cat === 'all') {
+                item.style.display = 'block';
+            } else if (cat === 'linear') {
+                if (['array', 'string', 'pointer', 'linkedlist', 'stack', 'queue', 'sliding window'].includes(topic)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            } else if (cat === 'tree') {
+                if (['tree', 'binary tree', 'binary search tree (bst)', 'avl tree', 'heap'].includes(topic)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            } else if (cat === 'graph') {
+                if (['graph', 'dynamic programming (dp)', 'recursion'].includes(topic)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    function searchQuizzes() {
+        const query = document.getElementById('quizSearchInput').value.toLowerCase();
+        const items = document.querySelectorAll('.quiz-item-col');
+
+        items.forEach(item => {
+            const topic = item.getAttribute('data-topic') || '';
+            const title = item.getAttribute('data-title') || '';
+            if (topic.includes(query) || title.includes(query)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

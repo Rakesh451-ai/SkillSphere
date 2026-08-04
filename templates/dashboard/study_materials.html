@@ -38,9 +38,9 @@
     /* DSA Tracker Custom Styles */
     .dsa-tracker-card {
         border-radius: 16px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(244, 247, 251, 0.95) 100%);
-        border: 1px solid rgba(111, 66, 193, 0.15);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        background: var(--card-bg) !important;
+        border: 1px solid var(--card-border) !important;
+        box-shadow: var(--card-shadow);
         transition: all 0.3s ease;
     }
     .dsa-problem-row {
@@ -134,7 +134,7 @@
             <!-- LEETCODE DSA TRACKER TAB -->
             <div class="tab-pane fade show active" id="leetcode-tracker-content" role="tabpanel">
                 {% if not is_own_sheet %}
-                <div class="alert alert-info border-0 rounded-4 p-3 mb-4 d-flex justify-content-between align-items-center shadow-sm bg-info bg-opacity-10 text-dark">
+                <div class="alert alert-info border-0 rounded-4 p-3 mb-4 d-flex justify-content-between align-items-center shadow-sm bg-info bg-opacity-10 ">
                     <div class="d-flex align-items-center gap-3">
                         <div class="bg-info bg-opacity-20 p-2 rounded-circle text-info">
                             <i class="bi bi-eye-fill fs-4"></i>
@@ -151,7 +151,7 @@
                 {% endif %}
 
                 <!-- Profile Status Card -->
-                <div class="card-custom p-4 mb-4 dsa-tracker-card border-0 shadow-sm bg-white">
+                <div class="card-custom p-4 mb-4 dsa-tracker-card border-0 shadow-sm card-custom">
                     <div class="row align-items-center g-4">
                         <div class="col-md-5">
                             <div class="d-flex align-items-center gap-3">
@@ -176,10 +176,10 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-2 d-flex justify-content-between align-items-center">
-                                <span class="fw-bold text-dark small">Curated Sheet Progress</span>
+                                <span class="fw-bold  small">Curated Sheet Progress</span>
                                 <span class="badge bg-primary rounded-pill" id="overall-solved-badge">{{ overall_completed }} / {{ overall_total }} Solved</span>
                             </div>
-                            <div class="progress rounded-pill bg-light" style="height: 12px;">
+                            <div class="progress rounded-pill bg-body-tertiary" style="height: 12px;">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-success progress-bar-glow" 
                                      id="overall-progress-bar"
                                      role="progressbar" 
@@ -219,7 +219,7 @@
                     
                     <hr class="my-3 opacity-10">
                     
-                    <div class="alert alert-info border-0 rounded-3 mb-0 p-3 small d-flex gap-2 bg-info bg-opacity-10 text-dark">
+                    <div class="alert alert-info border-0 rounded-3 mb-0 p-3 small d-flex gap-2 bg-info bg-opacity-10 ">
                         <i class="bi bi-info-circle-fill fs-5 text-info mt-1"></i>
                         <div>
                             <strong class="text-info-emphasis">Note on LeetCode Syncing:</strong> Since LeetCode's public API limits transaction downloads to the **most recent 20 submissions**, we pre-loaded this sheet with 80+ classic coding interview questions. You can manually check off your older solved problems (like the 363 you've already completed) to populate this tracker, while new problems you solve will automatically check off when you click "Sync Now".
@@ -231,19 +231,19 @@
                 <div class="row">
                     {% for category in dsa_categories %}
                         <div class="col-12 mb-4">
-                            <div class="card-custom border-0 shadow-sm overflow-hidden bg-white">
-                                <div class="p-3 bg-light border-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
+                            <div class="card-custom border-0 shadow-sm overflow-hidden card-custom">
+                                <div class="p-3 bg-body-tertiary border-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="rounded bg-primary bg-opacity-10 p-2 text-primary">
                                             <i class="bi bi-folder2-open"></i>
                                         </span>
                                         <div>
-                                            <h6 class="fw-bold mb-0 text-dark">{{ category.name }}</h6>
+                                            <h6 class="fw-bold mb-0 ">{{ category.name }}</h6>
                                             <small class="text-muted" id="cat-solved-{{ category.slug }}" data-total="{{ category.total }}">{{ category.completed }} of {{ category.total }} completed</small>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center gap-3" style="width: 250px;">
-                                        <div class="progress rounded-pill w-100 bg-white border" style="height: 8px;">
+                                        <div class="progress rounded-pill w-100 card-custom border" style="height: 8px;">
                                             <div class="progress-bar bg-primary" 
                                                  id="cat-progress-{{ category.slug }}"
                                                  role="progressbar" 
@@ -259,7 +259,7 @@
                                 <div class="p-0">
                                     <div class="table-responsive">
                                         <table class="table align-middle mb-0">
-                                            <thead class="table-light table-sm">
+                                            <thead class="table-sm">
                                                 <tr>
                                                     <th style="width: 60px;" class="text-center">Status</th>
                                                     <th>Problem Statement</th>
@@ -283,7 +283,7 @@
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <label for="chk-{{ problem.slug }}" class="fw-semibold text-dark mb-0 ms-1" style="cursor: pointer;">
+                                                            <label for="chk-{{ problem.slug }}" class="fw-semibold  mb-0 ms-1" style="cursor: pointer;">
                                                                 {{ problem.title }}
                                                             </label>
                                                         </td>
@@ -358,31 +358,31 @@
                             <div class="row row-cols-1 row-cols-lg-5 row-cols-md-3 g-3">
                                 <div class="col">
                                     <a href="https://www.naukri.com/code360/problem-lists/striver-sde-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
-                                        <h6 class="fw-bold mb-1 text-dark">Striver's SDE Sheet</h6>
+                                        <h6 class="fw-bold mb-1 ">Striver's SDE Sheet</h6>
                                         <p class="text-muted small mb-0">Interactive tracking sheet with 180+ curated interview problems.</p>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a href="https://neetcode.io/practice" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
-                                        <h6 class="fw-bold mb-1 text-dark">NeetCode 150</h6>
+                                        <h6 class="fw-bold mb-1 ">NeetCode 150</h6>
                                         <p class="text-muted small mb-0">150 structured coding questions categorized by key patterns with free video solutions.</p>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a href="https://www.naukri.com/code360/problem-lists/love-babbar-dsa-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
-                                        <h6 class="fw-bold mb-1 text-dark">Love Babbar Sheet</h6>
+                                        <h6 class="fw-bold mb-1 ">Love Babbar Sheet</h6>
                                         <p class="text-muted small mb-0">Interactive tracker for the famous 450+ question cracking DSA sheet.</p>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a href="https://www.naukri.com/code360/problem-lists/fraz-dsa-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
-                                        <h6 class="fw-bold mb-1 text-dark">Fraz's DSA Sheet</h6>
+                                        <h6 class="fw-bold mb-1 ">Fraz's DSA Sheet</h6>
                                         <p class="text-muted small mb-0">Comprehensive tracking sheet from easy to hard algorithms.</p>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a href="https://www.naukri.com/code360/problem-lists/apna-college-dsa-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">
-                                        <h6 class="fw-bold mb-1 text-dark">Apna College Sheet</h6>
+                                        <h6 class="fw-bold mb-1 ">Apna College Sheet</h6>
                                         <p class="text-muted small mb-0">375+ questions hand-selected for cracking technical placement rounds.</p>
                                     </a>
                                 </div>
@@ -430,19 +430,19 @@
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <a href="https://www.hackerrank.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">HackerRank</h6>
+                                        <h6 class="fw-bold mb-1 ">HackerRank</h6>
                                         <p class="text-muted small mb-0">Great for beginners learning syntaxes and fundamental scripts.</p>
                                     </a>
                                 </div>
                                 <div class="col-md-4">
                                     <a href="https://codeforces.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">Codeforces</h6>
+                                        <h6 class="fw-bold mb-1 ">Codeforces</h6>
                                         <p class="text-muted small mb-0">Competitive programming contests and high-speed algorithm rounds.</p>
                                     </a>
                                 </div>
                                 <div class="col-md-4">
                                     <a href="https://www.codechef.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">CodeChef</h6>
+                                        <h6 class="fw-bold mb-1 ">CodeChef</h6>
                                         <p class="text-muted small mb-0">Excellent monthly long/short contests for practice.</p>
                                     </a>
                                 </div>
@@ -491,19 +491,19 @@ urlpatterns = [
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <a href="https://developer.mozilla.org/en-US/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">MDN Web Docs</h6>
+                                        <h6 class="fw-bold mb-1 ">MDN Web Docs</h6>
                                         <p class="text-muted small mb-0">The official reference for HTML, CSS, and JS APIs.</p>
                                     </a>
                                 </div>
                                 <div class="col-md-4">
                                     <a href="https://docs.djangoproject.com/en/stable/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">Django Documentation</h6>
+                                        <h6 class="fw-bold mb-1 ">Django Documentation</h6>
                                         <p class="text-muted small mb-0">Guide for models, views, templates, and admin configurations.</p>
                                     </a>
                                 </div>
                                 <div class="col-md-4">
                                     <a href="https://react.dev/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">React Docs</h6>
+                                        <h6 class="fw-bold mb-1 ">React Docs</h6>
                                         <p class="text-muted small mb-0">Complete reference for state management, hooks, and components.</p>
                                     </a>
                                 </div>
@@ -553,19 +553,19 @@ print(f"Predicted Score: {predicted_score[0]:.2f}")</code></pre>
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <a href="https://www.kaggle.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">Kaggle Datasets & Notebooks</h6>
+                                        <h6 class="fw-bold mb-1 ">Kaggle Datasets & Notebooks</h6>
                                         <p class="text-muted small mb-0">Engage in data science competitions and view notebooks.</p>
                                     </a>
                                 </div>
                                 <div class="col-md-4">
                                     <a href="https://scikit-learn.org/stable/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">Scikit-Learn Docs</h6>
+                                        <h6 class="fw-bold mb-1 ">Scikit-Learn Docs</h6>
                                         <p class="text-muted small mb-0">API details for classification, regression, and clustering algorithms.</p>
                                     </a>
                                 </div>
                                 <div class="col-md-4">
                                     <a href="https://www.fast.ai/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">Fast.ai</h6>
+                                        <h6 class="fw-bold mb-1 ">Fast.ai</h6>
                                         <p class="text-muted small mb-0">Practical deep learning courses for coders.</p>
                                     </a>
                                 </div>
@@ -605,13 +605,13 @@ print(f"Predicted Score: {predicted_score[0]:.2f}")</code></pre>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <a href="https://www.indiabix.com/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">IndiaBIX</h6>
+                                        <h6 class="fw-bold mb-1 ">IndiaBIX</h6>
                                         <p class="text-muted small mb-0">Large database of quantitative, logical, and verbal aptitude questions with solutions.</p>
                                     </a>
                                 </div>
                                 <div class="col-md-6">
                                     <a href="https://www.geeksforgeeks.org/aptitude-questions-and-answers/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">GFG Aptitude</h6>
+                                        <h6 class="fw-bold mb-1 ">GFG Aptitude</h6>
                                         <p class="text-muted small mb-0">Topic-wise categorized practice test series and formula lists.</p>
                                     </a>
                                 </div>
@@ -650,13 +650,13 @@ print(f"Predicted Score: {predicted_score[0]:.2f}")</code></pre>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <a href="https://www.toastmasters.org/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">Toastmasters International</h6>
+                                        <h6 class="fw-bold mb-1 ">Toastmasters International</h6>
                                         <p class="text-muted small mb-0">World leader in communication and leadership skills development.</p>
                                     </a>
                                 </div>
                                 <div class="col-md-6">
                                     <a href="https://hbr.org/" target="_blank" class="card p-3 text-decoration-none resource-card">
-                                        <h6 class="fw-bold mb-1 text-dark">Harvard Business Review</h6>
+                                        <h6 class="fw-bold mb-1 ">Harvard Business Review</h6>
                                         <p class="text-muted small mb-0">Excellent advice on professional communication and workplace management.</p>
                                     </a>
                                 </div>

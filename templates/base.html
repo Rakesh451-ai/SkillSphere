@@ -1,77 +1,299 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SkillSphere{% endblock %}</title>
+    <!-- Anti-FOUC Theme Initialization Script -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('skillsphere_theme') || 'dark';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
+    <!-- Ultra-Modern Typography & Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --primary-light: #a29bfe;
-            --secondary: #00cec9;
-            --accent: #fd79a8;
-            --dark: #2d3436;
-            --light-bg: #f8f9fa;
+        /* =========================================================
+           ULTRA-MODERN CLEAN DESIGN SYSTEM (Linear & Vercel Aesthetic)
+           ========================================================= */
+
+        /* DARK THEME TOKENS (Deep Obsidian / Glassmorphic Tech) */
+        [data-bs-theme="dark"] {
+            --bg-body: #090d16;
+            --topbar-bg: rgba(15, 23, 42, 0.85);
+            --topbar-border: rgba(255, 255, 255, 0.07);
+            --sidebar-bg: linear-gradient(180deg, #0f172a 0%, #070a11 100%);
+            --card-bg: #111827;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.03);
+            --text-color: #f8fafc;       /* High-contrast pure slate 50 */
+            --text-muted: #94a3b8;       /* Medium slate 400 */
+            --heading-color: #ffffff;    /* Pure white headers */
+            --brand-accent: #6366f1;     /* Electric Indigo */
+            --brand-gradient: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+            --toggle-btn-bg: rgba(99, 102, 241, 0.15);
+            --toggle-btn-color: #818cf8;
+            --toggle-border: rgba(129, 140, 248, 0.3);
+            --input-bg: #0f172a;
+            --input-border: rgba(255, 255, 255, 0.12);
+            --table-header-bg: rgba(255, 255, 255, 0.03);
         }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+
+        /* BRIGHT / LIGHT THEME TOKENS (Ultra Clean Slate / Polar White) */
+        [data-bs-theme="light"] {
+            --bg-body: #f8fafc;
+            --topbar-bg: rgba(255, 255, 255, 0.9);
+            --topbar-border: #e2e8f0;
+            --sidebar-bg: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: #ffffff;
+            --card-border: rgba(226, 232, 240, 0.9);
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+            --text-color: #0f172a;       /* Deep slate 900 */
+            --text-muted: #64748b;       /* Slate 500 */
+            --heading-color: #0f172a;    /* Rich charcoal headers */
+            --brand-accent: #4f46e5;
+            --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #0284c7 100%);
+            --toggle-btn-bg: #e0e7ff;
+            --toggle-btn-color: #4338ca;
+            --toggle-border: #c7d2fe;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --table-header-bg: #f1f5f9;
+        }
+
+        /* Universal Clean Typography Stack */
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-color);
+            line-height: 1.6;
+            letter-spacing: -0.015em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1, h2, h3, h4, h5, h6, .fw-bold, .fw-semibold, .navbar-brand {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.025em;
+            color: var(--heading-color);
+            font-weight: 700;
+        }
+
+        code, pre, kbd, samp, .font-monospace, #typer-editor, .game-panel code {
+            font-family: 'JetBrains Mono', 'Fira Code', SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+        }
+
+        /* Scope Theme Color Enforcement */
+        [data-bs-theme="dark"] body,
+        [data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2, [data-bs-theme="dark"] h3,
+        [data-bs-theme="dark"] h4, [data-bs-theme="dark"] h5, [data-bs-theme="dark"] h6,
+        [data-bs-theme="dark"] p, [data-bs-theme="dark"] span, [data-bs-theme="dark"] div,
+        [data-bs-theme="dark"] td, [data-bs-theme="dark"] th, [data-bs-theme="dark"] label,
+        [data-bs-theme="dark"] input, [data-bs-theme="dark"] select, [data-bs-theme="dark"] textarea,
+        [data-bs-theme="dark"] button, [data-bs-theme="dark"] .card,
+        [data-bs-theme="dark"] .game-panel, [data-bs-theme="dark"] .admin-card,
+        [data-bs-theme="dark"] .stat-card, [data-bs-theme="dark"] .hud-label {
+            color: #f8fafc;
+        }
+
+        [data-bs-theme="dark"] .text-muted,
+        [data-bs-theme="dark"] .text-secondary,
+        [data-bs-theme="dark"] .text-light-50 {
+            color: #94a3b8 !important;
+        }
+
+        [data-bs-theme="dark"] .form-control,
+        [data-bs-theme="dark"] .form-select {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            border-radius: 10px;
+        }
+
+        [data-bs-theme="light"] body,
+        [data-bs-theme="light"] h1, [data-bs-theme="light"] h2, [data-bs-theme="light"] h3,
+        [data-bs-theme="light"] h4, [data-bs-theme="light"] h5, [data-bs-theme="light"] h6,
+        [data-bs-theme="light"] p, [data-bs-theme="light"] span, [data-bs-theme="light"] div,
+        [data-bs-theme="light"] td, [data-bs-theme="light"] th, [data-bs-theme="light"] label,
+        [data-bs-theme="light"] input, [data-bs-theme="light"] select, [data-bs-theme="light"] textarea,
+        [data-bs-theme="light"] button, [data-bs-theme="light"] .card,
+        [data-bs-theme="light"] .game-panel, [data-bs-theme="light"] .admin-card,
+        [data-bs-theme="light"] .stat-card, [data-bs-theme="light"] .hud-label {
+            color: #0f172a;
+        }
+
+        [data-bs-theme="light"] .text-muted,
+        [data-bs-theme="light"] .text-secondary {
+            color: #64748b !important;
+        }
+
+        [data-bs-theme="light"] .form-control,
+        [data-bs-theme="light"] .form-select {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border-color: #cbd5e1 !important;
+            border-radius: 10px;
+        }
+
+        /* Sidebar Styling (Modern Dark Glassmorphism) */
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(180deg, var(--primary) 0%, #4834d4 100%);
+            background: var(--sidebar-bg);
             width: 260px;
             position: fixed;
             left: 0;
             top: 0;
             z-index: 100;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+        }
+        .sidebar .brand-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #ffffff !important;
+            padding: 24px 22px;
+            letter-spacing: -0.03em;
+        }
+        .sidebar .brand-logo i {
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin: 2px 12px;
-            transition: all 0.2s;
-        }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-        }
-        .sidebar .nav-link i { width: 24px; text-align: center; margin-right: 10px; }
-        .main-content { margin-left: 260px; min-height: 100vh; background: var(--light-bg); }
-        .top-navbar {
-            background: #fff;
-            border-bottom: 1px solid #e9ecef;
-            padding: 12px 24px;
-        }
-        .stat-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            transition: transform 0.2s;
-        }
-        .stat-card:hover { transform: translateY(-4px); }
-        .stat-card .stat-icon {
-            width: 48px; height: 48px;
+            color: rgba(248, 250, 252, 0.75) !important;
+            padding: 12px 18px;
             border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem;
+            margin: 3px 14px;
+            font-weight: 500;
+            font-size: 0.92rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
         }
-        .stat-card .stat-value { font-size: 1.8rem; font-weight: 700; }
-        .card-custom {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        .sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff !important;
+            transform: translateX(4px);
+        }
+        .sidebar .nav-link.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.15) 100%);
+            color: #ffffff !important;
+            font-weight: 600;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
+        }
+        .sidebar .nav-link i {
+            width: 22px;
+            font-size: 1.1rem;
+            margin-right: 12px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            background-color: var(--bg-body);
+            transition: background-color 0.3s ease;
+        }
+
+        /* Top Navbar */
+        .top-navbar {
+            background-color: var(--topbar-bg) !important;
+            border-bottom: 1px solid var(--topbar-border) !important;
+            padding: 16px 32px;
+            backdrop-filter: blur(12px);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Modern Elevated Cards */
+        .stat-card, .card-custom, .card {
+            background-color: var(--card-bg) !important;
+            border: 1px solid var(--card-border) !important;
+            border-radius: 18px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, background-color 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 35px -5px rgba(0, 0, 0, 0.3), 0 0 25px rgba(99, 102, 241, 0.08);
+        }
+        .stat-card .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
+        .stat-card .stat-value {
+            font-size: 1.85rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        /* Modern Clean Buttons & Badges */
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             border: none;
+            color: #ffffff !important;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 0.55rem 1.25rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: all 0.2s ease;
         }
-        .btn-primary { background: var(--primary); border-color: var(--primary); }
-        .btn-primary:hover { background: #5b4cdb; border-color: #5b4cdb; }
-        .badge-xp { background: linear-gradient(135deg, var(--primary), var(--accent)); }
-        .progress-bar { background: var(--primary); }
-        .brand-logo { font-size: 1.5rem; font-weight: 700; color: #fff; padding: 20px; }
-        .brand-logo i { color: var(--secondary); }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
+            color: #ffffff !important;
+        }
+
+        .badge-xp {
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+            color: #ffffff !important;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.25);
+        }
+
+        /* Top-Right Theme Toggle Switch */
+        .theme-toggle-btn {
+            background: var(--toggle-btn-bg);
+            color: var(--toggle-btn-color) !important;
+            border: 1px solid var(--toggle-border);
+            border-radius: 50rem;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .theme-toggle-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.25);
+        }
+        .theme-toggle-btn i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .theme-toggle-btn:hover i {
+            transform: rotate(25deg);
+        }
+
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.show { transform: translateX(0); }
@@ -82,9 +304,9 @@
 </head>
 <body>
     {% if user.is_authenticated %}
-    <!-- Sidebar -->
+    <!-- Sidebar Navigation -->
     <nav class="sidebar" id="sidebar">
-        <div class="brand-logo">
+        <div class="brand-logo d-flex align-items-center gap-2">
             <i class="bi bi-lightning-charge-fill"></i> SkillSphere
         </div>
         <ul class="nav flex-column">
@@ -94,28 +316,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'skills' %}active{% endif %}" href="{% url 'skills:list' %}">
-                    <i class="bi bi-stars"></i> Skills
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'studylogs' %}active{% endif %}" href="{% url 'studylogs:list' %}">
-                    <i class="bi bi-journal-text"></i> Study Logs
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'goals' %}active{% endif %}" href="{% url 'goals:list' %}">
-                    <i class="bi bi-bullseye"></i> Goals
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'recommendations' %}active{% endif %}" href="{% url 'recommendations:list' %}">
-                    <i class="bi bi-lightbulb-fill"></i> AI Recommendations
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'resumeanalyzer' %}active{% endif %}" href="{% url 'resumeanalyzer:upload' %}">
-                    <i class="bi bi-file-earmark-person-fill"></i> Resume Analyzer
+                <a class="nav-link {% if request.resolver_match.app_name == 'resumeanalyzer' or request.resolver_match.app_name == 'recommendations' %}active{% endif %}" href="{% url 'resumeanalyzer:upload' %}">
+                    <i class="bi bi-file-earmark-person-fill"></i> Resume Analysis
                 </a>
             </li>
             <li class="nav-item">
@@ -124,8 +326,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}" href="{% url 'dashboard:analytics' %}">
-                    <i class="bi bi-graph-up-arrow"></i> Analytics
+                <a class="nav-link {% if request.resolver_match.url_name == 'dsa_visualizer' or request.resolver_match.url_name == 'dsa_theory' %}active{% endif %}" href="{% url 'dashboard:dsa_visualizer' %}">
+                    <i class="bi bi-journal-bookmark-fill text-info"></i> DSA Theory
                 </a>
             </li>
             <li class="nav-item">
@@ -134,61 +336,96 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'quiz_list' or request.resolver_match.url_name == 'quiz_take' or request.resolver_match.url_name == 'quiz_result' %}active{% endif %}" href="{% url 'dashboard:quiz_list' %}">
+                    <i class="bi bi-patch-question-fill text-warning"></i> Live Coding Quizzes
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.app_name == 'leaderboard' %}active{% endif %}" href="{% url 'leaderboard:leaderboard' %}">
                     <i class="bi bi-trophy-fill"></i> Leaderboard
                 </a>
             </li>
+            {% if request.user.is_staff or request.user.is_superuser %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'admin_user_dashboard' %}active{% endif %}" href="{% url 'dashboard:admin_user_dashboard' %}">
+                    <i class="bi bi-shield-lock-fill text-warning"></i> Admin Panel
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'admin_quiz_list' or request.resolver_match.url_name == 'admin_quiz_edit' %}active{% endif %}" href="{% url 'dashboard:admin_quiz_list' %}">
+                    <i class="bi bi-ui-checks text-info"></i> Admin Quiz Portal
+                </a>
+            </li>
+            {% endif %}
             <li class="nav-item mt-3">
                 <a class="nav-link {% if request.resolver_match.app_name == 'accounts' %}active{% endif %}" href="{% url 'accounts:profile' %}">
                     <i class="bi bi-person-circle"></i> Profile
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'accounts:logout' %}">
+                <a class="nav-link text-danger-subtitle" href="{% url 'accounts:logout' %}">
                     <i class="bi bi-box-arrow-left"></i> Logout
                 </a>
             </li>
         </ul>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <div class="main-content">
         <div class="top-navbar d-flex justify-content-between align-items-center">
-            <button class="btn btn-link d-md-none" onclick="document.getElementById('sidebar').classList.toggle('show')">
-                <i class="bi bi-list fs-4"></i>
+            <button class="btn btn-link d-md-none p-0 me-2" onclick="document.getElementById('sidebar').classList.toggle('show')">
+                <i class="bi bi-list fs-3"></i>
             </button>
             <div>
-                <h5 class="mb-0">{% block page_title %}Dashboard{% endblock %}</h5>
+                <h5 class="mb-0 fw-bold">{% block page_title %}Dashboard{% endblock %}</h5>
             </div>
+            <!-- Top Right Section -->
             <div class="d-flex align-items-center gap-3">
                 {% if user.leetcode_username %}
-                <a href="{% url 'leaderboard:leaderboard' %}?sort=leetcode" class="btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 text-decoration-none rounded-pill" style="border-color: rgba(0, 0, 0, 0.15);">
+                <a href="{% url 'leaderboard:leaderboard' %}?sort=leetcode" class="btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 text-decoration-none rounded-pill" style="border-color: rgba(255, 255, 255, 0.15);">
                     <i class="bi bi-code-slash text-warning"></i>
-                    <span class="small text-muted d-none d-sm-inline">LeetCode Rank:</span>
-                    <span class="fw-bold text-dark">#{{ user.leetcode_rank }}</span>
+                    <span class="small d-none d-sm-inline opacity-75">LeetCode Rank:</span>
+                    <span class="fw-bold">#{{ user.leetcode_rank }}</span>
                     <span class="vr mx-1"></span>
                     <span class="fw-semibold text-success">{{ user.leetcode_total_solved }} solved</span>
                 </a>
                 {% endif %}
-                <a href="{% url 'notifications:list' %}" class="btn btn-light position-relative">
-                    <i class="bi bi-bell"></i>
+
+                <!-- Community Discussion Link beside LeetCode Rank -->
+                <a href="{% url 'dashboard:discussions' %}" class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 text-decoration-none rounded-pill fw-bold shadow-sm">
+                    <i class="bi bi-chat-quote-fill"></i>
+                    <span>Community Discussion</span>
+                </a>
+
+                <!-- Notification Bell -->
+                <a href="{% url 'notifications:list' %}" class="btn btn-light rounded-circle position-relative p-2" style="width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-bell fs-5"></i>
                     {% if unread_notifications > 0 %}
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ unread_notifications }}
                     </span>
                     {% endif %}
                 </a>
-                <span class="badge badge-xp text-white px-3 py-2">
+
+                <!-- XP Badge -->
+                <span class="badge badge-xp px-3 py-2 rounded-pill">
                     <i class="bi bi-lightning-charge-fill"></i> {{ user.xp_points }} XP
                 </span>
-                <span class="text-muted">{{ user.display_name }}</span>
+
+                <span class="fw-semibold d-none d-md-inline">{{ user.display_name }}</span>
+
+                <!-- Top Right Dark/Bright Section Toggle Switch -->
+                <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark / Bright Theme">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                    <span id="themeText">Dark Theme</span>
+                </button>
             </div>
         </div>
 
         <div class="p-4">
             {% if messages %}
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
@@ -198,10 +435,54 @@
         </div>
     </div>
     {% else %}
+    
+    <!-- Top-Right Floating Theme Toggle Switch for Public/Landing/Login Pages -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        <button class="theme-toggle-btn shadow" id="publicThemeToggleBtn" onclick="toggleTheme()" title="Toggle Dark / Bright Theme">
+            <i class="bi bi-moon-stars-fill" id="publicThemeIcon"></i>
+            <span id="publicThemeText">Dark Theme</span>
+        </button>
+    </div>
+
     {% block public_content %}{% endblock %}
     {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('skillsphere_theme', theme);
+
+            const isDark = theme === 'dark';
+            const iconClass = isDark ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars-fill';
+            const text = isDark ? 'Bright Mode' : 'Dark Mode';
+
+            const btnIcon = document.getElementById('themeIcon');
+            const btnText = document.getElementById('themeText');
+            if (btnIcon && btnText) {
+                btnIcon.className = iconClass;
+                btnText.textContent = text;
+            }
+
+            const pubIcon = document.getElementById('publicThemeIcon');
+            const pubText = document.getElementById('publicThemeText');
+            if (pubIcon && pubText) {
+                pubIcon.className = iconClass;
+                pubText.textContent = text;
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('skillsphere_theme') || 'dark';
+            applyTheme(savedTheme);
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -514,6 +514,30 @@
 
 <div class="arcade-container">
     <div class="row">
+        <!-- Programming Language Selector Bar -->
+        <div class="col-12 mb-4">
+            <div class="p-3 rounded-4 d-flex align-items-center justify-content-between flex-wrap gap-3" style="background: rgba(15, 23, 42, 0.75); border: 1px solid var(--cyber-border); backdrop-filter: blur(10px);">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-code-slash text-warning fs-5"></i>
+                    <span class="fw-bold text-white small text-uppercase">Game Language:</span>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-wrap" id="langSelectorGroup">
+                    <button type="button" class="btn btn-outline-info rounded-pill px-3 py-1 fw-bold lang-btn active" data-lang="cpp" onclick="switchGameLanguage('cpp')">
+                        <i class="bi bi-filetype-cpp me-1"></i> C++
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 fw-bold lang-btn" data-lang="python" onclick="switchGameLanguage('python')">
+                        <i class="bi bi-filetype-py me-1"></i> Python
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 fw-bold lang-btn" data-lang="java" onclick="switchGameLanguage('java')">
+                        <i class="bi bi-filetype-java me-1"></i> Java
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 fw-bold lang-btn" data-lang="javascript" onclick="switchGameLanguage('javascript')">
+                        <i class="bi bi-filetype-js me-1"></i> JavaScript
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Game Selection Nav Navigation -->
         <div class="col-12 mb-4">
             <div class="game-tab-nav">
@@ -541,6 +565,11 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link game-tab-btn" id="predictor-tab" data-bs-toggle="tab" data-bs-target="#predictor-content" type="button" role="tab">
                             <i class="bi bi-terminal-fill me-2"></i>Output Predictor
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link game-tab-btn" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-content" type="button" role="tab">
+                            <i class="bi bi-clock-history me-2"></i>Game History
                         </button>
                     </li>
                 </ul>
@@ -860,6 +889,70 @@
                     </div>
                 </div>
 
+                <!-- TAB 6: GAME HISTORY -->
+                <div class="tab-pane fade" id="history-content" role="tabpanel">
+                    <div class="game-panel p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                            <div>
+                                <h3 class="fw-bold text-white mb-1"><i class="bi bi-journal-code text-info me-2"></i>User Game History</h3>
+                                <p class="text-light-50 mb-0">Track your recorded game runs, scores, levels unlocked, and gameplay logs over time.</p>
+                            </div>
+                            <div class="d-flex gap-3">
+                                <div class="hud-panel px-3 py-2 text-center">
+                                    <span class="hud-label d-block small">Total Games Played</span>
+                                    <span class="fw-bold text-info fs-5" id="history-total-count">{{ total_games_played|default:0 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive border border-secondary border-opacity-25 rounded-4 overflow-hidden">
+                            <table class="table table-dark table-hover mb-0 align-middle">
+                                <thead class="table-dark text-light-50 text-uppercase small" style="background: rgba(255, 255, 255, 0.05);">
+                                    <tr>
+                                        <th scope="col" class="py-3 ps-4">Game</th>
+                                        <th scope="col" class="py-3">Level Reached</th>
+                                        <th scope="col" class="py-3">XP / Score Earned</th>
+                                        <th scope="col" class="py-3 pe-4">Date & Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="game-history-tbody">
+                                    {% if game_histories %}
+                                        {% for item in game_histories %}
+                                            <tr class="align-middle">
+                                                <td class="ps-4 fw-semibold text-white">
+                                                    {% if item.game_type == 'typer' %}
+                                                        <i class="bi bi-keyboard-fill text-info me-2"></i>Speed Typer
+                                                    {% elif item.game_type == 'bug' %}
+                                                        <i class="bi bi-bug-fill text-danger me-2"></i>Bug Hunter
+                                                    {% elif item.game_type == 'complexity' %}
+                                                        <i class="bi bi-speedometer2 text-warning me-2"></i>Big-O Master
+                                                    {% elif item.game_type == 'parsons' %}
+                                                        <i class="bi bi-tools text-primary me-2"></i>Code Repair Shop
+                                                    {% elif item.game_type == 'predictor' %}
+                                                        <i class="bi bi-terminal-fill text-success me-2"></i>Output Predictor
+                                                    {% else %}
+                                                        <i class="bi bi-controller text-secondary me-2"></i>{{ item.get_game_type_display }}
+                                                    {% endif %}
+                                                </td>
+                                                <td><span class="badge bg-secondary rounded-pill px-3 py-2">Level {{ item.level }}</span></td>
+                                                <td class="text-warning fw-bold">+{{ item.score }} XP</td>
+                                                <td class="pe-4 text-light-50 small">{{ item.played_at|date:"b d, Y h:i A" }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr id="empty-history-row">
+                                            <td colspan="4" class="text-center py-5 text-light-50">
+                                                <i class="bi bi-emoji-smile fs-1 d-block mb-2 text-secondary"></i>
+                                                No game history recorded yet. Start playing any coding game above to save your progress!
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -947,6 +1040,14 @@ const gameAudio = {
 };
 
 
+let savedLevels = {
+    typer: {{ typer_level|default:0 }},
+    bug: {{ bug_level|default:0 }},
+    complexity: {{ complexity_level|default:0 }},
+    parsons: {{ parsons_level|default:0 }},
+    predictor: {{ predictor_level|default:0 }}
+};
+
 // CSRF Helper & Save game progress function
 function getCookie(name) {
     let cookieValue = null;
@@ -981,13 +1082,63 @@ function saveGameProgress(gameType, level, score) {
     .then(data => {
         if (data.status === 'success') {
             console.log(`Saved progress: ${gameType} level ${level}`);
+            
+            if (data.typer_level !== undefined) savedLevels.typer = data.typer_level;
+            if (data.bug_level !== undefined) savedLevels.bug = data.bug_level;
+            if (data.complexity_level !== undefined) savedLevels.complexity = data.complexity_level;
+            if (data.parsons_level !== undefined) savedLevels.parsons = data.parsons_level;
+            if (data.predictor_level !== undefined) savedLevels.predictor = data.predictor_level;
+
             const xpBadge = document.querySelector('.badge-xp');
             if (xpBadge) {
                 xpBadge.innerHTML = `<i class="bi bi-lightning-charge-fill"></i> ${data.xp_points} XP`;
             }
+
+            if (data.history_item) {
+                addHistoryRow(data.history_item);
+            }
         }
     })
     .catch(err => console.error('Failed to save progress:', err));
+}
+
+function addHistoryRow(item) {
+    const tbody = document.getElementById('game-history-tbody');
+    if (!tbody) return;
+    const emptyRow = document.getElementById('empty-history-row');
+    if (emptyRow) {
+        emptyRow.remove();
+    }
+
+    let iconClass = 'bi-controller text-secondary';
+    if (item.game_type === 'typer') iconClass = 'bi-keyboard-fill text-info';
+    else if (item.game_type === 'bug') iconClass = 'bi-bug-fill text-danger';
+    else if (item.game_type === 'complexity') iconClass = 'bi-speedometer2 text-warning';
+    else if (item.game_type === 'parsons') iconClass = 'bi-tools text-primary';
+    else if (item.game_type === 'predictor') iconClass = 'bi-terminal-fill text-success';
+
+    const tr = document.createElement('tr');
+    tr.className = 'align-middle';
+    tr.innerHTML = `
+        <td class="ps-4 fw-semibold text-white">
+            <i class="bi ${iconClass} me-2"></i>${item.game_display_name}
+        </td>
+        <td><span class="badge bg-secondary rounded-pill px-3 py-2">Level ${item.level}</span></td>
+        <td class="text-warning fw-bold">+${item.score} XP</td>
+        <td class="pe-4 text-light-50 small">${item.played_at}</td>
+    `;
+    
+    if (tbody.firstChild) {
+        tbody.insertBefore(tr, tbody.firstChild);
+    } else {
+        tbody.appendChild(tr);
+    }
+
+    const totalCountEl = document.getElementById('history-total-count');
+    if (totalCountEl) {
+        let count = parseInt(totalCountEl.textContent) || 0;
+        totalCountEl.textContent = count + 1;
+    }
 }
 
 
@@ -1045,7 +1196,90 @@ function isIndentationSpace(index, code) {
 // ----------------------------------------------------
 // GAME 1: SPEED TYPER LOGIC
 // ----------------------------------------------------
-const SPEED_TYPER_LEVELS = [
+
+// ====================================================
+// MULTI-LANGUAGE ENGINE FOR CODING GAMES ARCADE
+// ====================================================
+let currentSelectedLanguage = localStorage.getItem('arcade_selected_lang') || 'cpp';
+
+const SPEED_TYPER_LEVELS_BY_LANG = {
+    cpp: [
+        { lang: 'C++', file: 'binary_search.cpp', code: `int binarySearch(vector<int>& nums, int target) {\n    int low = 0, high = nums.size() - 1;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (nums[mid] == target) return mid;\n        if (nums[mid] < target) low = mid + 1;\n        else high = mid - 1;\n    }\n    return -1;\n}` },
+        { lang: 'C++', file: 'reverse_list.cpp', code: `ListNode* reverseList(ListNode* head) {\n    ListNode *prev = nullptr, *curr = head;\n    while (curr != nullptr) {\n        ListNode* nextNode = curr->next;\n        curr->next = prev;\n        prev = curr;\n        curr = nextNode;\n    }\n    return prev;\n}` },
+        { lang: 'C++', file: 'two_sum.cpp', code: `vector<int> twoSum(vector<int>& nums, int target) {\n    unordered_map<int, int> mp;\n    for (int i = 0; i < nums.size(); i++) {\n        int comp = target - nums[i];\n        if (mp.count(comp)) return {mp[comp], i};\n        mp[nums[i]] = i;\n    }\n    return {};\n}` },
+        { lang: 'C++', file: 'lru_cache.cpp', code: `class LRUCache {\n    int capacity;\n    list<pair<int, int>> cache;\n    unordered_map<int, list<pair<int, int>>::iterator> map;\npublic:\n    LRUCache(int cap) : capacity(cap) {}\n    int get(int key) {\n        if (!map.count(key)) return -1;\n        cache.splice(cache.begin(), cache, map[key]);\n        return map[key]->second;\n    }\n};` },
+        { lang: 'C++', file: 'quick_sort.cpp', code: `int partition(vector<int>& arr, int low, int high) {\n    int pivot = arr[high], i = low - 1;\n    for (int j = low; j < high; j++) {\n        if (arr[j] < pivot) swap(arr[++i], arr[j]);\n    }\n    swap(arr[i + 1], arr[high]);\n    return i + 1;\n}` }
+    ],
+    python: [
+        { lang: 'Python', file: 'binary_search.py', code: `def search(arr, target):\n    low, high = 0, len(arr) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1` },
+        { lang: 'Python', file: 'reverse_list.py', code: `def reverse_list(head):\n    prev, curr = None, head\n    while curr:\n        nxt = curr.next\n        curr.next = prev\n        prev = curr\n        curr = nxt\n    return prev` },
+        { lang: 'Python', file: 'two_sum.py', code: `def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i\n    return []` },
+        { lang: 'Python', file: 'lru_cache.py', code: `from collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.cache = OrderedDict()\n        self.cap = capacity\n\n    def get(self, key: int) -> int:\n        if key not in self.cache:\n            return -1\n        self.cache.move_to_end(key)\n        return self.cache[key]` },
+        { lang: 'Python', file: 'quick_sort.py', code: `def quicksort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quicksort(left) + middle + quicksort(right)` }
+    ],
+    java: [
+        { lang: 'Java', file: 'BinarySearch.java', code: `public static int binarySearch(int[] nums, int target) {\n    int low = 0, high = nums.length - 1;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (nums[mid] == target) return mid;\n        if (nums[mid] < target) low = mid + 1;\n        else high = mid - 1;\n    }\n    return -1;\n}` },
+        { lang: 'Java', file: 'ReverseList.java', code: `public ListNode reverseList(ListNode head) {\n    ListNode prev = null, curr = head;\n    while (curr != null) {\n        ListNode nextNode = curr.next;\n        curr.next = prev;\n        prev = curr;\n        curr = nextNode;\n    }\n    return prev;\n}` },
+        { lang: 'Java', file: 'TwoSum.java', code: `public int[] twoSum(int[] nums, int target) {\n    Map<Integer, Integer> map = new HashMap<>();\n    for (int i = 0; i < nums.length; i++) {\n        int comp = target - nums[i];\n        if (map.containsKey(comp)) return new int[] { map.get(comp), i };\n        map.put(nums[i], i);\n    }\n    return new int[]{};\n}` },
+        { lang: 'Java', file: 'LRUCache.java', code: `class LRUCache extends LinkedHashMap<Integer, Integer> {\n    private int capacity;\n    public LRUCache(int capacity) {\n        super(capacity, 0.75f, true);\n        this.capacity = capacity;\n    }\n    public int get(int key) {\n        return super.getOrDefault(key, -1);\n    }\n}` },
+        { lang: 'Java', file: 'QuickSort.java', code: `public static void quickSort(int[] arr, int low, int high) {\n    if (low < high) {\n        int pi = partition(arr, low, high);\n        quickSort(arr, low, pi - 1);\n        quickSort(arr, pi + 1, high);\n    }\n}` }
+    ],
+    javascript: [
+        { lang: 'JavaScript', file: 'binarySearch.js', code: `function binarySearch(nums, target) {\n  let low = 0, high = nums.length - 1;\n  while (low <= high) {\n    let mid = Math.floor((low + high) / 2);\n    if (nums[mid] === target) return mid;\n    if (nums[mid] < target) low = mid + 1;\n    else high = mid - 1;\n  }\n  return -1;\n}` },
+        { lang: 'JavaScript', file: 'reverseList.js', code: `function reverseList(head) {\n  let prev = null, curr = head;\n  while (curr !== null) {\n    let nextNode = curr.next;\n    curr.next = prev;\n    prev = curr;\n    curr = nextNode;\n  }\n  return prev;\n}` },
+        { lang: 'JavaScript', file: 'twoSum.js', code: `function twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    let comp = target - nums[i];\n    if (map.has(comp)) return [map.get(comp), i];\n    map.set(nums[i], i);\n  }\n  return [];\n}` },
+        { lang: 'JavaScript', file: 'debounce.js', code: `function debounce(func, delay) {\n  let timer;\n  return function(...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() => {\n      func.apply(this, args);\n    }, delay);\n  };\n}` },
+        { lang: 'JavaScript', file: 'quickSort.js', code: `function quickSort(arr) {\n  if (arr.length <= 1) return arr;\n  const pivot = arr[Math.floor(arr.length / 2)];\n  const left = arr.filter(x => x < pivot);\n  const middle = arr.filter(x => x === pivot);\n  const right = arr.filter(x => x > pivot);\n  return [...quickSort(left), ...middle, ...quickSort(right)];\n}` }
+    ]
+};
+
+let SPEED_TYPER_LEVELS = SPEED_TYPER_LEVELS_BY_LANG[currentSelectedLanguage] || SPEED_TYPER_LEVELS_BY_LANG['cpp'];
+
+
+let BUG_HUNTER_PUZZLES = [];
+let REPAIR_SHOP_PUZZLES = [];
+
+function switchGameLanguage(lang) {
+    currentSelectedLanguage = lang;
+    localStorage.setItem('arcade_selected_lang', lang);
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        if (btn.getAttribute('data-lang') === lang) {
+            btn.classList.add('active', 'btn-info', 'text-dark');
+            btn.classList.remove('btn-outline-secondary', 'text-white');
+        } else {
+            btn.classList.remove('active', 'btn-info', 'text-dark');
+            btn.classList.add('btn-outline-secondary', 'text-white');
+        }
+    });
+
+    const searchLang = (lang === 'cpp') ? 'c++' : (lang === 'javascript') ? 'javascript' : (lang === 'java') ? 'java' : 'python';
+
+    SPEED_TYPER_LEVELS = SPEED_TYPER_LEVELS_BY_LANG[lang] || SPEED_TYPER_LEVELS_BY_LANG['cpp'];
+
+    if (typeof ALL_BUG_HUNTER_PUZZLES !== 'undefined') {
+        let filtered = ALL_BUG_HUNTER_PUZZLES.filter(p => p.lang && p.lang.toLowerCase().includes(searchLang));
+        BUG_HUNTER_PUZZLES = filtered.length > 0 ? filtered : ALL_BUG_HUNTER_PUZZLES;
+    }
+
+    if (typeof ALL_REPAIR_SHOP_PUZZLES !== 'undefined') {
+        let filtered = ALL_REPAIR_SHOP_PUZZLES.filter(p => p.title && p.title.toLowerCase().includes(searchLang));
+        REPAIR_SHOP_PUZZLES = filtered.length > 0 ? filtered : ALL_REPAIR_SHOP_PUZZLES;
+    }
+
+    if (typeof populateTyperSelect === 'function') populateTyperSelect();
+    if (typeof initTyperGame === 'function') initTyperGame(0);
+    if (typeof initBugGame === 'function') initBugGame();
+    if (typeof initParsonsGame === 'function') initParsonsGame();
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchGameLanguage(currentSelectedLanguage);
+});
+
+// Original fallback dataset
+const ORIGINAL_TYPER_LEVELS = [
     {
         lang: 'Python',
         file: 'binary_search.py',
@@ -1259,7 +1493,7 @@ button.addEventListener("click", (event) => {
 ];
 
 let typerState = {
-    level: Math.max(0, Math.min({{ typer_level|default:0 }}, SPEED_TYPER_LEVELS.length - 1)),
+    level: Math.max(0, Math.min(savedLevels.typer, SPEED_TYPER_LEVELS.length - 1)),
     currentCode: '',
     currentIndex: 0,
     spans: [],
@@ -1501,7 +1735,8 @@ function endTyperGame(isSuccess) {
 // ----------------------------------------------------
 // GAME 2: BUG HUNTER LOGIC
 // ----------------------------------------------------
-const BUG_HUNTER_PUZZLES = [
+const ALL_BUG_HUNTER_PUZZLES = [
+
     {
         lang: 'Python',
         code: `def append_to(element, target=[]):
@@ -1822,14 +2057,14 @@ for (Integer x : list) {
 ];
 
 let bugState = {
-    level: Math.max(0, Math.min({{ bug_level|default:0 }}, BUG_HUNTER_PUZZLES.length - 1)),
+    level: Math.max(0, Math.min(savedLevels.bug, BUG_HUNTER_PUZZLES.length - 1)),
     score: 0,
     lives: 3,
     active: false
 };
 
 function initBugGame() {
-    bugState.level = Math.max(0, Math.min({{ bug_level|default:0 }}, BUG_HUNTER_PUZZLES.length - 1));
+    bugState.level = Math.max(0, Math.min(savedLevels.bug, BUG_HUNTER_PUZZLES.length - 1));
     bugState.score = 0;
     bugState.lives = 3;
     bugState.active = true;
@@ -2224,7 +2459,8 @@ function revertComplexityIntro() {
 // ----------------------------------------------------
 // GAME 4: CODE REPAIR SHOP (PARSONS PUZZLE) LOGIC
 // ----------------------------------------------------
-const REPAIR_SHOP_PUZZLES = [
+const ALL_REPAIR_SHOP_PUZZLES = [
+
     {
         title: 'Reverse String (Python)',
         desc: 'Reorder and indent the lines to reverse a string inside reverse(s).',
@@ -2489,7 +2725,7 @@ const REPAIR_SHOP_PUZZLES = [
 ];
 
 let parsonsState = {
-    level: Math.max(0, Math.min({{ parsons_level|default:0 }}, REPAIR_SHOP_PUZZLES.length - 1)),
+    level: Math.max(0, Math.min(savedLevels.parsons, REPAIR_SHOP_PUZZLES.length - 1)),
     score: 0,
     scrambled: [],
     workspace: [],
@@ -2497,7 +2733,7 @@ let parsonsState = {
 };
 
 function initParsonsGame() {
-    parsonsState.level = Math.max(0, Math.min({{ parsons_level|default:0 }}, REPAIR_SHOP_PUZZLES.length - 1));
+    parsonsState.level = Math.max(0, Math.min(savedLevels.parsons, REPAIR_SHOP_PUZZLES.length - 1));
     parsonsState.score = 0;
     parsonsState.active = true;
     document.getElementById('parsons-score').textContent = '0';
@@ -3026,14 +3262,14 @@ System.out.println(i);`,
 ];
 
 let predState = {
-    level: Math.max(0, Math.min({{ predictor_level|default:0 }}, OUTPUT_PUZZLES.length - 1)),
+    level: Math.max(0, Math.min(savedLevels.predictor, OUTPUT_PUZZLES.length - 1)),
     score: 0,
     lives: 3,
     active: false
 };
 
 function initPredGame() {
-    predState.level = Math.max(0, Math.min({{ predictor_level|default:0 }}, OUTPUT_PUZZLES.length - 1));
+    predState.level = Math.max(0, Math.min(savedLevels.predictor, OUTPUT_PUZZLES.length - 1));
     predState.score = 0;
     predState.lives = 3;
     predState.active = true;
@@ -3181,13 +3417,55 @@ document.getElementById('predictor-tab').addEventListener('click', () => {
     initPredGame();
 });
 
-// Safe initialization handling DOMContentLoaded state
+document.getElementById('history-tab').addEventListener('click', () => {
+    clearAllTimers();
+});
+
+// Safe initialization handling DOMContentLoaded state & URL parameters
 function initArcadePage() {
     populateTyperSelect();
     if (typerLevelSelect) {
         typerLevelSelect.value = typerState.level;
     }
-    loadTyperLevel();
+    
+    // Check URL parameters for active game tab
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameParam = urlParams.get('game') || window.location.hash.replace('#', '');
+    
+    if (gameParam === 'complexity') {
+        const tabBtn = document.getElementById('complexity-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+        }
+    } else if (gameParam === 'bug') {
+        const tabBtn = document.getElementById('bug-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+            initBugGame();
+        }
+    } else if (gameParam === 'parsons') {
+        const tabBtn = document.getElementById('parsons-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+            initParsonsGame();
+        }
+    } else if (gameParam === 'predictor') {
+        const tabBtn = document.getElementById('predictor-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+            initPredGame();
+        }
+    } else {
+        loadTyperLevel();
+    }
 }
 
 if (document.readyState === 'loading') {

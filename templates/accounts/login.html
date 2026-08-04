@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block title %}Login - SkillSphere{% endblock %}
 {% block public_content %}
-<div class="min-vh-100 d-flex align-items-center" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">
+<div class="min-vh-100 d-flex align-items-center py-5" style="background: var(--bg-body); color: var(--text-color); transition: background-color 0.3s ease;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-5">
-                <div class="card border-0 shadow-lg rounded-4">
+                <div class="card border-0 shadow-lg rounded-4" style="background: var(--card-bg); color: var(--text-color); border: 1px solid var(--card-border) !important;">
                     <div class="card-body p-5">
                         <div class="text-center mb-4">
-                            <h3 class="fw-bold"><i class="bi bi-lightning-charge-fill" style="color:#6c5ce7;"></i> SkillSphere</h3>
+                            <h3 class="fw-bold"><i class="bi bi-lightning-charge-fill" style="color:var(--primary);"></i> SkillSphere</h3>
                             <p class="text-muted">Welcome back</p>
                         </div>
                         {% if form.non_field_errors %}
@@ -27,9 +27,9 @@
                                 {% endfor %}
                             </div>
                             {% endfor %}
-                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Login</button>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold mt-2">Login</button>
                         </form>
-                        <p class="text-center mt-3 text-muted">Don't have an account? <a href="{% url 'accounts:register' %}">Register</a></p>
+                        <p class="text-center mt-3 text-muted">Don't have an account? <a href="{% url 'accounts:register' %}" class="fw-semibold text-primary">Register</a></p>
                     </div>
                 </div>
             </div>

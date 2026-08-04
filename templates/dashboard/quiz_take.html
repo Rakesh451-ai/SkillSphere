@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% block title %}Taking Quiz: {{ quiz.title }} - SkillSphere{% endblock %}
+{% block page_title %}DSA Quiz Attempt (25 Questions){% endblock %}
+
+{% block extra_css %}
+<style>
+    .timer-sticky-header {
+        position: sticky;
+        top: 75px;
+        z-index: 100;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .question-box {
+        background-color: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 24px;
+        margin-bottom: 24px;
+        transition: border-color 0.2s ease;
+    }
+    .question-box:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+    }
+    .nav-num-btn {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.82rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-muted);
+        transition: all 0.18s ease;
+    }
+    .nav-num-btn:hover {
+        border-color: #6366f1;
+        color: #ffffff;
+    }
+    .nav-num-btn.answered {
+        background: rgba(16, 185, 129, 0.2) !important;
+        border-color: #10b981 !important;
+        color: #10b981 !important;
+    }
+    .option-card-label {
+        transition: all 0.2s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+    }
+    .option-card-label:hover {
+        border-color: rgba(99, 102, 241, 0.5) !important;
+        background: rgba(99, 102, 241, 0.08) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Sticky Header & Progress Palette -->
+    <div class="col-12">
+        <div class="timer-sticky-header p-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-2">
+                <div>
+                    <span class="badge bg-primary bg-opacity-20 text-primary rounded-pill px-3 py-1 extra-small fw-bold mb-1">{{ quiz.topic }}</span>
+                    <h4 class="fw-bold mb-0 text-white"><i class="bi bi-patch-question-fill text-warning me-2"></i>{{ quiz.title }}</h4>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="text-end me-2">
+                        <small class="text-muted d-block extra-small">Time Remaining:</small>
+                        <span id="quiz-countdown" class="fs-4 fw-bold font-monospace text-warning">--:--:--</span>
+                    </div>
+                    <button type="button" class="btn btn-success px-4 py-2 rounded-pill fw-bold" onclick="submitQuizForm()">
+                        <i class="bi bi-send-fill me-2"></i>Submit Answers
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question Jump Palette (1 to 25) -->
+            <div class="d-flex flex-wrap gap-2 align-items-center pt-2 border-top border-secondary border-opacity-25">
+                <small class="text-muted fw-semibold me-2 extra-small">Jump to Question:</small>
+                {% for q in questions %}
+                <a href="#q_box_{{ forloop.counter }}" class="nav-num-btn text-decoration-none" id="q_nav_{{ q.id }}">{{ forloop.counter }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Question Form -->
+    <div class="col-12">
+        <form id="quiz-submit-form" method="POST" action="{% url 'dashboard:quiz_submit' quiz.id %}">
+            {% csrf_token %}
+            {% for q in questions %}
+            <div class="question-box" id="q_box_{{ forloop.counter }}">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                    <h5 class="fw-bold mb-0 text-white">
+                        <span class="badge bg-primary rounded-pill px-3 me-2">Q{{ forloop.counter }} of 25</span> {{ q.question_text }}
+                    </h5>
+                    <span class="badge bg-warning text-dark rounded-pill px-3 py-1 fw-bold">{{ q.points }} pts</span>
+                </div>
+
+                <!-- SINGLE CHOICE (RADIO) -->
+                {% if q.question_type == 'single' %}
+                    <div class="row g-3 mt-2">
+                        {% if q.option_a %}
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded-3 option-card-label">
+                                <input class="form-check-input ms-1" type="radio" name="q_{{ q.id }}" id="q_{{ q.id }}_A" value="A" onchange="markAnswered({{ q.id }})">
+                                <label class="form-check-label w-100 ps-2 cursor-pointer text-body" for="q_{{ q.id }}_A">
+                                    <strong class="text-warning">A.</strong> {{ q.option_a }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if q.option_b %}
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded-3 option-card-label">
+                                <input class="form-check-input ms-1" type="radio" name="q_{{ q.id }}" id="q_{{ q.id }}_B" value="B" onchange="markAnswered({{ q.id }})">
+                                <label class="form-check-label w-100 ps-2 cursor-pointer text-body" for="q_{{ q.id }}_B">
+                                    <strong class="text-warning">B.</strong> {{ q.option_b }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if q.option_c %}
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded-3 option-card-label">
+                                <input class="form-check-input ms-1" type="radio" name="q_{{ q.id }}" id="q_{{ q.id }}_C" value="C" onchange="markAnswered({{ q.id }})">
+                                <label class="form-check-label w-100 ps-2 cursor-pointer text-body" for="q_{{ q.id }}_C">
+                                    <strong class="text-warning">C.</strong> {{ q.option_c }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if q.option_d %}
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded-3 option-card-label">
+                                <input class="form-check-input ms-1" type="radio" name="q_{{ q.id }}" id="q_{{ q.id }}_D" value="D" onchange="markAnswered({{ q.id }})">
+                                <label class="form-check-label w-100 ps-2 cursor-pointer text-body" for="q_{{ q.id }}_D">
+                                    <strong class="text-warning">D.</strong> {{ q.option_d }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                <!-- MULTIPLE CHOICE (CHECKBOXES) -->
+                {% elif q.question_type == 'multiple' %}
+                    <p class="text-warning extra-small mb-2"><i class="bi bi-info-circle me-1"></i>Multiple choice question: Select all options that apply.</p>
+                    <div class="row g-3">
+                        {% if q.option_a %}
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded-3 option-card-label">
+                                <input class="form-check-input ms-1" type="checkbox" name="q_{{ q.id }}" id="q_{{ q.id }}_A" value="A" onchange="markAnswered({{ q.id }})">
+                                <label class="form-check-label w-100 ps-2 cursor-pointer text-body" for="q_{{ q.id }}_A">
+                                    <strong class="text-warning">A.</strong> {{ q.option_a }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if q.option_b %}
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded-3 option-card-label">
+                                <input class="form-check-input ms-1" type="checkbox" name="q_{{ q.id }}" id="q_{{ q.id }}_B" value="B" onchange="markAnswered({{ q.id }})">
+                                <label class="form-check-label w-100 ps-2 cursor-pointer text-body" for="q_{{ q.id }}_B">
+                                    <strong class="text-warning">B.</strong> {{ q.option_b }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if q.option_c %}
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded-3 option-card-label">
+                                <input class="form-check-input ms-1" type="checkbox" name="q_{{ q.id }}" id="q_{{ q.id }}_C" value="C" onchange="markAnswered({{ q.id }})">
+                                <label class="form-check-label w-100 ps-2 cursor-pointer text-body" for="q_{{ q.id }}_C">
+                                    <strong class="text-warning">C.</strong> {{ q.option_c }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if q.option_d %}
+                        <div class="col-md-6">
+                            <div class="form-check p-3 rounded-3 option-card-label">
+                                <input class="form-check-input ms-1" type="checkbox" name="q_{{ q.id }}" id="q_{{ q.id }}_D" value="D" onchange="markAnswered({{ q.id }})">
+                                <label class="form-check-label w-100 ps-2 cursor-pointer text-body" for="q_{{ q.id }}_D">
+                                    <strong class="text-warning">D.</strong> {{ q.option_d }}
+                                </label>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                <!-- TEXT ANSWER -->
+                {% elif q.question_type == 'text' %}
+                    <div class="mt-2">
+                        <label class="form-label text-muted small">Write your text answer / keyword / code snippet below:</label>
+                        <input type="text" name="q_{{ q.id }}" class="form-control font-monospace bg-body border-secondary border-opacity-25" placeholder="Type your answer here..." oninput="markAnswered({{ q.id }})">
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="text-center py-4">
+                <button type="button" class="btn btn-success btn-lg px-5 rounded-pill fw-bold shadow" onclick="submitQuizForm()">
+                    <i class="bi bi-check-circle-fill me-2"></i>Finalize & Submit All 25 Answers
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const endTimeMs = new Date("{{ quiz.end_time|date:'c' }}").getTime();
+
+    function updateQuizTimer() {
+        const now = new Date().getTime();
+        const distance = endTimeMs - now;
+
+        if (distance < 0) {
+            document.getElementById('quiz-countdown').textContent = 'EXPIRED';
+            alert('Quiz time has ended! Submitting answers automatically...');
+            document.getElementById('quiz-submit-form').submit();
+            return;
+        }
+
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById('quiz-countdown').textContent = 
+            `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function markAnswered(qId) {
+        const navBtn = document.getElementById(`q_nav_${qId}`);
+        if (navBtn) {
+            navBtn.classList.add('answered');
+        }
+    }
+
+    function submitQuizForm() {
+        if (confirm("Are you sure you want to finalize and submit your 25 answers for this quiz?")) {
+            document.getElementById('quiz-submit-form').submit();
+        }
+    }
+
+    updateQuizTimer();
+    setInterval(updateQuizTimer, 1000);
+</script>
+{% endblock %}
