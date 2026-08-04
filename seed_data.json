@@ -82,7 +82,7 @@
 {
   "model": "accounts.user",
   "fields": {
-    "password": "pbkdf2_sha256$1200000$c1vrDzUz2pKdA9sGqvWHzt$ivLs4qnNGGz7wVKflSu2BlONFIhAegKKDvpRhtCJtJI=",
+    "password": "pbkdf2_sha256$1200000$wLT5XFvkTdM52b8ccTZif9$/Cj1WZX2eZeUgZ1jQ3v97yebiLBwz/MjH3FImw9Xrks=",
     "last_login": "2026-08-04T10:43:20.444Z",
     "is_superuser": true,
     "username": "admin",
@@ -750,7 +750,7 @@
 {
   "model": "accounts.user",
   "fields": {
-    "password": "pbkdf2_sha256$1200000$FeRXZtOf0ICSVRPNgWhycS$lIZFX9n5Sr76XzNRs4nUtykV+wxcNsPWvEW1NcC+IRM=",
+    "password": "pbkdf2_sha256$1200000$tvSLaDujjRxAtIJEAXTzC2$xbLscL072d5Y1AlIRuO5VcyyCfmWQzeJQD/rLxjyLwo=",
     "last_login": null,
     "is_superuser": true,
     "username": "admin_user",
@@ -791,14 +791,14 @@
 {
   "model": "accounts.user",
   "fields": {
-    "password": "pbkdf2_sha256$1200000$OEL18dwApzPm5DwJRXBK7t$DOdBeFCbDgB08alL7SbWpD1NO+yuWSYf6v0/VMld9k4=",
+    "password": "pbkdf2_sha256$1200000$JllZFlghfEhkY0nshx98Zf$uevC81EFaOlFym3Jn4YKQvUP/YbIcAbooxfJcs/PIRY=",
     "last_login": null,
-    "is_superuser": false,
+    "is_superuser": true,
     "username": "Ayush",
     "first_name": "Ayush",
     "last_name": "Raj",
     "email": "ayush@gmail.com",
-    "is_staff": false,
+    "is_staff": true,
     "is_active": true,
     "date_joined": "2026-08-02T07:33:20.652Z",
     "college": "School of Information Technology",
@@ -832,14 +832,14 @@
 {
   "model": "accounts.user",
   "fields": {
-    "password": "pbkdf2_sha256$1200000$mleNlIH2Ie2CqQPgXz2ZO7$eUeuq5lPcvEcXxuledDCq6w6k2AgyQUk4yRsRPLrdX0=",
+    "password": "pbkdf2_sha256$1200000$4ARw6bkIMpirNG88RTZcUp$AWek5icRXcMFCACvQA3ewHn4LiWgxFrxY7sluvnLc+Y=",
     "last_login": "2026-08-03T14:22:49.406Z",
-    "is_superuser": false,
+    "is_superuser": true,
     "username": "Test",
     "first_name": "test",
     "last_name": "5",
     "email": "te22st@test.com",
-    "is_staff": false,
+    "is_staff": true,
     "is_active": true,
     "date_joined": "2026-08-02T09:05:48.671Z",
     "college": "",
