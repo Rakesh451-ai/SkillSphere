@@ -82,7 +82,7 @@
 {
   "model": "accounts.user",
   "fields": {
-    "password": "pbkdf2_sha256$1200000$twhIa7O0E5aOU5DjpoUTgJ$KHrOjt/0E48kfFgunDC1hMIvJRXwUizTLIGhfB8cvFY=",
+    "password": "pbkdf2_sha256$1200000$c1vrDzUz2pKdA9sGqvWHzt$ivLs4qnNGGz7wVKflSu2BlONFIhAegKKDvpRhtCJtJI=",
     "last_login": "2026-08-04T10:43:20.444Z",
     "is_superuser": true,
     "username": "admin",
@@ -113,7 +113,7 @@
     "leetcode_easy_solved": 175,
     "leetcode_medium_solved": 183,
     "leetcode_hard_solved": 22,
-    "leetcode_last_sync": "2026-08-04T16:12:57.512Z",
+    "leetcode_last_sync": "2026-08-04T16:29:36.179Z",
     "leetcode_last_penalty_date": "2026-08-04",
     "completed_dsa_problems": [
       "n-th-tribonacci-number",
@@ -750,14 +750,14 @@
 {
   "model": "accounts.user",
   "fields": {
-    "password": "pbkdf2_sha256$1200000$C8vkixySUtIVZ1kYsRsxhu$hZfqbHAYiJ0m16cDR820ZMypr9xkxqWpGh+rrOlL0fU=",
+    "password": "pbkdf2_sha256$1200000$FeRXZtOf0ICSVRPNgWhycS$lIZFX9n5Sr76XzNRs4nUtykV+wxcNsPWvEW1NcC+IRM=",
     "last_login": null,
     "is_superuser": true,
     "username": "admin_user",
     "first_name": "",
     "last_name": "",
     "email": "admin_user@example.com",
-    "is_staff": false,
+    "is_staff": true,
     "is_active": true,
     "date_joined": "2026-08-02T06:31:44.627Z",
     "college": "",
