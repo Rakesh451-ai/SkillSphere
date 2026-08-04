@@ -1049,234 +1049,234 @@
 },
 {
   "model": "dashboard.quiz",
-  "pk": 4,
+  "pk": 19,
   "fields": {
     "title": "Array Data Structure & Algorithmic Patterns Quiz",
     "topic": "Array",
     "difficulty": "Basic to Advanced",
     "description": "Master array memory layouts, 2-pointers, prefix sums, sliding window arrays, and multidimensional arrays from basic to advanced.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:29.694Z"
+    "created_at": "2026-08-04T17:09:44.947Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 5,
+  "pk": 20,
   "fields": {
     "title": "String Processing & Pattern Matching Algorithms Quiz",
     "topic": "String",
     "difficulty": "Basic to Advanced",
     "description": "Master string immutability, pattern matching (KMP, Rabin-Karp, Z-algorithm), palindromic expansions, string building, and text parsing.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:31.994Z"
+    "created_at": "2026-08-04T17:09:47.741Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 6,
+  "pk": 21,
   "fields": {
     "title": "Pointers, Memory Allocation & Address Arithmetic Quiz",
     "topic": "Pointer",
     "difficulty": "Basic to Advanced",
     "description": "Master memory addresses, pointer arithmetic, double pointers, reference safety, heap vs stack memory, dynamic allocation, and memory leaks.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:34.462Z"
+    "created_at": "2026-08-04T17:09:50.533Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 7,
+  "pk": 22,
   "fields": {
     "title": "Recursion, Backtracking & Recurrence Relations Quiz",
     "topic": "Recursion",
     "difficulty": "Basic to Advanced",
     "description": "Master call stack frames, base cases, tail recursion, state space trees, divide and conquer, Master Theorem, and backtracking pruning.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:36.595Z"
+    "created_at": "2026-08-04T17:09:53.460Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 8,
+  "pk": 23,
   "fields": {
     "title": "Singly, Doubly & Circular Linked List Master Quiz",
     "topic": "LinkedList",
     "difficulty": "Basic to Advanced",
     "description": "Master dynamic node pointers, 3-pointer reversals, Floyd's cycle detection, fast/slow middle pointer, skip lists, and memory fragmentation.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:38.829Z"
+    "created_at": "2026-08-04T17:09:56.260Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 9,
+  "pk": 24,
   "fields": {
     "title": "Stack Data Structure & Monotonic Stack Applications Quiz",
     "topic": "Stack",
     "difficulty": "Basic to Advanced",
     "description": "Master LIFO invariants, call stack execution, expression evaluation (Shunting-Yard), monotonic stacks, min stack, and histogram area.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:41.188Z"
+    "created_at": "2026-08-04T17:09:59.038Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 10,
+  "pk": 25,
   "fields": {
     "title": "Queue, Circular Queue & Priority Queue Systems Quiz",
     "topic": "Queue",
     "difficulty": "Basic to Advanced",
     "description": "Master FIFO scheduling buffers, circular modulo index arithmetic, priority queues, monotonic deques, double-ended queues, and multi-source BFS.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:44.013Z"
+    "created_at": "2026-08-04T17:10:01.727Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 11,
+  "pk": 26,
   "fields": {
     "title": "Sliding Window & Two Pointer Techniques Quiz",
     "topic": "Sliding Window",
     "difficulty": "Basic to Advanced",
     "description": "Master fixed vs dynamic window bounds, inward two pointers, fast/slow pointers, frequency map windows, and exact count reductions.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:46.456Z"
+    "created_at": "2026-08-04T17:10:05.877Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 12,
+  "pk": 27,
   "fields": {
     "title": "General Trees & Tree Traversals Master Quiz",
     "topic": "Tree",
     "difficulty": "Basic to Advanced",
     "description": "Master tree terminology, height vs depth, DFS (Inorder, Preorder, Postorder), BFS Level-Order, path sums, diameter, and tree construction.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:49.206Z"
+    "created_at": "2026-08-04T17:10:08.784Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 13,
+  "pk": 28,
   "fields": {
     "title": "Binary Tree Architecture & Properties Quiz",
     "topic": "Binary Tree",
     "difficulty": "Basic to Advanced",
     "description": "Master binary tree properties, complete vs full vs perfect trees, vertical order, top/bottom views, LCA, and subtree invariants.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:35:54.006Z"
+    "created_at": "2026-08-04T17:10:10.928Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 14,
+  "pk": 29,
   "fields": {
     "title": "Binary Search Tree Invariants & Operations Quiz",
     "topic": "Binary Search Tree (BST)",
     "difficulty": "Basic to Advanced",
     "description": "Master BST search, insert, delete (3 cases), inorder sorting property, BST validation, LCA in BST, floor/ceil, and Kth smallest element.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:36:00.883Z"
+    "created_at": "2026-08-04T17:10:13.303Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 15,
+  "pk": 30,
   "fields": {
     "title": "AVL Trees & Self-Balancing Rotations Quiz",
     "topic": "AVL Tree",
     "difficulty": "Basic to Advanced",
     "description": "Master balance factor invariant (-1, 0, 1), single rotations (LL, RR), double rotations (LR, RL), insertion/deletion rebalancing, and AVL height bounds.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:36:03.700Z"
+    "created_at": "2026-08-04T17:10:15.545Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 16,
+  "pk": 31,
   "fields": {
     "title": "Min-Heap, Max-Heap & Priority Queue Operations Quiz",
     "topic": "Heap",
     "difficulty": "Basic to Advanced",
     "description": "Master heap invariants (Min-Heap, Max-Heap), array representation, Heapify (O(N)), Heap Sort, Priority Queues, K-way merges, and median streams.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:36:06.050Z"
+    "created_at": "2026-08-04T17:10:17.962Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 17,
+  "pk": 32,
   "fields": {
     "title": "Graph Algorithms, Shortest Paths & Topological Sort Quiz",
     "topic": "Graph",
     "difficulty": "Basic to Advanced",
     "description": "Master Adjacency List/Matrix, BFS, DFS, Cycle Detection, Topological Sort (Kahn's), Dijkstra, Bellman-Ford, Kruskal/Prim MST, and Tarjan SCC.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:36:08.492Z"
+    "created_at": "2026-08-04T17:10:21.263Z"
   }
 },
 {
   "model": "dashboard.quiz",
-  "pk": 18,
+  "pk": 33,
   "fields": {
     "title": "Dynamic Programming (DP) & State Transitions Quiz",
     "topic": "Dynamic Programming (DP)",
     "difficulty": "Basic to Advanced",
     "description": "Master optimal substructure, overlapping subproblems, top-down memoization, bottom-up tabulation, 1D/2D DP, Knapsack variants, LCS, and Bitmask DP.",
-    "start_time": "2026-08-03T14:35:29.568Z",
-    "end_time": "2027-08-04T14:35:29.568Z",
+    "start_time": "2026-07-05T17:09:44.934Z",
+    "end_time": "2036-08-01T17:09:44.934Z",
     "is_live": true,
     "total_xp": 250,
-    "created_at": "2026-08-04T14:36:10.751Z"
+    "created_at": "2026-08-04T17:10:23.596Z"
   }
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 21,
+  "pk": 396,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "1. What is the time complexity to access an element at index i in a standard static array of size N?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -1290,9 +1290,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 22,
+  "pk": 397,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "2. What is the worst-case time complexity of inserting an element at the beginning (index 0) of an array of size N?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -1306,9 +1306,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 23,
+  "pk": 398,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "3. In dynamic arrays (e.g. C++ vector, Python list), what is the amortized time complexity of appending an element to the end?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -1322,9 +1322,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 24,
+  "pk": 399,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "4. Which property of arrays makes them extremely efficient for CPU execution compared to linked lists?",
     "question_type": "single",
     "option_a": "Non-linear layout",
@@ -1338,9 +1338,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 25,
+  "pk": 400,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "5. Given a 2D array of dimensions R x C stored in row-major order, what is the formula for the offset of element at row i, col j?",
     "question_type": "single",
     "option_a": "i * C + j",
@@ -1354,9 +1354,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 26,
+  "pk": 401,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "6. What technique computes the sum of any contiguous subarray [L, R] in O(1) time after O(N) preprocessing?",
     "question_type": "single",
     "option_a": "Monotonic Stack",
@@ -1370,9 +1370,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 27,
+  "pk": 402,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "7. In a sorted array of N distinct elements, what is the maximum number of comparisons needed to search for a key using Binary Search?",
     "question_type": "single",
     "option_a": "N",
@@ -1386,9 +1386,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 28,
+  "pk": 403,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "8. Which algorithm finds the maximum subarray sum in linear O(N) time?",
     "question_type": "single",
     "option_a": "Kadane's Algorithm",
@@ -1402,9 +1402,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 29,
+  "pk": 404,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "9. What is the space complexity of reversing an array in-place using two pointers?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -1418,9 +1418,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 30,
+  "pk": 405,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "10. In the 'Dutch National Flag' algorithm (sorting 0s, 1s, 2s), how many pointers are maintained?",
     "question_type": "single",
     "option_a": "1",
@@ -1434,9 +1434,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 31,
+  "pk": 406,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "11. If an array of size N contains numbers from 1 to N with one missing number, how can you find it in O(N) time and O(1) space?",
     "question_type": "single",
     "option_a": "Sort and check",
@@ -1450,9 +1450,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 32,
+  "pk": 407,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "12. What is the worst-case space complexity of storing a sparse matrix using a standard 2D array of size M x N?",
     "question_type": "single",
     "option_a": "O(K) where K is non-zeros",
@@ -1466,9 +1466,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 33,
+  "pk": 408,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "13. In the 2Sum problem (find 2 elements in sorted array summing to Target), what is the optimal time & space complexity using Two Pointers?",
     "question_type": "single",
     "option_a": "O(N) time, O(1) space",
@@ -1482,9 +1482,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 34,
+  "pk": 409,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "14. How can you rotate an array of N elements to the right by K steps in O(N) time and O(1) auxiliary space?",
     "question_type": "single",
     "option_a": "Reverse full array, then reverse first K elements, then reverse remaining N-K elements",
@@ -1498,9 +1498,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 35,
+  "pk": 410,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "15. What is the worst-case time complexity of Majority Element algorithm (Boyer-Moore Voting Algorithm)?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -1514,9 +1514,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 36,
+  "pk": 411,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "16. In 2D Matrix binary search on a sorted matrix of size M x N where matrix[i][j] < matrix[i][j+1] and matrix[i][C-1] < matrix[i+1][0], how is 1D index mid mapped to (row, col)?",
     "question_type": "single",
     "option_a": "row = mid // N, col = mid % N",
@@ -1530,9 +1530,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 37,
+  "pk": 412,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "17. What is the time complexity to find the median of two sorted arrays of sizes M and N using binary search on partitions?",
     "question_type": "single",
     "option_a": "O(M + N)",
@@ -1546,9 +1546,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 38,
+  "pk": 413,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "18. What is the maximum number of contiguous subarrays in an array of size N?",
     "question_type": "single",
     "option_a": "N",
@@ -1562,9 +1562,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 39,
+  "pk": 414,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "19. Which array operation requires O(N) time even in a sorted array?",
     "question_type": "single",
     "option_a": "Binary Search",
@@ -1578,9 +1578,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 40,
+  "pk": 415,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "20. In Trapping Rain Water problem, what is the optimal time and space complexity using two pointers?",
     "question_type": "single",
     "option_a": "O(N) time, O(1) space",
@@ -1594,9 +1594,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 41,
+  "pk": 416,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "21. What does Product of Array Except Self problem require to achieve O(N) time without using division operation?",
     "question_type": "single",
     "option_a": "Sorting array",
@@ -1610,9 +1610,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 42,
+  "pk": 417,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "22. In Next Permutation algorithm, what is the first step to find lexicographically next greater permutation of an array?",
     "question_type": "single",
     "option_a": "Reverse entire array",
@@ -1626,9 +1626,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 43,
+  "pk": 418,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "23. In an array of size N, what is the total number of non-empty subsequences?",
     "question_type": "single",
     "option_a": "N*(N+1)/2",
@@ -1642,9 +1642,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 44,
+  "pk": 419,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "24. What is the time complexity of 3Sum problem using sorting and two pointers?",
     "question_type": "single",
     "option_a": "O(N^3)",
@@ -1658,9 +1658,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 45,
+  "pk": 420,
   "fields": {
-    "quiz": 4,
+    "quiz": 19,
     "question_text": "25. In monotonic array checking, what is the best time complexity to determine if an array is strictly increasing or decreasing?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -1674,9 +1674,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 46,
+  "pk": 421,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "1. What is the time complexity of checking if two strings of length N are anagrams using character frequency arrays?",
     "question_type": "single",
     "option_a": "O(N log N)",
@@ -1690,9 +1690,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 47,
+  "pk": 422,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "2. In Java / Python, strings are immutable. What does string concatenation s += 'a' inside a loop of size N cost overall in time?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -1706,9 +1706,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 48,
+  "pk": 423,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "3. What auxiliary structure is recommended to perform efficient repeated string concatenations in Java/Python?",
     "question_type": "single",
     "option_a": "Array of chars / StringBuilder",
@@ -1722,9 +1722,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 49,
+  "pk": 424,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "4. What is the worst-case time complexity of Brute Force pattern matching of pattern P (len M) in text T (len N)?",
     "question_type": "single",
     "option_a": "O(N + M)",
@@ -1738,9 +1738,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 50,
+  "pk": 425,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "5. What array precomputed by KMP algorithm allows skipping unnecessary re-comparisons during pattern search?",
     "question_type": "single",
     "option_a": "Z-array",
@@ -1754,9 +1754,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 51,
+  "pk": 426,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "6. What is the time complexity to construct the LPS array in KMP algorithm for pattern of length M?",
     "question_type": "single",
     "option_a": "O(M^2)",
@@ -1770,9 +1770,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 52,
+  "pk": 427,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "7. What hashing technique does Rabin-Karp algorithm use to update substring hash in O(1) time while sliding a window across text?",
     "question_type": "single",
     "option_a": "Cryptographic SHA256",
@@ -1786,9 +1786,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 53,
+  "pk": 428,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "8. What algorithm finds the longest palindromic substring in strictly linear O(N) time?",
     "question_type": "single",
     "option_a": "Manacher's Algorithm",
@@ -1802,9 +1802,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 54,
+  "pk": 429,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "9. In Manacher's algorithm, why are special separator characters (like '#') inserted between string characters?",
     "question_type": "single",
     "option_a": "To encrypt the string",
@@ -1818,9 +1818,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 55,
+  "pk": 430,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "10. What does Z[i] represent in the Z-Algorithm for string processing?",
     "question_type": "single",
     "option_a": "Length of longest substring starting at index i matching prefix of string S",
@@ -1834,9 +1834,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 56,
+  "pk": 431,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "11. What is the overall time complexity of Z-Algorithm to build Z-array for string of length N?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -1850,9 +1850,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 57,
+  "pk": 432,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "12. In Minimum Window Substring problem (find min window in S containing all chars of T), what algorithm pattern is optimal?",
     "question_type": "single",
     "option_a": "Dynamic Programming Matrix",
@@ -1866,9 +1866,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 58,
+  "pk": 433,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "13. What is the time complexity of reversing words in a string of length N in-place?",
     "question_type": "single",
     "option_a": "O(N log N)",
@@ -1882,9 +1882,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 59,
+  "pk": 434,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "14. How many distinct non-empty substrings can be formed from a string of length N with distinct characters?",
     "question_type": "single",
     "option_a": "2^N - 1",
@@ -1898,9 +1898,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 60,
+  "pk": 435,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "15. In Longest Common Prefix problem among array of K strings of max length L, what is the worst-case time complexity using horizontal scanning?",
     "question_type": "single",
     "option_a": "O(K * L)",
@@ -1914,9 +1914,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 61,
+  "pk": 436,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "16. In Run-Length Encoding (compression), string 'AAABBC' compresses to:",
     "question_type": "single",
     "option_a": "A3B2C1",
@@ -1930,9 +1930,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 62,
+  "pk": 437,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "17. What is the time complexity of checking if string S is a rotation of string T of length N?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -1946,9 +1946,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 63,
+  "pk": 438,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "18. What data structure allows finding all matching occurrences of K patterns in text T (len N) simultaneously in O(N + total_matches) time?",
     "question_type": "single",
     "option_a": "Aho-Corasick Automaton",
@@ -1962,9 +1962,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 64,
+  "pk": 439,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "19. In Suffix Automaton, what is the maximum number of states for a string of length N > 2?",
     "question_type": "single",
     "option_a": "2^N",
@@ -1978,9 +1978,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 65,
+  "pk": 440,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "20. What is the space complexity to store a Trie containing N words of average length L with lowercase English alphabet?",
     "question_type": "single",
     "option_a": "O(N * L * 26)",
@@ -1994,9 +1994,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 66,
+  "pk": 441,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "21. What is the main cause of Hash Collisions in Rabin-Karp algorithm?",
     "question_type": "single",
     "option_a": "Choosing alphabet size 26",
@@ -2010,9 +2010,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 67,
+  "pk": 442,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "22. In Isomorphic Strings problem ('egg' and 'add'), two strings are isomorphic if:",
     "question_type": "single",
     "option_a": "They have equal vowel count",
@@ -2026,9 +2026,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 68,
+  "pk": 443,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "23. In Edit Distance (Levenshtein Distance) between string S (len M) and T (len N), what operations are allowed?",
     "question_type": "single",
     "option_a": "Insert, Delete, Replace",
@@ -2042,9 +2042,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 69,
+  "pk": 444,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "24. What is the time complexity of computing Edit Distance using 2D Dynamic Programming matrix?",
     "question_type": "single",
     "option_a": "O(M + N)",
@@ -2058,9 +2058,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 70,
+  "pk": 445,
   "fields": {
-    "quiz": 5,
+    "quiz": 20,
     "question_text": "25. Which string comparison algorithm is invariant to case sensitivity and extra whitespace when parsing tokens?",
     "question_type": "single",
     "option_a": "Lexicographical strcmp",
@@ -2074,9 +2074,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 71,
+  "pk": 446,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "1. What does a pointer variable store in C / C++?",
     "question_type": "single",
     "option_a": "Integer value of variable",
@@ -2090,9 +2090,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 72,
+  "pk": 447,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "2. Given int *ptr and sizeof(int) = 4, if ptr holds address 0x1000, what is the value of (ptr + 2)?",
     "question_type": "single",
     "option_a": "0x1002",
@@ -2106,9 +2106,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 73,
+  "pk": 448,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "3. What does dereferencing a pointer (*ptr) perform?",
     "question_type": "single",
     "option_a": "Retrieves the memory address",
@@ -2122,9 +2122,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 74,
+  "pk": 449,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "4. What is a 'Dangling Pointer'?",
     "question_type": "single",
     "option_a": "A pointer initialized to NULL",
@@ -2138,9 +2138,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 75,
+  "pk": 450,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "5. What is a 'Null Pointer'?",
     "question_type": "single",
     "option_a": "Pointer holding address 0 (nullptr) indicating it points to no valid memory",
@@ -2154,9 +2154,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 76,
+  "pk": 451,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "6. What operator is used to get the memory address of an existing variable in C/C++?",
     "question_type": "single",
     "option_a": "* operator",
@@ -2170,9 +2170,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 77,
+  "pk": 452,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "7. What is a 'Memory Leak' in C / C++?",
     "question_type": "single",
     "option_a": "Reading uninitialized memory",
@@ -2186,9 +2186,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 78,
+  "pk": 453,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "8. What does double pointer int **ptr store?",
     "question_type": "single",
     "option_a": "Address of an integer",
@@ -2202,9 +2202,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 79,
+  "pk": 454,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "9. In C, what function allocates requested bytes of uninitialized heap memory and returns a void pointer?",
     "question_type": "single",
     "option_a": "calloc()",
@@ -2218,9 +2218,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 80,
+  "pk": 455,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "10. How does calloc(n, size) differ from malloc(n * size)?",
     "question_type": "single",
     "option_a": "calloc allocates faster",
@@ -2234,9 +2234,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 81,
+  "pk": 456,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "11. What operator replaces (*ptr).member in C/C++ for structure pointers?",
     "question_type": "single",
     "option_a": ". (dot operator)",
@@ -2250,9 +2250,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 82,
+  "pk": 457,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "12. What happens when you attempt to dereference a NULL pointer (*nullptr)?",
     "question_type": "single",
     "option_a": "Returns 0",
@@ -2266,9 +2266,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 83,
+  "pk": 458,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "13. What is the size of a pointer variable (e.g. char*, int*, double*) on a 64-bit operating system architecture?",
     "question_type": "single",
     "option_a": "1 byte",
@@ -2282,9 +2282,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 84,
+  "pk": 459,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "14. What is a 'Wild Pointer'?",
     "question_type": "single",
     "option_a": "A pointer initialized to NULL",
@@ -2298,9 +2298,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 85,
+  "pk": 460,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "15. How can you pass a pointer by reference to a function in C to modify the original pointer itself?",
     "question_type": "single",
     "option_a": "Pass single pointer int *ptr",
@@ -2314,9 +2314,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 86,
+  "pk": 461,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "16. In C++, what smart pointer type manages exclusive ownership of dynamic heap memory and prevents copy assignment?",
     "question_type": "single",
     "option_a": "std::shared_ptr",
@@ -2330,9 +2330,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 87,
+  "pk": 462,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "17. What smart pointer maintains a reference count of owners sharing heap memory in C++?",
     "question_type": "single",
     "option_a": "std::unique_ptr",
@@ -2346,9 +2346,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 88,
+  "pk": 463,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "18. What issue occurs when two std::shared_ptr instances reference each other cyclically?",
     "question_type": "single",
     "option_a": "Segmentation Fault",
@@ -2362,9 +2362,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 89,
+  "pk": 464,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "19. In array decay: when array name 'arr' is passed to a function void foo(int arr[]), what does 'arr' decay into inside foo?",
     "question_type": "single",
     "option_a": "Full array copy",
@@ -2378,9 +2378,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 90,
+  "pk": 465,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "20. What is a 'Void Pointer' (void*) in C/C++?",
     "question_type": "single",
     "option_a": "Pointer pointing to nothing",
@@ -2394,9 +2394,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 91,
+  "pk": 466,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "21. What is the result of subtracting two pointers pointing to elements in the same array: (ptr2 - ptr1)?",
     "question_type": "single",
     "option_a": "Difference in raw byte addresses",
@@ -2410,9 +2410,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 92,
+  "pk": 467,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "22. What does function pointer syntax int (*func_ptr)(int, int) declare?",
     "question_type": "single",
     "option_a": "Function returning pointer to int",
@@ -2426,9 +2426,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 93,
+  "pk": 468,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "23. In C++, what operator is used to allocate memory on heap and invoke constructor?",
     "question_type": "single",
     "option_a": "malloc",
@@ -2442,9 +2442,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 94,
+  "pk": 469,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "24. What happens when calling free(ptr) on a memory pointer that was ALREADY freed?",
     "question_type": "single",
     "option_a": "Nothing happens",
@@ -2458,9 +2458,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 95,
+  "pk": 470,
   "fields": {
-    "quiz": 6,
+    "quiz": 21,
     "question_text": "25. Which memory area stores local function variables, parameter pointers, and return addresses?",
     "question_type": "single",
     "option_a": "Heap Memory",
@@ -2474,9 +2474,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 96,
+  "pk": 471,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "1. What mandatory component must every recursive function possess to prevent infinite execution?",
     "question_type": "single",
     "option_a": "Loop counter",
@@ -2490,9 +2490,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 97,
+  "pk": 472,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "2. What error occurs when a recursive function lacks a valid base case or recurses too deeply?",
     "question_type": "single",
     "option_a": "Segmentation Fault / Stack Overflow",
@@ -2506,9 +2506,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 98,
+  "pk": 473,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "3. What is 'Tail Recursion'?",
     "question_type": "single",
     "option_a": "Recursion inside a loop",
@@ -2522,9 +2522,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 99,
+  "pk": 474,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "4. Why is Tail Call Optimization (TCO) beneficial?",
     "question_type": "single",
     "option_a": "Reduces time to O(1)",
@@ -2538,9 +2538,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 100,
+  "pk": 475,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "5. What is the time complexity of naive recursive Fibonacci calc(N) = calc(N-1) + calc(N-2)?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -2554,9 +2554,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 101,
+  "pk": 476,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "6. What technique caches the results of expensive recursive calls to reduce time complexity from exponential to linear?",
     "question_type": "single",
     "option_a": "Backtracking",
@@ -2570,9 +2570,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 102,
+  "pk": 477,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "7. What recurrence relation T(N) = 2 T(N/2) + O(N) represents Merge Sort?",
     "question_type": "single",
     "option_a": "T(N) = O(N)",
@@ -2586,9 +2586,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 103,
+  "pk": 478,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "8. In Master Theorem formula T(N) = a T(N/b) + f(N), what does 'a' represent?",
     "question_type": "single",
     "option_a": "Size of subproblems",
@@ -2602,9 +2602,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 104,
+  "pk": 479,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "9. What is the space complexity due to call stack for depth-first recursion of max tree height H?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -2618,9 +2618,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 105,
+  "pk": 480,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "10. What is the general 3-step paradigm of Backtracking algorithms?",
     "question_type": "single",
     "option_a": "Sort, Search, Output",
@@ -2634,9 +2634,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 106,
+  "pk": 481,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "11. How many total permutations are explored in brute force recursion for an array of size N?",
     "question_type": "single",
     "option_a": "2^N",
@@ -2650,9 +2650,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 107,
+  "pk": 482,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "12. How many subsets (power set) exist for a set of size N?",
     "question_type": "single",
     "option_a": "N!",
@@ -2666,9 +2666,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 108,
+  "pk": 483,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "13. In N-Queens problem on N x N board, what technique prunes invalid search branches early?",
     "question_type": "single",
     "option_a": "Column/Diagonal Collision Checking Sets",
@@ -2682,9 +2682,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 109,
+  "pk": 484,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "14. In Sudoku Solver algorithm, what type of search strategy is utilized?",
     "question_type": "single",
     "option_a": "Breadth First Search",
@@ -2698,9 +2698,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 110,
+  "pk": 485,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "15. What is the difference between Direct and Indirect Recursion?",
     "question_type": "single",
     "option_a": "Direct calls itself; Indirect function A calls function B which calls A",
@@ -2714,9 +2714,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 111,
+  "pk": 486,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "16. In Tower of Hanoi problem with N disks, what is the minimum number of moves required?",
     "question_type": "single",
     "option_a": "2N",
@@ -2730,9 +2730,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 112,
+  "pk": 487,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "17. What is the time complexity of Quick Select algorithm (find Kth smallest element) on average?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -2746,9 +2746,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 113,
+  "pk": 488,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "18. How can any recursive algorithm be converted into an non-recursive iterative algorithm?",
     "question_type": "single",
     "option_a": "Using an explicit Stack data structure to simulate function call frames",
@@ -2762,9 +2762,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 114,
+  "pk": 489,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "19. In Subset Sum problem (find subset summing to K), what is the time complexity of naive recursive backtracking?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -2778,9 +2778,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 115,
+  "pk": 490,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "20. What is 'Branch and Bound' in optimization problems?",
     "question_type": "single",
     "option_a": "A sorting method",
@@ -2794,9 +2794,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 116,
+  "pk": 491,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "21. What happens to local variables of a function when a recursive call is invoked?",
     "question_type": "single",
     "option_a": "Overwritten immediately",
@@ -2810,9 +2810,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 117,
+  "pk": 492,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "22. In Combination Sum problem (reuse numbers allowed), how do you prevent duplicate combinations in output?",
     "question_type": "single",
     "option_a": "Sort array and start inner recursive loop from current index i instead of 0",
@@ -2826,9 +2826,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 118,
+  "pk": 493,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "23. What is the time complexity of Word Search grid puzzle (word len L on M x N grid)?",
     "question_type": "single",
     "option_a": "O(M * N * 3^L)",
@@ -2842,9 +2842,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 119,
+  "pk": 494,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "24. In recursive binary search T(N) = T(N/2) + O(1), what is the maximum call stack depth for N elements?",
     "question_type": "single",
     "option_a": "N",
@@ -2858,9 +2858,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 120,
+  "pk": 495,
   "fields": {
-    "quiz": 7,
+    "quiz": 22,
     "question_text": "25. Which problem cannot be solved using simple divide-and-conquer without memoization/tabulation due to overlapping subproblems?",
     "question_type": "single",
     "option_a": "Merge Sort",
@@ -2874,9 +2874,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 121,
+  "pk": 496,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "1. What is the primary advantage of a Linked List over a static Array?",
     "question_type": "single",
     "option_a": "O(1) Random Access",
@@ -2890,9 +2890,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 122,
+  "pk": 497,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "2. What is the time complexity to insert a new node at the HEAD of a Singly Linked List?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -2906,9 +2906,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 123,
+  "pk": 498,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "3. What is the time complexity to access the K-th element in a Singly Linked List of N nodes?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -2922,9 +2922,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 124,
+  "pk": 499,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "4. What pointers are stored in each node of a Doubly Linked List?",
     "question_type": "single",
     "option_a": "next pointer only",
@@ -2938,9 +2938,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 125,
+  "pk": 500,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "5. What algorithm reverses a Singly Linked List in-place in O(N) time and O(1) space?",
     "question_type": "single",
     "option_a": "Three-Pointer Iteration (prev, curr, next)",
@@ -2954,9 +2954,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 126,
+  "pk": 501,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "6. What is Floyd's Cycle Detection Algorithm (Tortoise & Hare)?",
     "question_type": "single",
     "option_a": "Two pointers moving at same speed",
@@ -2970,9 +2970,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 127,
+  "pk": 502,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "7. After Floyd's algorithm detects a cycle, how do you locate the EXACT START NODE of the cycle?",
     "question_type": "single",
     "option_a": "Reset fast to Head, keep slow at meeting point, move both 1 step at a time until they collide",
@@ -2986,9 +2986,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 128,
+  "pk": 503,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "8. What is the purpose of a 'Dummy Head Node' in linked list operations?",
     "question_type": "single",
     "option_a": "Saves memory",
@@ -3002,9 +3002,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 129,
+  "pk": 504,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "9. How do fast and slow pointers find the MIDDLE node of a linked list in one pass?",
     "question_type": "single",
     "option_a": "Fast moves 1 step, slow moves 2 steps",
@@ -3018,9 +3018,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 130,
+  "pk": 505,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "10. What is the time and space complexity to find the K-th node from the END of a linked list using two pointers?",
     "question_type": "single",
     "option_a": "O(N) time, O(1) space",
@@ -3034,9 +3034,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 131,
+  "pk": 506,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "11. How does a Circular Linked List differ from a standard Singly Linked List?",
     "question_type": "single",
     "option_a": "Last node's next pointer points back to Head instead of NULL",
@@ -3050,9 +3050,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 132,
+  "pk": 507,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "12. What is the time complexity to delete a node given ONLY a direct pointer 'node' to it in a Singly Linked List (not tail)?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -3066,9 +3066,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 133,
+  "pk": 508,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "13. What is the time complexity of Merge Sort on a Linked List of size N?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -3082,9 +3082,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 134,
+  "pk": 509,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "14. Why is Quick Sort less preferred than Merge Sort for Singly Linked Lists?",
     "question_type": "single",
     "option_a": "Quick sort requires random access indexing arr[i]",
@@ -3098,9 +3098,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 135,
+  "pk": 510,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "15. In LRU Cache implementation, why is a Doubly Linked List used alongside a Hash Map?",
     "question_type": "single",
     "option_a": "Allows O(1) removal and node relocation to head upon access",
@@ -3114,9 +3114,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 136,
+  "pk": 511,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "16. What is a 'Skip List'?",
     "question_type": "single",
     "option_a": "A linked list with missing nodes",
@@ -3130,9 +3130,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 137,
+  "pk": 512,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "17. What is an 'XOR Doubly Linked List'?",
     "question_type": "single",
     "option_a": "Memory-optimized doubly linked list storing XOR address (prev ^ next) in a single pointer field",
@@ -3146,9 +3146,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 138,
+  "pk": 513,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "18. What is the time complexity to check if a Singly Linked List is a Palindrome using fast/slow pointers and reversing second half?",
     "question_type": "single",
     "option_a": "O(N) time, O(1) space",
@@ -3162,9 +3162,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 139,
+  "pk": 514,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "19. How do you find the Intersection Node of two linked lists of lengths M and N in O(M+N) time and O(1) space?",
     "question_type": "single",
     "option_a": "Hash table lookup",
@@ -3178,9 +3178,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 140,
+  "pk": 515,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "20. What is the time complexity of merging K sorted linked lists of total N nodes using Min-Heap?",
     "question_type": "single",
     "option_a": "O(N * K)",
@@ -3194,9 +3194,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 141,
+  "pk": 516,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "21. What happens if you fail to update tail->next = NULL when splitting a linked list into two sublists?",
     "question_type": "single",
     "option_a": "List splits normally",
@@ -3210,9 +3210,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 142,
+  "pk": 517,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "22. In Copy List with Random Pointer problem, how can you clone the list in O(N) time and O(1) auxiliary space?",
     "question_type": "single",
     "option_a": "Interleave cloned nodes next to original nodes (A -> A' -> B -> B')",
@@ -3226,9 +3226,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 143,
+  "pk": 518,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "23. Why do Linked Lists experience worse hardware performance than Arrays during sequential traversal?",
     "question_type": "single",
     "option_a": "Pointers take more space",
@@ -3242,9 +3242,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 144,
+  "pk": 519,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "24. What is the time complexity of Flattening a Multi-Level Doubly Linked List containing child pointers?",
     "question_type": "single",
     "option_a": "O(N) where N is total nodes",
@@ -3258,9 +3258,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 145,
+  "pk": 520,
   "fields": {
-    "quiz": 8,
+    "quiz": 23,
     "question_text": "25. How do Lock-Free Concurrent Linked Lists perform thread-safe insertions without global mutexes?",
     "question_type": "single",
     "option_a": "Using Atomic Compare-And-Swap (CAS) hardware instructions",
@@ -3274,9 +3274,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 146,
+  "pk": 521,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "1. What operational principle governs a Stack data structure?",
     "question_type": "single",
     "option_a": "FIFO (First In First Out)",
@@ -3290,9 +3290,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 147,
+  "pk": 522,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "2. What is the time complexity of Push, Pop, and Top operations in a standard Stack?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -3306,9 +3306,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 148,
+  "pk": 523,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "3. What condition occurs when attempting to POP an element from an EMPTY stack?",
     "question_type": "single",
     "option_a": "Stack Overflow",
@@ -3322,9 +3322,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 149,
+  "pk": 524,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "4. What runtime environment structure tracks function calls, local variables, and return addresses?",
     "question_type": "single",
     "option_a": "Heap Buffer",
@@ -3338,9 +3338,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 150,
+  "pk": 525,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "5. What algorithm converts Infix mathematical expressions (A + B) to Postfix (A B +)?",
     "question_type": "single",
     "option_a": "Kadane's Algorithm",
@@ -3354,9 +3354,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 151,
+  "pk": 526,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "6. How is postfix expression '3 4 + 2 *' evaluated using a stack?",
     "question_type": "single",
     "option_a": "Result = 14: push 3, 4; '+' pops 3+4=7, push 7; push 2; '*' pops 7*2=14",
@@ -3370,9 +3370,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 152,
+  "pk": 527,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "7. How can you design a Min-Stack where getMin() runs in O(1) time?",
     "question_type": "single",
     "option_a": "Sort stack on every push",
@@ -3386,9 +3386,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 153,
+  "pk": 528,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "8. What pattern uses a stack maintaining elements in strictly increasing/decreasing order to find Next Greater Element?",
     "question_type": "single",
     "option_a": "Monotonic Stack Pattern",
@@ -3402,9 +3402,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 154,
+  "pk": 529,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "9. What is the time complexity to solve 'Next Greater Element' for all N array elements using a Monotonic Stack?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -3418,9 +3418,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 155,
+  "pk": 530,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "10. In 'Valid Parentheses' problem, what action is taken when encountering a closing bracket ')'?",
     "question_type": "single",
     "option_a": "Push onto stack",
@@ -3434,9 +3434,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 156,
+  "pk": 531,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "11. What is the time complexity to calculate Largest Rectangle in Histogram using a Monotonic Stack?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -3450,9 +3450,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 157,
+  "pk": 532,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "12. In Daily Temperatures problem (days until warmer temperature), what does the stack store?",
     "question_type": "single",
     "option_a": "Raw temperature values only",
@@ -3466,9 +3466,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 158,
+  "pk": 533,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "13. How can a Queue be implemented using TWO Stacks (inStack & outStack)?",
     "question_type": "single",
     "option_a": "Enqueue pushes to inStack; Dequeue pops outStack (transferring inStack to outStack if empty)",
@@ -3482,9 +3482,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 159,
+  "pk": 534,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "14. What is the space complexity of an Array-based Stack of capacity C?",
     "question_type": "single",
     "option_a": "O(C)",
@@ -3498,9 +3498,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 160,
+  "pk": 535,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "15. What is the time complexity of reversing a string using a Stack?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -3514,9 +3514,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 161,
+  "pk": 536,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "16. In expression parsing, prefix notation '+ A B' is also known as:",
     "question_type": "single",
     "option_a": "Polish Notation",
@@ -3530,9 +3530,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 162,
+  "pk": 537,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "17. In Maximal Rectangle in 2D Binary Matrix problem, how is the problem transformed to use Histogram Stack algorithm?",
     "question_type": "single",
     "option_a": "Treat each row as histogram base by accumulating consecutive 1s vertically",
@@ -3546,9 +3546,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 163,
+  "pk": 538,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "18. What stack state indicates that a string of brackets is valid after processing all characters?",
     "question_type": "single",
     "option_a": "Stack has 1 element",
@@ -3562,9 +3562,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 164,
+  "pk": 539,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "19. In Asteroid Collision problem, when two asteroids meet (positive moving right, negative moving left), what determines which survives?",
     "question_type": "single",
     "option_a": "Asteroid with larger absolute size survives; equal sizes explode both",
@@ -3578,9 +3578,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 165,
+  "pk": 540,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "20. How do you implement stack using a SINGLE Queue recursively?",
     "question_type": "single",
     "option_a": "On push(x), enqueue x, then dequeue and re-enqueue previous N-1 elements",
@@ -3594,9 +3594,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 166,
+  "pk": 541,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "21. What is the auxiliary space complexity of removing adjacent duplicates in a string using stack?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -3610,9 +3610,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 167,
+  "pk": 542,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "22. In Decode String ('3[a2[c]]' -> 'accaccacc'), what data structure handles nested bracket expansion?",
     "question_type": "single",
     "option_a": "Two Stacks (countStack and stringStack)",
@@ -3626,9 +3626,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 168,
+  "pk": 543,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "23. In Simplify Path problem ('/a/./b/../../c/'), what does '..' command perform on path stack?",
     "question_type": "single",
     "option_a": "Push '..'",
@@ -3642,9 +3642,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 169,
+  "pk": 544,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "24. What is the time complexity of evaluating an RPN (Reverse Polish Notation) expression array of length N?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -3658,9 +3658,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 170,
+  "pk": 545,
   "fields": {
-    "quiz": 9,
+    "quiz": 24,
     "question_text": "25. Which OS memory segment grows downward towards lower memory addresses on x86 architectures?",
     "question_type": "single",
     "option_a": "Heap Segment",
@@ -3674,9 +3674,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 171,
+  "pk": 546,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "1. What ordering invariant defines a Queue data structure?",
     "question_type": "single",
     "option_a": "LIFO (Last In First Out)",
@@ -3690,9 +3690,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 172,
+  "pk": 547,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "2. What are the core operations of a Queue called?",
     "question_type": "single",
     "option_a": "Push and Pop",
@@ -3706,9 +3706,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 173,
+  "pk": 548,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "3. In a simple array-based queue without circular indexing, what is the drawback of Dequeue?",
     "question_type": "single",
     "option_a": "Memory leak",
@@ -3722,9 +3722,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 174,
+  "pk": 549,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "4. What formula updates the rear pointer in a Circular Queue of size N?",
     "question_type": "single",
     "option_a": "rear = rear + 1",
@@ -3738,9 +3738,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 175,
+  "pk": 550,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "5. How do you distinguish between EMPTY and FULL states in a Circular Queue of size N using front and rear?",
     "question_type": "single",
     "option_a": "Empty: count == 0; Full: count == N (or maintain size counter)",
@@ -3754,9 +3754,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 176,
+  "pk": 551,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "6. What is a Deque (Double-Ended Queue)?",
     "question_type": "single",
     "option_a": "Queue allowing insertion and deletion at BOTH front and rear ends in O(1)",
@@ -3770,9 +3770,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 177,
+  "pk": 552,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "7. What graph traversal algorithm relies fundamentally on a Queue data structure?",
     "question_type": "single",
     "option_a": "Depth-First Search (DFS)",
@@ -3786,9 +3786,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 178,
+  "pk": 553,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "8. What data structure underpins a Priority Queue to achieve O(log N) insertion and extraction of min/max element?",
     "question_type": "single",
     "option_a": "Linked List",
@@ -3802,9 +3802,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 179,
+  "pk": 554,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "9. In Sliding Window Maximum problem (array size N, window K), what data structure achieves linear O(N) overall time?",
     "question_type": "single",
     "option_a": "Priority Queue (Heap)",
@@ -3818,9 +3818,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 180,
+  "pk": 555,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "10. How can a Stack be implemented using TWO Queues (q1 & q2)?",
     "question_type": "single",
     "option_a": "Push to q2, transfer all elements from q1 to q2, swap q1 and q2 names",
@@ -3834,9 +3834,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 181,
+  "pk": 556,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "11. In Multi-Source BFS (e.g. Rotting Oranges), how is the Queue initialized before loop execution?",
     "question_type": "single",
     "option_a": "Push single root node",
@@ -3850,9 +3850,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 182,
+  "pk": 557,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "12. In OS CPU process scheduling, what queue mechanism prevents low-priority processes from starving?",
     "question_type": "single",
     "option_a": "Single Priority Queue",
@@ -3866,9 +3866,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 183,
+  "pk": 558,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "13. What is the time complexity to find Kth largest element in array using Min-Heap of size K?",
     "question_type": "single",
     "option_a": "O(N log N)",
@@ -3882,9 +3882,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 184,
+  "pk": 559,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "14. What is a 'Lock-Free SPSC Ring Buffer'?",
     "question_type": "single",
     "option_a": "Single Producer Single Consumer circular queue using atomic atomic head/tail pointers without mutex locks",
@@ -3898,9 +3898,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 185,
+  "pk": 560,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "15. In Circular Tour / Gas Station problem, what is the time complexity to find starting station completing circuit?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -3914,9 +3914,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 186,
+  "pk": 561,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "16. What is the time complexity of popping the highest priority element from an UNORDERED Array implementation of Priority Queue?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -3930,9 +3930,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 187,
+  "pk": 562,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "17. In standard C++ STL, what data structure underlies std::queue by default?",
     "question_type": "single",
     "option_a": "std::vector",
@@ -3946,9 +3946,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 188,
+  "pk": 563,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "18. What is the time complexity of building a Binary Heap from an array of N elements (Heapify)?",
     "question_type": "single",
     "option_a": "O(N log N)",
@@ -3962,9 +3962,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 189,
+  "pk": 564,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "19. In Task Scheduler problem (with cooling period CPU tasks), what data structures are optimal?",
     "question_type": "single",
     "option_a": "Max-Heap for frequencies and Queue for cooling timer",
@@ -3978,9 +3978,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 190,
+  "pk": 565,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "20. What is the time complexity to peek front element in a Queue?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -3994,9 +3994,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 191,
+  "pk": 566,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "21. How do you implement a Stream Moving Average of last K integers?",
     "question_type": "single",
     "option_a": "Queue of size K tracking running sum; subtract popped element when size exceeds K",
@@ -4010,9 +4010,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 192,
+  "pk": 567,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "22. In 0-1 BFS (graph edge weights 0 or 1), what data structure replaces Priority Queue to achieve O(V + E) time?",
     "question_type": "single",
     "option_a": "Deque (push front weight 0, push back weight 1)",
@@ -4026,9 +4026,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 193,
+  "pk": 568,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "23. In Priority Queue, what operation decreases the key value of an existing node in Fibonacci Heap in amortized O(1) time?",
     "question_type": "single",
     "option_a": "Decrease-Key",
@@ -4042,9 +4042,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 194,
+  "pk": 569,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "24. What happens when enqueueing to a Queue that has reached max capacity?",
     "question_type": "single",
     "option_a": "Queue Underflow",
@@ -4058,9 +4058,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 195,
+  "pk": 570,
   "fields": {
-    "quiz": 10,
+    "quiz": 25,
     "question_text": "25. Which problem is solved in O(N) using Monotonic Queue of sliding window?",
     "question_type": "single",
     "option_a": "Sliding Window Maximum / Minimum",
@@ -4074,9 +4074,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 196,
+  "pk": 571,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "1. What is the main advantage of Sliding Window technique over brute force nested loops?",
     "question_type": "single",
     "option_a": "Reduces time complexity from O(N^2) or O(N^3) to linear O(N)",
@@ -4090,9 +4090,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 197,
+  "pk": 572,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "2. In Fixed-Size Sliding Window of length K, how is running window sum updated when moving window right by 1 step?",
     "question_type": "single",
     "option_a": "Re-sum all K elements",
@@ -4106,9 +4106,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 198,
+  "pk": 573,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "3. In Dynamic-Size Sliding Window (e.g. Max Subarray Sum <= Target with positive numbers), when do you expand right pointer R?",
     "question_type": "single",
     "option_a": "When window condition is valid, expand R to find larger window",
@@ -4122,9 +4122,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 199,
+  "pk": 574,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "4. What is the time complexity of processing an array of size N using Dynamic Sliding Window where left L and right R pointers move forward?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -4138,9 +4138,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 200,
+  "pk": 575,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "5. In sorted array Two Pointer inward convergence (e.g. 2Sum), if arr[L] + arr[R] > Target, what action is taken?",
     "question_type": "single",
     "option_a": "Increment L (L++)",
@@ -4154,9 +4154,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 201,
+  "pk": 576,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "6. Why can standard Sliding Window NOT be applied directly to solve Subarray Sum Equals K when array contains NEGATIVE numbers?",
     "question_type": "single",
     "option_a": "Window sum is non-monotonic (expanding R may decrease sum, shrinking L may increase sum)",
@@ -4170,9 +4170,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 202,
+  "pk": 577,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "7. What formula calculates exact count of subarrays with EXACTLY K distinct elements using At-Most helper function?",
     "question_type": "single",
     "option_a": "Exact(K) = AtMost(K) - AtMost(K-1)",
@@ -4186,9 +4186,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 203,
+  "pk": 578,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "8. What is the time complexity of finding Longest Substring Without Repeating Characters using sliding window & hash map?",
     "question_type": "single",
     "option_a": "O(N^2)",
@@ -4202,9 +4202,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 204,
+  "pk": 579,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "9. In Minimum Window Substring (string S len N, target T len M), what is the optimal overall time complexity?",
     "question_type": "single",
     "option_a": "O(N * M)",
@@ -4218,9 +4218,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 205,
+  "pk": 580,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "10. In Fruit Into Baskets problem (at most 2 distinct fruit types in window), what determines window shrinking trigger?",
     "question_type": "single",
     "option_a": "When map size (distinct elements) exceeds 2",
@@ -4234,9 +4234,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 206,
+  "pk": 581,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "11. In Fast and Slow Pointers (Floyd's Tortoise & Hare) for array duplicate detection (Find Duplicate Number), why does it run in O(1) space?",
     "question_type": "single",
     "option_a": "Array values act as next pointers arr[i]",
@@ -4250,9 +4250,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 207,
+  "pk": 582,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "12. In Container With Most Water problem (height array), how do you decide which pointer L or R to move inward?",
     "question_type": "single",
     "option_a": "Move pointer with SMALLER height (height[L] < height[R] ? L++ : R--)",
@@ -4266,9 +4266,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 208,
+  "pk": 583,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "13. In Max Consecutive Ones III (flip at most K zeros), what does window store?",
     "question_type": "single",
     "option_a": "Running count of zeros inside window [L, R] <= K",
@@ -4282,9 +4282,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 209,
+  "pk": 584,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "14. In 3Sum problem (find triplets sum to 0), why is array sorted first?",
     "question_type": "single",
     "option_a": "Enables Two Pointer inward convergence and easy skip of duplicate elements",
@@ -4298,9 +4298,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 210,
+  "pk": 585,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "15. What is the time complexity of 4Sum problem optimized with 2 outer loops and inner 2-pointer convergence?",
     "question_type": "single",
     "option_a": "O(N^4)",
@@ -4314,9 +4314,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 211,
+  "pk": 586,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "16. In Subarrays with Bounded Maximum (max element between L and R), how is count accumulated?",
     "question_type": "single",
     "option_a": "Track last valid element index within range [L, R]",
@@ -4330,9 +4330,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 212,
+  "pk": 587,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "17. In Minimum Size Subarray Sum (sum >= Target with positive numbers), what is updated upon finding a valid window sum?",
     "question_type": "single",
     "option_a": "min_len = min(min_len, R - L + 1), then shrink L to test smaller window",
@@ -4346,9 +4346,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 213,
+  "pk": 588,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "18. How many total subarrays of window size K exist in array of size N?",
     "question_type": "single",
     "option_a": "N - K + 1",
@@ -4362,9 +4362,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 214,
+  "pk": 589,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "19. In Permutation in String problem (check if S1 permutation is substring of S2), what window size is maintained on S2?",
     "question_type": "single",
     "option_a": "Fixed window of size equal to length of S1",
@@ -4378,9 +4378,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 215,
+  "pk": 590,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "20. In Trapping Rain Water problem using Two Pointers (left & right), what metric determines water trapped at index?",
     "question_type": "single",
     "option_a": "min(left_max, right_max) - height[i]",
@@ -4394,9 +4394,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 216,
+  "pk": 591,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "21. In Move Zeroes to end in-place, how do slow and fast pointers operate?",
     "question_type": "single",
     "option_a": "Fast scans array; when arr[fast] != 0, swap arr[slow] and arr[fast], increment slow",
@@ -4410,9 +4410,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 217,
+  "pk": 592,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "22. What is the space complexity of Two Pointer inward algorithm on sorted array?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -4426,9 +4426,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 218,
+  "pk": 593,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "23. In Longest Repeating Character Replacement (replace at most K chars), window is valid if:",
     "question_type": "single",
     "option_a": "(window_len - max_freq_char_in_window) <= K",
@@ -4442,9 +4442,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 219,
+  "pk": 594,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "24. In Subarray Product Less Than K (positive integers), how many valid subarrays end at index R?",
     "question_type": "single",
     "option_a": "R - L + 1",
@@ -4458,9 +4458,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 220,
+  "pk": 595,
   "fields": {
-    "quiz": 11,
+    "quiz": 26,
     "question_text": "25. What is the optimal time complexity to find Partition Labels (partition string into max parts where char appears in 1 part)?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -4474,9 +4474,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 221,
+  "pk": 596,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "1. What is the defining topological property of a Tree with N vertices?",
     "question_type": "single",
     "option_a": "Connected acyclic graph with exactly N - 1 edges",
@@ -4490,9 +4490,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 222,
+  "pk": 597,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "2. What is the Depth of a node in a tree?",
     "question_type": "single",
     "option_a": "Number of edges on the path from Root to that node",
@@ -4506,9 +4506,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 223,
+  "pk": 598,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "3. What is the Height of a tree?",
     "question_type": "single",
     "option_a": "Number of edges on the longest path from Root to any Leaf node",
@@ -4522,9 +4522,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 224,
+  "pk": 599,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "4. In binary tree Depth-First Search, what is the order of nodes visited in INORDER Traversal?",
     "question_type": "single",
     "option_a": "Root -> Left -> Right",
@@ -4538,9 +4538,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 225,
+  "pk": 600,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "5. In binary tree Depth-First Search, what is the order of nodes visited in PREORDER Traversal?",
     "question_type": "single",
     "option_a": "Root -> Left -> Right",
@@ -4554,9 +4554,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 226,
+  "pk": 601,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "6. In binary tree Depth-First Search, what is the order of nodes visited in POSTORDER Traversal?",
     "question_type": "single",
     "option_a": "Root -> Left -> Right",
@@ -4570,9 +4570,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 227,
+  "pk": 602,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "7. What data structure is used to perform Level-Order Traversal (BFS) of a tree?",
     "question_type": "single",
     "option_a": "Stack",
@@ -4586,9 +4586,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 228,
+  "pk": 603,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "8. What is the maximum number of nodes in a Binary Tree of height H (where root height = 0)?",
     "question_type": "single",
     "option_a": "2^(H+1) - 1",
@@ -4602,9 +4602,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 229,
+  "pk": 604,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "9. What is a 'Full Binary Tree'?",
     "question_type": "single",
     "option_a": "Tree where every node has either 0 or 2 children",
@@ -4618,9 +4618,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 230,
+  "pk": 605,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "10. What is a 'Complete Binary Tree'?",
     "question_type": "single",
     "option_a": "Binary tree where every level is completely filled except possibly last level, which is filled from left to right",
@@ -4634,9 +4634,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 231,
+  "pk": 606,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "11. What is the Diameter of a Binary Tree?",
     "question_type": "single",
     "option_a": "Length of longest path between ANY two nodes in the tree (may or may not pass through root)",
@@ -4650,9 +4650,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 232,
+  "pk": 607,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "12. What pair of tree traversals is required to UNLEASH unique reconstruction of a general Binary Tree?",
     "question_type": "single",
     "option_a": "Preorder + Inorder (or Postorder + Inorder)",
@@ -4666,9 +4666,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 233,
+  "pk": 608,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "13. What is the time complexity to check if a binary tree is Symmetric (mirror image of itself)?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -4682,9 +4682,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 234,
+  "pk": 609,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "14. In Binary Tree Maximum Path Sum problem, what does a node return to its parent during postorder recursion?",
     "question_type": "single",
     "option_a": "node.val + max(0, max(left_branch, right_branch))",
@@ -4698,9 +4698,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 235,
+  "pk": 610,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "15. What is Lowest Common Ancestor (LCA) of two nodes P and Q in a general binary tree?",
     "question_type": "single",
     "option_a": "Deepest node that has both P and Q as descendants",
@@ -4714,9 +4714,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 236,
+  "pk": 611,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "16. What is the time complexity of finding LCA in a balanced Binary Tree of N nodes?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -4730,9 +4730,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 237,
+  "pk": 612,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "17. What is Morris Inorder Traversal?",
     "question_type": "single",
     "option_a": "Inorder traversal achieving O(N) time and O(1) auxiliary space using threaded temporary links to predecessor",
@@ -4746,9 +4746,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 238,
+  "pk": 613,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "18. What is the space complexity of recursive DFS traversal on a SKEWED tree of N nodes?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -4762,9 +4762,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 239,
+  "pk": 614,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "19. In Zigzag Level-Order Traversal (Spiral Order), how are level node values accumulated?",
     "question_type": "single",
     "option_a": "Alternate left-to-right and right-to-left insertion direction per level",
@@ -4778,9 +4778,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 240,
+  "pk": 615,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "20. How do you serialize a binary tree into a string for storage?",
     "question_type": "single",
     "option_a": "Preorder traversal inserting null markers '#' for missing child pointers",
@@ -4794,9 +4794,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 241,
+  "pk": 616,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "21. What is the maximum number of leaf nodes in a Full Binary Tree with L leaves?",
     "question_type": "single",
     "option_a": "Total nodes N = 2L - 1",
@@ -4810,9 +4810,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 242,
+  "pk": 617,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "22. In Path Sum III (count paths summing to Target, path does not need to start at root), what optimal data structure is used during DFS?",
     "question_type": "single",
     "option_a": "Prefix Sum Hash Map",
@@ -4826,9 +4826,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 243,
+  "pk": 618,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "23. In Subtree of Another Tree problem, what is the worst-case time complexity comparing tree S (N nodes) and T (M nodes)?",
     "question_type": "single",
     "option_a": "O(N * M)",
@@ -4842,9 +4842,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 244,
+  "pk": 619,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "24. What is the time complexity to flatten a binary tree into a linked list in-place using right pointer chaining?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -4858,9 +4858,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 245,
+  "pk": 620,
   "fields": {
-    "quiz": 12,
+    "quiz": 27,
     "question_text": "25. Which traversal visits all leaf nodes from left to right in a standard binary tree?",
     "question_type": "single",
     "option_a": "Inorder, Preorder, and Postorder all visit leaves in left-to-right relative order",
@@ -4874,9 +4874,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 246,
+  "pk": 621,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "1. What is the defining constraint of a Binary Tree?",
     "question_type": "single",
     "option_a": "Every node has at most 2 children (left child and right child)",
@@ -4890,9 +4890,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 247,
+  "pk": 622,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "2. What is a 'Perfect Binary Tree'?",
     "question_type": "single",
     "option_a": "Binary tree where all internal nodes have 2 children AND all leaf nodes are at identical depth",
@@ -4906,9 +4906,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 248,
+  "pk": 623,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "3. In an array representation of a Complete Binary Tree (1-based indexing), what is the index of the LEFT child of node at index i?",
     "question_type": "single",
     "option_a": "2 * i",
@@ -4922,9 +4922,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 249,
+  "pk": 624,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "4. In 0-based array indexing of a Complete Binary Tree, what is the index of the RIGHT child of node at index i?",
     "question_type": "single",
     "option_a": "2 * i + 1",
@@ -4938,9 +4938,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 250,
+  "pk": 625,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "5. What algorithm calculates Vertical Order Traversal of a Binary Tree?",
     "question_type": "single",
     "option_a": "BFS Level-Order maintaining horizontal distance HD (left HD-1, right HD+1) in Map",
@@ -4954,9 +4954,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 251,
+  "pk": 626,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "6. In Top View of a Binary Tree, which node is visible for each vertical column HD?",
     "question_type": "single",
     "option_a": "The FIRST node encountered at column HD during BFS level-order traversal",
@@ -4970,9 +4970,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 252,
+  "pk": 627,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "7. In Bottom View of a Binary Tree, which node is visible for each vertical column HD?",
     "question_type": "single",
     "option_a": "The LAST node encountered at column HD during BFS level-order traversal",
@@ -4986,9 +4986,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 253,
+  "pk": 628,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "8. In Left View of a Binary Tree, which nodes are visible?",
     "question_type": "single",
     "option_a": "The first node encountered at each level depth during BFS level-order",
@@ -5002,9 +5002,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 254,
+  "pk": 629,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "9. In Right View of a Binary Tree, which nodes are visible?",
     "question_type": "single",
     "option_a": "The last node encountered at each level depth during BFS level-order",
@@ -5018,9 +5018,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 255,
+  "pk": 630,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "10. What is the time complexity to check if a binary tree is Height-Balanced (AVL balanced property |left_h - right_h| <= 1)?",
     "question_type": "single",
     "option_a": "O(N) using bottom-up postorder returning height or -1 if unbalanced",
@@ -5034,9 +5034,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 256,
+  "pk": 631,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "11. What is the Maximum Width of a Binary Tree?",
     "question_type": "single",
     "option_a": "Maximum width among all levels, measured as positional distance between leftmost and rightmost non-null nodes in level",
@@ -5050,9 +5050,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 257,
+  "pk": 632,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "12. In Invert/Flip Binary Tree (mirror image), what operation is performed at each node?",
     "question_type": "single",
     "option_a": "Swap node.left and node.right pointers recursively",
@@ -5066,9 +5066,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 258,
+  "pk": 633,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "13. What is the total number of structurally unique Binary Trees that can be formed with N unlabeled nodes?",
     "question_type": "single",
     "option_a": "Catalan Number C_n = (1 / (n + 1)) * (2n choose n)",
@@ -5082,9 +5082,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 259,
+  "pk": 634,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "14. How many structurally unique Binary Search Trees can be formed with N distinct key values?",
     "question_type": "single",
     "option_a": "Catalan Number C_n",
@@ -5098,9 +5098,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 260,
+  "pk": 635,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "15. In Boundary Traversal of a Binary Tree, in what order are boundary nodes collected?",
     "question_type": "single",
     "option_a": "Root -> Left Boundary (excluding leaves) -> All Leaf Nodes -> Right Boundary in Reverse (excluding leaves)",
@@ -5114,9 +5114,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 261,
+  "pk": 636,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "16. What is the time complexity of Boundary Traversal on a tree of N nodes?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -5130,9 +5130,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 262,
+  "pk": 637,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "17. What is an 'Expression Tree'?",
     "question_type": "single",
     "option_a": "Binary tree where internal nodes are operators (+, -, *, /) and leaves are operands",
@@ -5146,9 +5146,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 263,
+  "pk": 638,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "18. In Construct Binary Tree from Preorder and Postorder Traversal, when is construction unique?",
     "question_type": "single",
     "option_a": "Only if the binary tree is FULL (every node has 0 or 2 children)",
@@ -5162,9 +5162,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 264,
+  "pk": 639,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "19. What is the auxiliary space complexity of Level-Order Traversal on a Perfect Binary Tree of height H (N nodes)?",
     "question_type": "single",
     "option_a": "O(N) queue memory (max level contains ~N/2 leaf nodes)",
@@ -5178,9 +5178,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 265,
+  "pk": 640,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "20. How do you find the All Nodes Distance K from Target Node in Binary Tree?",
     "question_type": "single",
     "option_a": "Build parent pointer graph links during DFS, then run BFS outwards from target node up to distance K",
@@ -5194,9 +5194,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 266,
+  "pk": 641,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "21. What is the Maximum Path Sum between any two leaves in a binary tree?",
     "question_type": "single",
     "option_a": "Postorder tracking max(max_leaf_path, left_path + right_path + node.val)",
@@ -5210,9 +5210,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 267,
+  "pk": 642,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "22. In Cousin Nodes in Binary Tree (same depth, different parents), how is relationship validated?",
     "question_type": "single",
     "option_a": "Nodes P and Q have identical depth level AND node1.parent != node2.parent",
@@ -5226,9 +5226,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 268,
+  "pk": 643,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "23. In Population of Next Right Pointers in Each Node (Perfect Binary Tree), what pointer link is added?",
     "question_type": "single",
     "option_a": "node.left.next = node.right and node.right.next = node.next.left",
@@ -5242,9 +5242,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 269,
+  "pk": 644,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "24. What is the time complexity to Count Complete Tree Nodes in less than O(N) time?",
     "question_type": "single",
     "option_a": "O((log N)^2) by comparing left and right subtree heights to binary search complete level",
@@ -5258,9 +5258,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 270,
+  "pk": 645,
   "fields": {
-    "quiz": 13,
+    "quiz": 28,
     "question_text": "25. Which tree property guarantees that simple array 2*i and 2*i+1 indexing stores nodes compactly without empty slot gaps?",
     "question_type": "single",
     "option_a": "Complete Binary Tree property",
@@ -5274,9 +5274,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 271,
+  "pk": 646,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "1. What is the structural ordering invariant of a Binary Search Tree (BST)?",
     "question_type": "single",
     "option_a": "Left Subtree values < Root value < Right Subtree values for EVERY node",
@@ -5290,9 +5290,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 272,
+  "pk": 647,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "2. What tree traversal on a BST produces node key values in STRICTLY SORTED ascending order?",
     "question_type": "single",
     "option_a": "Preorder Traversal",
@@ -5306,9 +5306,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 273,
+  "pk": 648,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "3. What is the time complexity of Search, Insert, and Delete in a BALANCED BST of N nodes?",
     "question_type": "single",
     "option_a": "O(N)",
@@ -5322,9 +5322,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 274,
+  "pk": 649,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "4. What is the WORST-CASE time complexity of searching in a SKEWED (degenerate) BST of N nodes?",
     "question_type": "single",
     "option_a": "O(log N)",
@@ -5338,9 +5338,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 275,
+  "pk": 650,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "5. In BST node DELETION, what replaces a deleted node that has TWO children?",
     "question_type": "single",
     "option_a": "Inorder Successor (smallest node in right subtree) OR Inorder Predecessor (largest in left subtree)",
@@ -5354,9 +5354,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 276,
+  "pk": 651,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "6. How do you locate the MINIMUM key value in a BST?",
     "question_type": "single",
     "option_a": "Traverse left pointers starting from Root until node.left is NULL",
@@ -5370,9 +5370,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 277,
+  "pk": 652,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "7. How do you locate the MAXIMUM key value in a BST?",
     "question_type": "single",
     "option_a": "Traverse right pointers starting from Root until node.right is NULL",
@@ -5386,9 +5386,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 278,
+  "pk": 653,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "8. How can you validate if a Binary Tree is a VALID BST in linear O(N) time?",
     "question_type": "single",
     "option_a": "DFS passing valid range bounds (min_val, max_val) down to children",
@@ -5402,9 +5402,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 279,
+  "pk": 654,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "9. What is the time complexity to find K-th Smallest Element in a BST using Inorder Traversal?",
     "question_type": "single",
     "option_a": "O(H + K) time, O(H) stack space",
@@ -5418,9 +5418,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 280,
+  "pk": 655,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "10. In BST, how is Lowest Common Ancestor (LCA) of nodes P and Q located efficiently in O(H) time?",
     "question_type": "single",
     "option_a": "Starting from Root: if P and Q < curr, move left; if P and Q > curr, move right; else curr is LCA",
@@ -5434,9 +5434,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 281,
+  "pk": 656,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "11. What is the FLOOR value of Key X in a BST?",
     "question_type": "single",
     "option_a": "The largest key value in the BST that is <= X",
@@ -5450,9 +5450,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 282,
+  "pk": 657,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "12. What is the CEIL value of Key X in a BST?",
     "question_type": "single",
     "option_a": "The smallest key value in the BST that is >= X",
@@ -5466,9 +5466,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 283,
+  "pk": 658,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "13. How do you convert a Sorted Array into a Height-Balanced BST in O(N) time?",
     "question_type": "single",
     "option_a": "Pick middle element arr[mid] as Root, recursively build left subtree from left half, right subtree from right half",
@@ -5482,9 +5482,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 284,
+  "pk": 659,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "14. How do you convert a Sorted Doubly Linked List into a Balanced BST in-place in O(N) time?",
     "question_type": "single",
     "option_a": "Bottom-up Inorder simulation advancing list head pointer as nodes are built",
@@ -5498,9 +5498,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 285,
+  "pk": 660,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "15. In Two Sum IV - Input is a BST (find 2 nodes summing to Target), what space-efficient technique runs in O(N) time and O(H) space?",
     "question_type": "single",
     "option_a": "Two BST Iterators (1 normal Inorder, 1 Reverse Inorder)",
@@ -5514,9 +5514,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 286,
+  "pk": 661,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "16. What algorithm restores a BST where EXACTLY TWO nodes were swapped accidentally (Recover BST)?",
     "question_type": "single",
     "option_a": "Inorder traversal tracking prev node; detect 1st swap (prev > curr) and 2nd swap (prev > curr), then swap back values",
@@ -5530,9 +5530,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 287,
+  "pk": 662,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "17. What is the time complexity to Construct a BST from a Given Preorder Traversal array of size N?",
     "question_type": "single",
     "option_a": "O(N) passing upper bound constraint down recursive calls",
@@ -5546,9 +5546,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 288,
+  "pk": 663,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "18. What is the Range Sum of BST (sum of node values in range [Low, High]) time complexity?",
     "question_type": "single",
     "option_a": "O(N) worst case, pruned branches skip subtrees out of range",
@@ -5562,9 +5562,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 289,
+  "pk": 664,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "19. What data structure maintains dynamic median of data stream in O(log N) insert time?",
     "question_type": "single",
     "option_a": "Self-Balancing BST (or Dual Heaps: Max-Heap for left half, Min-Heap for right half)",
@@ -5578,9 +5578,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 290,
+  "pk": 665,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "20. In BST Inorder Successor search without parent pointers, what node is tracked when moving LEFT?",
     "question_type": "single",
     "option_a": "Current node is candidate successor (successor = curr)",
@@ -5594,9 +5594,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 291,
+  "pk": 666,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "21. What is the Largest BST Subtree in Binary Tree algorithm time complexity?",
     "question_type": "single",
     "option_a": "O(N) bottom-up returning (is_bst, size, min_val, max_val)",
@@ -5610,9 +5610,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 292,
+  "pk": 667,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "22. Why does a standard BST fail to guarantee O(log N) operational performance in real-world applications?",
     "question_type": "single",
     "option_a": "Sorted or semi-sorted insertion sequences cause tree height to degrade to O(N)",
@@ -5626,9 +5626,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 293,
+  "pk": 668,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "23. In BST insertion, where is a new unique key inserted?",
     "question_type": "single",
     "option_a": "Always as a NEW LEAF node at appropriate NULL pointer position",
@@ -5642,9 +5642,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 294,
+  "pk": 669,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "24. In BST, what is the Inorder Predecessor of a node X with a LEFT child?",
     "question_type": "single",
     "option_a": "The MAXIMUM key node in X's LEFT subtree (rightmost node of left child)",
@@ -5658,9 +5658,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 295,
+  "pk": 670,
   "fields": {
-    "quiz": 14,
+    "quiz": 29,
     "question_text": "25. What property distinguishes BST from a Binary Heap?",
     "question_type": "single",
     "option_a": "BST enforces Left < Root < Right order; Heap enforces Parent >= Child (Max-Heap) across both children",
@@ -5674,9 +5674,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 296,
+  "pk": 671,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "1. What is an AVL Tree?",
     "question_type": "single",
     "option_a": "Self-balancing Binary Search Tree where height difference between left and right subtrees of EVERY node is at most 1",
@@ -5690,9 +5690,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 297,
+  "pk": 672,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "2. How is the Balance Factor (BF) of a node calculated in an AVL Tree?",
     "question_type": "single",
     "option_a": "BF(node) = Height(Left Subtree) - Height(Right Subtree)",
@@ -5706,9 +5706,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 298,
+  "pk": 673,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "3. What values of Balance Factor indicate that an AVL tree node is OUT OF BALANCE and requires rotation?",
     "question_type": "single",
     "option_a": "BF > 1 or BF < -1 (i.e. BF = +2 or BF = -2)",
@@ -5722,9 +5722,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 299,
+  "pk": 674,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "4. What is the MAXIMUM height H of an AVL tree containing N nodes?",
     "question_type": "single",
     "option_a": "H <= 1.44 * log2(N)",
@@ -5738,9 +5738,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 300,
+  "pk": 675,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "5. What rotation rebalances a Left-Left (LL) imbalance (node BF = +2, left child BF = +1)?",
     "question_type": "single",
     "option_a": "Single Right Rotation (Rotate Right around unbalanced node)",
@@ -5754,9 +5754,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 301,
+  "pk": 676,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "6. What rotation rebalances a Right-Right (RR) imbalance (node BF = -2, right child BF = -1)?",
     "question_type": "single",
     "option_a": "Single Left Rotation (Rotate Left around unbalanced node)",
@@ -5770,9 +5770,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 302,
+  "pk": 677,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "7. What rotations rebalance a Left-Right (LR) imbalance (node BF = +2, left child BF = -1)?",
     "question_type": "single",
     "option_a": "Left Rotation on Left Child, followed by Right Rotation on Unbalanced Node",
@@ -5786,9 +5786,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 303,
+  "pk": 678,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "8. What rotations rebalance a Right-Left (RL) imbalance (node BF = -2, right child BF = +1)?",
     "question_type": "single",
     "option_a": "Right Rotation on Right Child, followed by Left Rotation on Unbalanced Node",
@@ -5802,9 +5802,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 304,
+  "pk": 679,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "9. What is the time complexity of a single tree rotation (Left or Right)?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -5818,9 +5818,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 305,
+  "pk": 680,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "10. During INSERTION in an AVL tree, what is the maximum number of rotations required to restore balance to the entire tree?",
     "question_type": "single",
     "option_a": "At most 1 single or 1 double rotation (at most 2 pointer rotations total)",
@@ -5834,9 +5834,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 306,
+  "pk": 681,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "11. During DELETION in an AVL tree, what is the maximum number of rotations required to restore balance?",
     "question_type": "single",
     "option_a": "Up to O(log N) rotations (rebalancing may propagate up ancestors to root)",
@@ -5850,9 +5850,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 307,
+  "pk": 682,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "12. What is the worst-case time complexity for Search, Insert, and Delete in an AVL tree of N nodes?",
     "question_type": "single",
     "option_a": "O(log N) for all three operations",
@@ -5866,9 +5866,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 308,
+  "pk": 683,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "13. How does an AVL Tree compare with a Red-Black Tree in terms of search speed vs insertion/deletion overhead?",
     "question_type": "single",
     "option_a": "AVL is more strictly balanced (faster searches), but requires more rotations during frequent insertions/deletions",
@@ -5882,9 +5882,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 309,
+  "pk": 684,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "14. What minimum number of nodes N(H) is required to construct an AVL tree of height H?",
     "question_type": "single",
     "option_a": "N(H) = N(H-1) + N(H-2) + 1 (Fibonacci-like tree recurrence)",
@@ -5898,9 +5898,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 310,
+  "pk": 685,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "15. In Right Rotation around node Z (with left child Y and Y's right child T2), where does T2 attach after rotation?",
     "question_type": "single",
     "option_a": "T2 becomes the LEFT child of node Z",
@@ -5914,9 +5914,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 311,
+  "pk": 686,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "16. In Left Rotation around node X (with right child Y and Y's left child T2), where does T2 attach after rotation?",
     "question_type": "single",
     "option_a": "T2 becomes the RIGHT child of node X",
@@ -5930,9 +5930,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 312,
+  "pk": 687,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "17. What extra data field must every node in an AVL tree store?",
     "question_type": "single",
     "option_a": "Height of the node (or Balance Factor)",
@@ -5946,9 +5946,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 313,
+  "pk": 688,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "18. What is the space complexity of storing an AVL tree of N nodes?",
     "question_type": "single",
     "option_a": "O(N) memory for nodes and height fields",
@@ -5962,9 +5962,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 314,
+  "pk": 689,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "19. If an AVL tree node has height 0 (leaf), what is its height after inserting a single child?",
     "question_type": "single",
     "option_a": "1",
@@ -5978,9 +5978,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 315,
+  "pk": 690,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "20. What is the height of an empty (NULL) subtree in AVL balance factor calculations?",
     "question_type": "single",
     "option_a": "-1 (or 0 depending on convention)",
@@ -5994,9 +5994,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 316,
+  "pk": 691,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "21. Why are AVL trees preferred over Red-Black trees in lookup-heavy database index applications?",
     "question_type": "single",
     "option_a": "Stricter balance factor guarantees shorter tree height, minimizing disk read / pointer traversal operations",
@@ -6010,9 +6010,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 317,
+  "pk": 692,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "22. In AVL tree rebalancing after insertion, how do you determine whether an imbalance at node Z is LL vs LR?",
     "question_type": "single",
     "option_a": "Check left child Y: if inserted key < Y.key it is LL; if inserted key > Y.key it is LR",
@@ -6026,9 +6026,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 318,
+  "pk": 693,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "23. In an AVL tree with 1 node, what is the tree height (using 0-based root convention)?",
     "question_type": "single",
     "option_a": "0",
@@ -6042,9 +6042,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 319,
+  "pk": 694,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "24. What happens if you attempt to insert a duplicate key into a standard AVL Tree?",
     "question_type": "single",
     "option_a": "Duplicates are rejected/ignored OR stored in node frequency counter",
@@ -6058,9 +6058,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 320,
+  "pk": 695,
   "fields": {
-    "quiz": 15,
+    "quiz": 30,
     "question_text": "25. Who invented the AVL Tree data structure in 1962?",
     "question_type": "single",
     "option_a": "Adelson-Velsky and Landis",
@@ -6074,9 +6074,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 321,
+  "pk": 696,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "1. What ordering property defines a MAX-HEAP?",
     "question_type": "single",
     "option_a": "Every parent node key is GREATER than or equal to its children keys (Root is Maximum)",
@@ -6090,9 +6090,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 322,
+  "pk": 697,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "2. What ordering property defines a MIN-HEAP?",
     "question_type": "single",
     "option_a": "Every parent node key is LESS than or equal to its children keys (Root is Minimum)",
@@ -6106,9 +6106,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 323,
+  "pk": 698,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "3. What structural property must every Binary Heap satisfy?",
     "question_type": "single",
     "option_a": "Must be a Complete Binary Tree (all levels filled except possibly last, filled left-to-right)",
@@ -6122,9 +6122,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 324,
+  "pk": 699,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "4. In 0-based array heap representation, given parent index i, what are the left child, right child, and parent indices?",
     "question_type": "single",
     "option_a": "left = 2*i + 1, right = 2*i + 2, parent = (i - 1) // 2",
@@ -6138,9 +6138,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 325,
+  "pk": 700,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "5. What is the time complexity to INSERT a new element into a Binary Heap of N elements?",
     "question_type": "single",
     "option_a": "O(log N) using Percolate Up / Bubble Up",
@@ -6154,9 +6154,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 326,
+  "pk": 701,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "6. What is the time complexity to EXTRACT MAX / MIN (pop root) from a Binary Heap of N elements?",
     "question_type": "single",
     "option_a": "O(log N) using Percolate Down / Heapify",
@@ -6170,9 +6170,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 327,
+  "pk": 702,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "7. What is the time complexity to BUILD A HEAP (Heapify) from an unsorted array of N elements?",
     "question_type": "single",
     "option_a": "O(N) bottom-up heapify",
@@ -6186,9 +6186,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 328,
+  "pk": 703,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "8. What is the worst-case time complexity of HEAP SORT on an array of N elements?",
     "question_type": "single",
     "option_a": "O(N log N) time and O(1) auxiliary space",
@@ -6202,9 +6202,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 329,
+  "pk": 704,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "9. Is Heap Sort a STABLE sorting algorithm?",
     "question_type": "single",
     "option_a": "No, non-adjacent element swaps break relative order of equal keys",
@@ -6218,9 +6218,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 330,
+  "pk": 705,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "10. In array of size N representing Max-Heap, at what index do LEAF nodes start (0-based indexing)?",
     "question_type": "single",
     "option_a": "Index floor(N / 2)",
@@ -6234,9 +6234,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 331,
+  "pk": 706,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "11. What is the time complexity to find the MINIMUM element in a MAX-HEAP of N elements?",
     "question_type": "single",
     "option_a": "O(N) search among leaf nodes floor(N/2)..N-1",
@@ -6250,9 +6250,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 332,
+  "pk": 707,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "12. In K-th Largest Element in an Array problem, what heap size should be maintained to achieve O(N log K) time?",
     "question_type": "single",
     "option_a": "Min-Heap of size K (root holds K-th largest element)",
@@ -6266,9 +6266,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 333,
+  "pk": 708,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "13. In Find Median from Data Stream, what two heaps are used?",
     "question_type": "single",
     "option_a": "Max-Heap for lower half of numbers, Min-Heap for upper half of numbers",
@@ -6282,9 +6282,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 334,
+  "pk": 709,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "14. What is the time complexity of Merging K Sorted Lists of total N elements using Min-Heap?",
     "question_type": "single",
     "option_a": "O(N log K)",
@@ -6298,9 +6298,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 335,
+  "pk": 710,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "15. What is a 'd-ary Heap'?",
     "question_type": "single",
     "option_a": "Heap where each non-leaf node has d children instead of 2",
@@ -6314,9 +6314,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 336,
+  "pk": 711,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "16. In Fibonacci Heap, what is the amortized time complexity of Insert, Find-Min, and Decrease-Key operations?",
     "question_type": "single",
     "option_a": "O(1) amortized time for Insert, Find-Min, and Decrease-Key",
@@ -6330,9 +6330,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 337,
+  "pk": 712,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "17. What graph shortest path algorithm benefits directly from Fibonacci Heap's O(1) Decrease-Key performance?",
     "question_type": "single",
     "option_a": "Dijkstra's Algorithm (improves time from O(E log V) to O(E + V log V))",
@@ -6346,9 +6346,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 338,
+  "pk": 713,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "18. What heap operation is used in Priority Queue to change an element's value and fix heap order?",
     "question_type": "single",
     "option_a": "Decrease-Key / Increase-Key (percolate up if smaller in Min-Heap, down if larger)",
@@ -6362,9 +6362,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 339,
+  "pk": 714,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "19. In Top K Frequent Elements problem (array of N numbers), how can you solve it in O(N log K) time?",
     "question_type": "single",
     "option_a": "Count frequencies using Hash Map, then maintain Min-Heap of size K based on frequency",
@@ -6378,9 +6378,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 340,
+  "pk": 715,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "20. How do you implement a Max-Heap in Python's heapq module (which only provides Min-Heap by default)?",
     "question_type": "single",
     "option_a": "Multiply numerical values by -1 before push and after pop",
@@ -6394,9 +6394,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 341,
+  "pk": 716,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "21. What is the space complexity of storing a Binary Heap of N elements in an array?",
     "question_type": "single",
     "option_a": "O(N) contiguous array memory",
@@ -6410,9 +6410,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 342,
+  "pk": 717,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "22. In Reorganize String problem (rearrange so no adjacent identical chars), what heap strategy is used?",
     "question_type": "single",
     "option_a": "Max-Heap of character frequencies; pop top 2 most frequent characters per step",
@@ -6426,9 +6426,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 343,
+  "pk": 718,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "23. What is the time complexity to Peek the Root element of a Min-Heap?",
     "question_type": "single",
     "option_a": "O(1)",
@@ -6442,9 +6442,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 344,
+  "pk": 719,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "24. In Minimum Cost to Connect Ropes problem, what heap strategy minimizes total cost?",
     "question_type": "single",
     "option_a": "Min-Heap: repeatedly pop 2 smallest ropes, add sum to cost, push sum back to Min-Heap",
@@ -6458,9 +6458,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 345,
+  "pk": 720,
   "fields": {
-    "quiz": 16,
+    "quiz": 31,
     "question_text": "25. Which heap type supports O(1) Meld (merge two heaps) operation?",
     "question_type": "single",
     "option_a": "Pairing Heap / Fibonacci Heap / Binomial Heap",
@@ -6474,9 +6474,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 346,
+  "pk": 721,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "1. What is the space complexity of storing a Graph G(V, E) using an Adjacency Matrix vs Adjacency List?",
     "question_type": "single",
     "option_a": "Adjacency Matrix: O(V^2); Adjacency List: O(V + E)",
@@ -6490,9 +6490,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 347,
+  "pk": 722,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "2. What graph traversal algorithm uses a FIFO Queue and finds Shortest Path in UNWEIGHTED graphs?",
     "question_type": "single",
     "option_a": "Breadth-First Search (BFS)",
@@ -6506,9 +6506,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 348,
+  "pk": 723,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "3. What graph traversal uses a Call Stack / Recursion and explores deep along edges before backtracking?",
     "question_type": "single",
     "option_a": "Depth-First Search (DFS)",
@@ -6522,9 +6522,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 349,
+  "pk": 724,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "4. What is the time complexity of BFS and DFS traversals on a graph represented as an Adjacency List?",
     "question_type": "single",
     "option_a": "O(V + E)",
@@ -6538,9 +6538,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 350,
+  "pk": 725,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "5. How do you detect a Cycle in an UNDIRECTED Graph using Disjoint Set Union (DSU)?",
     "question_type": "single",
     "option_a": "If find(u) == find(v) for edge (u, v), a cycle exists",
@@ -6554,9 +6554,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 351,
+  "pk": 726,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "6. How do you detect a Cycle in a DIRECTED Graph using DFS?",
     "question_type": "single",
     "option_a": "Track visit states: Unvisited (0), Visiting/Active in Call Stack (1), Visited (2). Encountering state 1 indicates back-edge cycle",
@@ -6570,9 +6570,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 352,
+  "pk": 727,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "7. What is Topological Sort?",
     "question_type": "single",
     "option_a": "Linear ordering of vertices in a Directed Acyclic Graph (DAG) such that for every directed edge u -> v, u comes before v",
@@ -6586,9 +6586,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 353,
+  "pk": 728,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "8. What algorithm uses In-Degree counting and a Queue to perform Topological Sort (Kahn's Algorithm)?",
     "question_type": "single",
     "option_a": "Kahn's Algorithm: enqueue 0-indegree nodes, pop node, decrement neighbor indegrees, enqueue new 0-indegree nodes",
@@ -6602,9 +6602,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 354,
+  "pk": 729,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "9. What shortest path algorithm finds single-source shortest paths in NON-NEGATIVE weighted graphs using Min-Priority Queue?",
     "question_type": "single",
     "option_a": "Dijkstra's Algorithm",
@@ -6618,9 +6618,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 355,
+  "pk": 730,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "10. Why does Dijkstra's Algorithm FAIL or enter infinite loops on graphs with NEGATIVE edge weights?",
     "question_type": "single",
     "option_a": "Greedy assumption breaks (visited distance can be re-shortened by negative edge), causing incorrect distances or infinite loops in negative cycles",
@@ -6634,9 +6634,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 356,
+  "pk": 731,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "11. What algorithm computes single-source shortest paths on graphs with NEGATIVE edge weights and detects negative weight cycles?",
     "question_type": "single",
     "option_a": "Bellman-Ford Algorithm",
@@ -6650,9 +6650,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 357,
+  "pk": 732,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "12. What is the time complexity of Bellman-Ford Algorithm on graph G(V, E)?",
     "question_type": "single",
     "option_a": "O(V * E)",
@@ -6666,9 +6666,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 358,
+  "pk": 733,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "13. What algorithm computes ALL-PAIRS shortest paths between every pair of vertices in O(V^3) time?",
     "question_type": "single",
     "option_a": "Floyd-Warshall Algorithm",
@@ -6682,9 +6682,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 359,
+  "pk": 734,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "14. What is a Minimum Spanning Tree (MST)?",
     "question_type": "single",
     "option_a": "Subset of edges connecting all V vertices in a weighted connected graph without cycles, with MINIMUM total edge weight",
@@ -6698,9 +6698,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 360,
+  "pk": 735,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "15. How does Kruskal's Algorithm build a Minimum Spanning Tree?",
     "question_type": "single",
     "option_a": "Sort all E edges by weight, iterate sorted edges, add edge to MST if DSU find(u) != find(v)",
@@ -6714,9 +6714,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 361,
+  "pk": 736,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "16. How does Prim's Algorithm build a Minimum Spanning Tree?",
     "question_type": "single",
     "option_a": "Start from arbitrary vertex, maintain Min-PQ of edges connected to visited tree, greedily pick smallest edge to unvisited node",
@@ -6730,9 +6730,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 362,
+  "pk": 737,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "17. What is a Bipartite Graph?",
     "question_type": "single",
     "option_a": "Graph whose vertices can be divided into 2 disjoint sets U and V such that every edge connects a vertex in U to a vertex in V",
@@ -6746,9 +6746,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 363,
+  "pk": 738,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "18. What is a Strongly Connected Component (SCC) in a Directed Graph?",
     "question_type": "single",
     "option_a": "Maximal subgraph where EVERY vertex is reachable from every other vertex in the subgraph",
@@ -6762,9 +6762,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 364,
+  "pk": 739,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "19. What algorithm finds all Strongly Connected Components in a Directed Graph in linear O(V + E) time using low-link values?",
     "question_type": "single",
     "option_a": "Tarjan's SCC Algorithm (or Kosaraju's Algorithm)",
@@ -6778,9 +6778,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 365,
+  "pk": 740,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "20. What is an Articulation Point (Cut Vertex) in a graph?",
     "question_type": "single",
     "option_a": "A vertex whose removal increases the number of connected components (disconnects the graph)",
@@ -6794,9 +6794,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 366,
+  "pk": 741,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "21. What condition identifies a Bridge (Cut Edge) in graph DFS low-link calculation for edge u -> v?",
     "question_type": "single",
     "option_a": "low[v] > disc[u]",
@@ -6810,9 +6810,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 367,
+  "pk": 742,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "22. In Network Flow, what theorem states that Maximum Flow through a network equals Minimum Capacity Cut?",
     "question_type": "single",
     "option_a": "Max-Flow Min-Cut Theorem (Ford-Fulkerson Algorithm)",
@@ -6826,9 +6826,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 368,
+  "pk": 743,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "23. What is an Eulerian Path in a graph?",
     "question_type": "single",
     "option_a": "Path that visits EVERY EDGE in the graph exactly once",
@@ -6842,9 +6842,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 369,
+  "pk": 744,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "24. What is a Hamiltonian Path in a graph?",
     "question_type": "single",
     "option_a": "Path that visits EVERY VERTEX in the graph exactly once",
@@ -6858,9 +6858,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 370,
+  "pk": 745,
   "fields": {
-    "quiz": 17,
+    "quiz": 32,
     "question_text": "25. What is the Handshaking Lemma for undirected graphs?",
     "question_type": "single",
     "option_a": "Sum of degrees of all vertices equals 2 * |E|",
@@ -6874,9 +6874,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 371,
+  "pk": 746,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "1. What TWO core properties must a problem satisfy to be solvable using Dynamic Programming?",
     "question_type": "single",
     "option_a": "Optimal Substructure and Overlapping Subproblems",
@@ -6890,9 +6890,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 372,
+  "pk": 747,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "2. What is Top-Down Dynamic Programming?",
     "question_type": "single",
     "option_a": "Recursion combined with Memoization table/hash map to cache calculated state results",
@@ -6906,9 +6906,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 373,
+  "pk": 748,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "3. What is Bottom-Up Dynamic Programming?",
     "question_type": "single",
     "option_a": "Iterative Tabulation filling DP table starting from Base Cases up to Target state",
@@ -6922,9 +6922,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 374,
+  "pk": 749,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "4. What is the time & space complexity of calculating N-th Fibonacci number using DP Tabulation with 2 variables?",
     "question_type": "single",
     "option_a": "O(N) time and O(1) auxiliary space",
@@ -6938,9 +6938,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 375,
+  "pk": 750,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "5. In 0/1 Knapsack Problem (N items, Weight W), what choices are available for each item?",
     "question_type": "single",
     "option_a": "Include item at most ONCE or Exclude item",
@@ -6954,9 +6954,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 376,
+  "pk": 751,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "6. What is the time and space complexity of standard 2D DP for 0/1 Knapsack (N items, capacity W)?",
     "question_type": "single",
     "option_a": "O(N * W) time and O(N * W) space (reducible to O(W) space)",
@@ -6970,9 +6970,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 377,
+  "pk": 752,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "7. How does Unbounded Knapsack differ from 0/1 Knapsack?",
     "question_type": "single",
     "option_a": "Items can be chosen and reused an INFINITE number of times",
@@ -6986,9 +6986,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 378,
+  "pk": 753,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "8. What state transition equation defines Longest Common Subsequence (LCS) for S1[i-1] == S2[j-1]?",
     "question_type": "single",
     "option_a": "dp[i][j] = 1 + dp[i-1][j-1]",
@@ -7002,9 +7002,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 379,
+  "pk": 754,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "9. What state transition equation defines LCS when S1[i-1] != S2[j-1]?",
     "question_type": "single",
     "option_a": "dp[i][j] = max(dp[i-1][j], dp[i][j-1])",
@@ -7018,9 +7018,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 380,
+  "pk": 755,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "10. In Coin Change Problem (minimum coins to make amount A), what is the state transition for dp[i]?",
     "question_type": "single",
     "option_a": "dp[i] = min(dp[i], 1 + dp[i - coin]) for all coins <= i",
@@ -7034,9 +7034,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 381,
+  "pk": 756,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "11. In Coin Change 2 Problem (total UNIQUE COMBINATIONS to make amount A), what is the loop order?",
     "question_type": "single",
     "option_a": "Outer loop over coins, inner loop over amounts from coin to A",
@@ -7050,9 +7050,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 382,
+  "pk": 757,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "12. What is the time complexity to find Longest Increasing Subsequence (LIS) of length N using DP + Binary Search (Patience Sorting)?",
     "question_type": "single",
     "option_a": "O(N log N)",
@@ -7066,9 +7066,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 383,
+  "pk": 758,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "13. In Edit Distance (Levenshtein) between S1 (len M) and S2 (len N), what is the transition when S1[i-1] != S2[j-1]?",
     "question_type": "single",
     "option_a": "dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) (Delete, Insert, Replace)",
@@ -7082,9 +7082,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 384,
+  "pk": 759,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "14. In Partition Equal Subset Sum (can array sum S be split into 2 equal halves S/2), what DP variant does this reduce to?",
     "question_type": "single",
     "option_a": "0/1 Knapsack Subset Sum with target capacity = TotalSum / 2",
@@ -7098,9 +7098,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 385,
+  "pk": 760,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "15. In Matrix Chain Multiplication (find min scalar multiplications to multiply N matrices), what DP pattern is used?",
     "question_type": "single",
     "option_a": "Interval / Range Dynamic Programming dp[i][j] for subsegment range [i..j]",
@@ -7114,9 +7114,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 386,
+  "pk": 761,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "16. What is the time complexity of Matrix Chain Multiplication for N matrices using Interval DP?",
     "question_type": "single",
     "option_a": "O(N^3)",
@@ -7130,9 +7130,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 387,
+  "pk": 762,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "17. What is Bitmask Dynamic Programming?",
     "question_type": "single",
     "option_a": "Using integer bitmask (e.g. 0 to 2^N - 1) to represent subset state of visited elements in NP-hard problems",
@@ -7146,9 +7146,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 388,
+  "pk": 763,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "18. What is the time complexity of Traveling Salesperson Problem (TSP) using Bitmask DP (Held-Karp Algorithm) for N cities?",
     "question_type": "single",
     "option_a": "O(N^2 * 2^N) time, reduced from brute force O(N!)",
@@ -7162,9 +7162,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 389,
+  "pk": 764,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "19. In Palindromic Partitioning II (min cuts to partition string into palindromes), what is optimal time complexity?",
     "question_type": "single",
     "option_a": "O(N^2) by precomputing palindrome matrix then 1D DP min cut",
@@ -7178,9 +7178,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 390,
+  "pk": 765,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "20. In House Robber II (houses arranged in a CIRCLE), how is circular constraint handled?",
     "question_type": "single",
     "option_a": "Run 1D DP twice: once for range [0..N-2] (skip last), once for range [1..N-1] (skip first), take max",
@@ -7194,9 +7194,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 391,
+  "pk": 766,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "21. What optimization technique reduces DP transitions from O(N) to O(1) in convex DP recurrence functions?",
     "question_type": "single",
     "option_a": "Convex Hull Trick (CHT) / Monotonic Queue Optimization",
@@ -7210,9 +7210,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 392,
+  "pk": 767,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "22. In N-th Fibonacci number using Matrix Exponentiation, what is the time complexity?",
     "question_type": "single",
     "option_a": "O(log N) using binary matrix power",
@@ -7226,9 +7226,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 393,
+  "pk": 768,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "23. In Word Break Problem (dict of words, check if S can be segmented), what is time complexity using 1D DP?",
     "question_type": "single",
     "option_a": "O(N^2 * L) where N is len(S) and L is max word len in dict",
@@ -7242,9 +7242,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 394,
+  "pk": 769,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "24. In Wildcard Matching ('?' matches 1 char, '*' matches any sequence), what is 2D DP matrix transition for '*'?",
     "question_type": "single",
     "option_a": "dp[i][j] = dp[i-1][j] (match 1+ chars) OR dp[i][j-1] (match empty sequence)",
@@ -7258,9 +7258,9 @@
 },
 {
   "model": "dashboard.quizquestion",
-  "pk": 395,
+  "pk": 770,
   "fields": {
-    "quiz": 18,
+    "quiz": 33,
     "question_text": "25. Why is Space Optimization possible in many 2D DP problems (e.g. 0/1 Knapsack, Unique Paths)?",
     "question_type": "single",
     "option_a": "State dp[i][j] depends ONLY on previous row dp[i-1], allowing rolling array of 1 or 2 rows",
@@ -7270,20 +7270,6 @@
     "correct_answer": "A",
     "explanation": "When transition only references row i-1, keeping 1D rolling array reduces auxiliary space from O(R*C) to O(C).",
     "points": 10
-  }
-},
-{
-  "model": "dashboard.quizsubmission",
-  "pk": 5,
-  "fields": {
-    "quiz": 4,
-    "user": [
-      "admin"
-    ],
-    "score": 0,
-    "total_possible": 250,
-    "xp_awarded": 0,
-    "submitted_at": "2026-08-04T15:23:07.474Z"
   }
 },
 {

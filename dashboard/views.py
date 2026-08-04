@@ -939,10 +939,10 @@ from django.utils.dateparse import parse_datetime
 
 @login_required
 def quiz_list(request):
-    if not Quiz.objects.exists():
+    if Quiz.objects.count() < 15:
         try:
             from create_dsa_quizzes import seed_quizzes
-            seed_quizzes()
+            seed_quizzes(force=False)
         except Exception:
             pass
 

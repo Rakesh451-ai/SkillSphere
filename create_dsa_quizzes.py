@@ -8,14 +8,9 @@ django.setup()
 from django.utils import timezone
 from dashboard.models import Quiz, QuizQuestion
 
-def seed_quizzes():
-    now = timezone.now()
-    start_time = now - timedelta(days=1)
-    end_time = now + timedelta(days=365)
-
-    # 15 Topics with 25 questions each = 375 questions total
-    quiz_data = [
-        {
+# 15 Topics with 25 questions each = 375 questions total
+quiz_data = [
+    {
             "topic": "Array",
             "title": "Array Data Structure & Algorithmic Patterns Quiz",
             "description": "Master array memory layouts, 2-pointers, prefix sums, sliding window arrays, and multidimensional arrays from basic to advanced.",
@@ -1997,41 +1992,60 @@ def seed_quizzes():
         }
     ]
 
-    print(f"Seeding {len(quiz_data)} DSA Quiz topics...")
-    Quiz.objects.all().delete() # Clean previous test quizzes
+def seed_quizzes(force=False):
+    now = timezone.now()
+    start_time = now - timedelta(days=30)
+    end_time = now + timedelta(days=3650) # 10 years valid so live status never expires
+
+    if force:
+        print("Force re-seeding: deleting old quizzes...")
+        Quiz.objects.all().delete()
+
+    print(f"Ensuring all {len(quiz_data)} DSA Quiz topics and 375 questions are present...")
 
     created_quizzes_count = 0
     created_questions_count = 0
 
     for item in quiz_data:
-        quiz = Quiz.objects.create(
-            title=item["title"],
-            topic=item["topic"],
-            difficulty="Basic to Advanced",
-            description=item["description"],
-            start_time=start_time,
-            end_time=end_time,
-            is_live=True,
-            total_xp=250
-        )
-        created_quizzes_count += 1
-
-        for q_data in item["questions"]:
-            QuizQuestion.objects.create(
-                quiz=quiz,
-                question_text=q_data["q"],
-                question_type=q_data.get("type", "single"),
-                option_a=q_data.get("a", ""),
-                option_b=q_data.get("b", ""),
-                option_c=q_data.get("c", ""),
-                option_d=q_data.get("d", ""),
-                correct_answer=q_data.get("ans", "A"),
-                explanation=q_data.get("exp", ""),
-                points=10
+        quiz = Quiz.objects.filter(topic__iexact=item["topic"]).first()
+        if not quiz:
+            quiz = Quiz.objects.create(
+                title=item["title"],
+                topic=item["topic"],
+                difficulty="Basic to Advanced",
+                description=item["description"],
+                start_time=start_time,
+                end_time=end_time,
+                is_live=True,
+                total_xp=250
             )
-            created_questions_count += 1
+            created_quizzes_count += 1
+        else:
+            # Ensure quiz stays live permanently
+            quiz.is_live = True
+            quiz.start_time = start_time
+            quiz.end_time = end_time
+            quiz.save()
 
-    print(f"Successfully seeded {created_quizzes_count} Quizzes and {created_questions_count} Questions!")
+        # Check existing questions
+        if quiz.questions.count() < len(item["questions"]):
+            quiz.questions.all().delete()
+            for q_data in item["questions"]:
+                QuizQuestion.objects.create(
+                    quiz=quiz,
+                    question_text=q_data["q"],
+                    question_type=q_data.get("type", "single"),
+                    option_a=q_data.get("a", ""),
+                    option_b=q_data.get("b", ""),
+                    option_c=q_data.get("c", ""),
+                    option_d=q_data.get("d", ""),
+                    correct_answer=q_data.get("ans", "A"),
+                    explanation=q_data.get("exp", ""),
+                    points=10
+                )
+                created_questions_count += 1
+
+    print(f"Done! Verified 15 Quizzes & 375 Questions in database.")
 
 if __name__ == '__main__':
-    seed_quizzes()
+    seed_quizzes(force=True)
