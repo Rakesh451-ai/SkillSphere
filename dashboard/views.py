@@ -940,47 +940,11 @@ from django.utils.dateparse import parse_datetime
 @login_required
 def quiz_list(request):
     if not Quiz.objects.exists():
-        now = timezone.now()
-        q1 = Quiz.objects.create(
-            title="SkillSphere Weekly Live Coding & DSA Quiz",
-            description="Test your algorithm, time complexity & system design capabilities in this timed challenge!",
-            start_time=now - timezone.timedelta(minutes=5),
-            end_time=now + timezone.timedelta(days=2),
-            is_live=True,
-            total_xp=150
-        )
-        QuizQuestion.objects.create(
-            quiz=q1,
-            question_text="What is the worst-case time complexity of Quick Sort?",
-            question_type="single",
-            option_a="O(N)",
-            option_b="O(N log N)",
-            option_c="O(N^2)",
-            option_d="O(1)",
-            correct_answer="C",
-            explanation="In the worst case (e.g. sorted array with poor pivot selection), QuickSort degenerates to O(N^2).",
-            points=10
-        )
-        QuizQuestion.objects.create(
-            quiz=q1,
-            question_text="Which of the following data structures maintain elements in LIFO (Last In First Out) order? (Select all that apply)",
-            question_type="multiple",
-            option_a="Stack",
-            option_b="Call Stack",
-            option_c="Queue",
-            option_d="Deque",
-            correct_answer="A,B",
-            explanation="Stack and Call Stack operate under LIFO order.",
-            points=15
-        )
-        QuizQuestion.objects.create(
-            quiz=q1,
-            question_text="What method in Python dictionary is used to safely retrieve a value without throwing a KeyError if the key is missing?",
-            question_type="text",
-            correct_answer="get",
-            explanation="dict.get(key, default) returns default or None if the key is not present.",
-            points=10
-        )
+        try:
+            from create_dsa_quizzes import seed_quizzes
+            seed_quizzes()
+        except Exception:
+            pass
 
     quizzes = Quiz.objects.all().prefetch_related('questions', 'submissions')
     user_submissions = {s.quiz_id: s for s in QuizSubmission.objects.filter(user=request.user)}
