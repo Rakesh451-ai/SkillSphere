@@ -334,11 +334,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'resumeanalyzer' or request.resolver_match.app_name == 'recommendations' %}active{% endif %}" href="{% url 'resumeanalyzer:upload' %}">
-                    <i class="bi bi-file-earmark-person-fill"></i> Resume Analysis
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'study_materials' %}active{% endif %}" href="{% url 'dashboard:study_materials' %}">
                     <i class="bi bi-book-half"></i> Study Resources
                 </a>
@@ -361,6 +356,11 @@
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.app_name == 'leaderboard' %}active{% endif %}" href="{% url 'leaderboard:leaderboard' %}">
                     <i class="bi bi-trophy-fill"></i> Leaderboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.app_name == 'resumeanalyzer' or request.resolver_match.app_name == 'recommendations' %}active{% endif %}" href="{% url 'resumeanalyzer:upload' %}">
+                    <i class="bi bi-file-earmark-person-fill"></i> Resume Analysis
                 </a>
             </li>
             {% if request.user.is_staff or request.user.is_superuser %}
