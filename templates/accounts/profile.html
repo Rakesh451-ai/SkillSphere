@@ -1,173 +1,198 @@
 {% extends "base.html" %}
-{% block title %}Profile - SkillSphere{% endblock %}
-{% block page_title %}{% if is_own_profile %}My Profile{% else %}Student Profile{% endif %}{% endblock %}
+{% block title %}{% if is_own_profile %}My Profile{% else %}{{ profile_user.display_name }}'s Profile{% endif %} - SkillSphere{% endblock %}
+{% block page_title %}{% if is_own_profile %}My Profile{% else %}Student Profile Overview{% endif %}{% endblock %}
 
 {% block content %}
-<!-- Back to My Profile Banner when viewing another user -->
-{% if not is_own_profile %}
-<div class="alert alert-info border-0 rounded-4 p-3 mb-4 d-flex justify-content-between align-items-center shadow-sm bg-info bg-opacity-10 text-dark">
-    <div class="d-flex align-items-center gap-3">
-        <div class="bg-info bg-opacity-20 p-2 rounded-circle text-info">
-            <i class="bi bi-person-fill fs-4"></i>
+<div class="space-y-6">
+    <!-- Read-Only Banner when viewing another student's profile -->
+    {% if not is_own_profile %}
+    <div class="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-white text-sm mb-0">Viewing Profile: {{ profile_user.display_name }}</h3>
+                <p class="text-xs text-slate-400 mb-0">You are inspecting another student's portfolio in read-only mode.</p>
+            </div>
         </div>
-        <div>
-            <h6 class="fw-bold mb-0">Viewing Profile: {{ profile_user.display_name }}</h6>
-            <p class="mb-0 small text-muted">You are viewing another student's details in read-only mode.</p>
-        </div>
+        <a href="{% url 'accounts:profile' %}" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 text-decoration-none transition-all">
+            <i class="fa-solid fa-user me-1"></i> View My Profile
+        </a>
     </div>
-    <a href="{% url 'accounts:profile' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold text-decoration-none">
-        <i class="bi bi-person-check me-1"></i> View My Profile
-    </a>
-</div>
-{% endif %}
+    {% endif %}
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="card-custom p-4 text-center mb-4 bg-white shadow-sm border-0 rounded-4">
-            {% if profile_user.profile_image %}
-            <img src="{{ profile_user.profile_image.url }}" class="rounded-circle mb-3 border border-3 border-light shadow-sm" width="120" height="120" style="object-fit:cover;">
-            {% else %}
-            <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width:120px;height:120px;">
-                <i class="bi bi-person-fill fs-1 text-primary"></i>
-            </div>
-            {% endif %}
-            <h4 class="fw-bold text-dark mb-0">{{ profile_user.display_name }}</h4>
-            <p class="text-muted">@{{ profile_user.username }}</p>
-            <div class="d-flex justify-content-center gap-2 mb-3">
-                <span class="badge badge-xp text-white px-3 py-2"><i class="bi bi-lightning-charge-fill text-warning"></i> {{ profile_user.xp_points }} XP</span>
-                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2"><i class="bi bi-fire"></i> {{ profile_user.current_streak }} day streak</span>
-            </div>
-            {% if profile_user.college %}<p class="mb-1 text-muted"><i class="bi bi-building me-1"></i> {{ profile_user.college }}</p>{% endif %}
-            {% if profile_user.branch %}<p class="mb-1 text-muted"><i class="bi bi-bookmark me-1"></i> {{ profile_user.branch }}</p>{% endif %}
-            {% if profile_user.year %}<p class="mb-1 text-muted"><i class="bi bi-calendar me-1"></i> {{ profile_user.get_year_display }}</p>{% endif %}
-            {% if profile_user.bio %}<p class="text-muted mt-2 border-top pt-2 small">{{ profile_user.bio }}</p>{% endif %}
-            <div class="d-flex justify-content-center gap-2 mt-3">
-                {% if profile_user.github_link %}<a href="{{ profile_user.github_link }}" class="btn btn-sm btn-outline-dark rounded-circle" target="_blank"><i class="bi bi-github"></i></a>{% endif %}
-                {% if profile_user.linkedin_link %}<a href="{{ profile_user.linkedin_link }}" class="btn btn-sm btn-outline-primary rounded-circle" target="_blank"><i class="bi bi-linkedin"></i></a>{% endif %}
-            </div>
-            {% if profile_user.leetcode_username %}
-            <div class="border-top mt-3 pt-3 text-start">
-                <h6 class="fw-bold mb-2 text-center text-warning"><i class="bi bi-code-slash"></i> LeetCode Stats</h6>
-                <div class="d-flex justify-content-between mb-1 small">
-                    <span class="text-muted">Solved (E/M/H):</span>
-                    <span class="fw-semibold">
-                        <span class="text-success">{{ profile_user.leetcode_easy_solved }}</span> / 
-                        <span class="text-warning">{{ profile_user.leetcode_medium_solved }}</span> / 
-                        <span class="text-danger">{{ profile_user.leetcode_hard_solved }}</span>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left: Student Info Summary Card -->
+        <div class="premium-card p-6 flex flex-col justify-between text-center">
+            <div>
+                <!-- Avatar & Ring -->
+                <div class="relative w-28 h-28 mx-auto mb-4">
+                    {% if profile_user.profile_image %}
+                    <img src="{{ profile_user.profile_image.url }}" class="w-full h-full rounded-full object-cover ring-4 ring-indigo-500/50 shadow-xl">
+                    {% else %}
+                    <div class="w-full h-full rounded-full bg-slate-800 border-2 border-indigo-500/40 flex items-center justify-center font-extrabold text-white text-2xl shadow-xl">
+                        {{ profile_user.username|slice:":2"|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <h2 class="text-xl font-extrabold text-white mb-0">{{ profile_user.display_name }}</h2>
+                <p class="text-xs text-slate-400 font-mono mb-3">@{{ profile_user.username }}</p>
+
+                <!-- XP & Streak Badges -->
+                <div class="flex items-center justify-center gap-2 mb-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        <i class="fa-solid fa-bolt text-amber-400"></i> {{ profile_user.xp_points }} XP
+                    </span>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <i class="fa-solid fa-fire text-amber-500"></i> {{ profile_user.current_streak }}d Streak
                     </span>
                 </div>
-                <div class="d-flex justify-content-between mb-1 small">
-                    <span class="text-muted">Total Questions:</span>
-                    <span class="fw-semibold">{{ profile_user.leetcode_easy_solved|add:profile_user.leetcode_medium_solved|add:profile_user.leetcode_hard_solved }}</span>
+
+                <!-- Bio & Academic Info -->
+                <div class="space-y-2 text-xs text-slate-300 text-left pt-3 border-t border-slate-800">
+                    {% if profile_user.college %}
+                    <div class="flex items-center gap-2 text-slate-400">
+                        <i class="fa-solid fa-building text-indigo-400 w-4 text-center"></i>
+                        <span>{{ profile_user.college }}</span>
+                    </div>
+                    {% endif %}
+                    {% if profile_user.branch %}
+                    <div class="flex items-center gap-2 text-slate-400">
+                        <i class="fa-solid fa-graduation-cap text-cyan-400 w-4 text-center"></i>
+                        <span>{{ profile_user.branch }}</span>
+                    </div>
+                    {% endif %}
+                    {% if profile_user.year %}
+                    <div class="flex items-center gap-2 text-slate-400">
+                        <i class="fa-solid fa-calendar text-emerald-400 w-4 text-center"></i>
+                        <span>{{ profile_user.get_year_display }}</span>
+                    </div>
+                    {% endif %}
+                    {% if profile_user.bio %}
+                    <p class="text-slate-400 pt-2 border-t border-slate-800/60 leading-relaxed italic mb-0">"{{ profile_user.bio }}"</p>
+                    {% endif %}
                 </div>
-                {% if profile_user.leetcode_last_sync %}
-                <div class="text-center text-muted mt-2" style="font-size:0.75rem;">
-                    Synced: {{ profile_user.leetcode_last_sync|timesince }} ago
+
+                <!-- Social Links -->
+                <div class="flex items-center justify-center gap-3 pt-4">
+                    {% if profile_user.github_link %}
+                    <a href="{{ profile_user.github_link }}" target="_blank" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center text-sm transition-colors text-decoration-none">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    {% endif %}
+                    {% if profile_user.linkedin_link %}
+                    <a href="{{ profile_user.linkedin_link }}" target="_blank" class="w-9 h-9 rounded-full bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-sm transition-colors text-decoration-none border border-indigo-500/30">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                    {% endif %}
                 </div>
-                {% endif %}
+            </div>
+
+            <!-- LeetCode Sync Section -->
+            {% if profile_user.leetcode_username %}
+            <div class="mt-6 pt-4 border-t border-slate-800 text-left space-y-2">
+                <div class="flex items-center justify-between text-xs mb-1">
+                    <span class="font-bold text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-code text-amber-400"></i> LeetCode Profile
+                    </span>
+                    <span class="text-amber-400 font-mono font-bold">#{{ profile_user.leetcode_rank }}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="block text-[10px] text-slate-400">Easy</span>
+                        <span class="font-bold text-emerald-400">{{ profile_user.leetcode_easy_solved }}</span>
+                    </div>
+                    <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="block text-[10px] text-slate-400">Medium</span>
+                        <span class="font-bold text-amber-400">{{ profile_user.leetcode_medium_solved }}</span>
+                    </div>
+                    <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                        <span class="block text-[10px] text-slate-400">Hard</span>
+                        <span class="font-bold text-rose-400">{{ profile_user.leetcode_hard_solved }}</span>
+                    </div>
+                </div>
             </div>
             {% endif %}
         </div>
-    </div>
-    
-    <div class="col-md-8">
-        {% if is_own_profile %}
-        <div class="card-custom p-4 bg-white shadow-sm border-0 rounded-4">
-            <h5 class="fw-bold mb-4 text-dark border-bottom pb-2"><i class="bi bi-pencil-square me-2"></i>Edit Profile Details</h5>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
-                    {% for field in form %}
-                    <div class="{% if field.name in 'first_name,last_name,email,college,branch,year,leetcode_username' %}col-md-6{% else %}col-12{% endif %} mb-3">
-                        <label class="form-label fw-semibold text-muted small">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.help_text %}<small class="text-muted d-block mt-1">{{ field.help_text }}</small>{% endif %}
-                        {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-                    </div>
-                    {% endfor %}
-                </div>
-                <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 fw-bold mt-2"><i class="bi bi-check-lg me-1"></i> Save Changes</button>
-            </form>
-        </div>
-        {% else %}
-        <!-- Read-Only Profile Stats Card -->
-        <div class="card-custom p-4 bg-white shadow-sm border-0 rounded-4">
-            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-badge text-primary me-2"></i>Student Stats & Achievement Overview</h5>
-                <span class="badge bg-info-subtle text-info px-3 py-1 rounded-pill fw-bold"><i class="bi bi-eye-fill"></i> Read-only Profile</span>
-            </div>
 
-            <!-- Stats Grid -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="p-3 bg-light rounded-4 text-center">
-                        <small class="text-muted d-block text-uppercase fw-semibold" style="font-size: 0.75rem;">Experience Points</small>
-                        <span class="fs-3 fw-bold text-primary"><i class="bi bi-lightning-charge-fill text-warning"></i> {{ profile_user.xp_points }}</span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="p-3 bg-light rounded-4 text-center">
-                        <small class="text-muted d-block text-uppercase fw-semibold" style="font-size: 0.75rem;">Study Time</small>
-                        <span class="fs-3 fw-bold text-success"><i class="bi bi-clock-fill me-1"></i> {{ study_hours }}h</span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="p-3 bg-light rounded-4 text-center">
-                        <small class="text-muted d-block text-uppercase fw-semibold" style="font-size: 0.75rem;">Goals Completed</small>
-                        <span class="fs-3 fw-bold text-info"><i class="bi bi-check-circle-fill me-1"></i> {{ goals_completed }}</span>
-                    </div>
-                </div>
-            </div>
+        <!-- Right: Profile Form or Read-Only Overview -->
+        <div class="lg:col-span-2 space-y-6">
+            {% if is_own_profile %}
+            <!-- Edit Profile Form Card -->
+            <div class="premium-card p-6">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
+                    <i class="fa-solid fa-pen-to-square text-indigo-400"></i>
+                    <span>Edit Profile Details</span>
+                </h2>
 
-            <!-- Detail Info -->
-            <div class="mb-4">
-                <h6 class="fw-bold mb-3 text-secondary"><i class="bi bi-file-person me-2"></i>College Details</h6>
-                <table class="table table-sm table-borderless align-middle">
-                    <tbody>
-                        <tr>
-                            <td class="text-muted" style="width: 120px;">College:</td>
-                            <td class="fw-semibold text-dark">{{ profile_user.college|default:"Not specified" }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">Branch / Dept:</td>
-                            <td class="fw-semibold text-dark">{{ profile_user.branch|default:"Not specified" }}</td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">Academic Year:</td>
-                            <td class="fw-semibold text-dark">{{ profile_user.get_year_display|default:"Not specified" }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Skills List -->
-            <div class="mb-4">
-                <h6 class="fw-bold mb-2 text-secondary"><i class="bi bi-stars me-2"></i>Skills & Expertises</h6>
-                {% if profile_user.skills_list %}
-                    <div class="d-flex flex-wrap gap-2 mt-2">
-                        {% for skill in profile_user.skills_list.split %}
-                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">{{ skill|cut:"," }}</span>
+                <form method="post" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for field in form %}
+                        <div class="{% if field.name in 'bio,skills_list' %}md:col-span-2{% endif %} space-y-1.5">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}<p class="text-[11px] text-slate-500 mt-1 mb-0">{{ field.help_text }}</p>{% endif %}
+                            {% for error in field.errors %}
+                            <p class="text-xs text-rose-400 font-semibold mt-1 mb-0">{{ error }}</p>
+                            {% endfor %}
+                        </div>
                         {% endfor %}
                     </div>
-                {% else %}
-                    <p class="text-muted small mb-0">No skills added yet.</p>
-                {% endif %}
-            </div>
 
-            <!-- Quick Links -->
-            <div class="border-top pt-3 d-flex justify-content-between align-items-center">
-                <span class="text-muted small">Viewing profile of @{{ profile_user.username }}</span>
-                <div class="d-flex gap-2">
-                    <a href="{% url 'dashboard:study_materials' %}?username={{ profile_user.username }}" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold text-decoration-none">
-                        <i class="bi bi-journal-check me-1"></i> View DSA Sheet
-                    </a>
-                    <a href="{% url 'leaderboard:leaderboard' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 text-decoration-none">
-                        <i class="bi bi-arrow-left me-1"></i> Back to Leaderboard
-                    </a>
+                    <div class="pt-4 border-t border-slate-800">
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Save Profile Changes</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% else %}
+            <!-- Read-Only Overview Card -->
+            <div class="premium-card p-6 space-y-6">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2 mb-0">
+                        <i class="fa-solid fa-id-card text-indigo-400"></i>
+                        <span>Student Portfolio Overview</span>
+                    </h2>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400">Read-only Profile</span>
+                </div>
+
+                <!-- Stats Showcase Grid -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-xs font-semibold text-slate-400 mb-1">XP Points</span>
+                        <span class="text-2xl font-extrabold text-amber-400">{{ profile_user.xp_points }}</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-xs font-semibold text-slate-400 mb-1">Study Hours</span>
+                        <span class="text-2xl font-extrabold text-emerald-400">{{ study_hours }}h</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                        <span class="block text-xs font-semibold text-slate-400 mb-1">Goals Solved</span>
+                        <span class="text-2xl font-extrabold text-indigo-400">{{ goals_completed }}</span>
+                    </div>
+                </div>
+
+                <!-- Skills Tags -->
+                <div class="space-y-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Skills & Tech Stack</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% if profile_user.skills_list %}
+                            {% for skill in profile_user.skills_list.split %}
+                            <span class="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-bold">{{ skill|cut:"," }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-xs text-slate-500">No skills listed yet.</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

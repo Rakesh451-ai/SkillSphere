@@ -1,253 +1,351 @@
 {% extends "base.html" %}
-{% block title %}Dashboard - SkillSphere{% endblock %}
+{% block title %}Dashboard Overview - SkillSphere{% endblock %}
 {% block page_title %}Dashboard Overview{% endblock %}
 
-{% block extra_css %}
-<style>
-    @keyframes pulseGlow {
-        0% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.25); }
-        50% { box-shadow: 0 0 35px rgba(99, 102, 241, 0.6); }
-        100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.25); }
-    }
-    @keyframes rainbowBorder {
-        0% { border-color: #6366f1; }
-        33% { border-color: #06b6d4; }
-        66% { border-color: #f59e0b; }
-        100% { border-color: #6366f1; }
-    }
-    @keyframes shimmerText {
-        0% { background-position: -200% center; }
-        100% { background-position: 200% center; }
-    }
-    @keyframes iconSpin {
-        0% { transform: rotate(0deg) scale(1); }
-        50% { transform: rotate(180deg) scale(1.15); }
-        100% { transform: rotate(360deg) scale(1); }
-    }
-    .hero-wishing-card {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(6, 182, 212, 0.12) 50%, rgba(245, 158, 11, 0.12) 100%) !important;
-        border: 2px solid #6366f1 !important;
-        border-radius: 24px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        animation: rainbowBorder 8s infinite linear, pulseGlow 4s infinite ease-in-out;
-        position: relative;
-        overflow: hidden;
-    }
-    .shimmer-title {
-        background: linear-gradient(90deg, #6366f1, #06b6d4, #f59e0b, #ec4899, #6366f1);
-        background-size: 200% auto;
-        color: transparent;
-        -webkit-background-clip: text;
-        background-clip: text;
-        animation: shimmerText 5s linear infinite;
-        font-weight: 800;
-    }
-    .clock-badge {
-        background-color: rgba(15, 23, 42, 0.75);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 16px;
-        padding: 10px 20px;
-    }
-    .animated-clock-icon {
-        display: inline-block;
-        animation: iconSpin 12s infinite linear;
-    }
-    .special-badge {
-        background: linear-gradient(135deg, #ef4444 0%, #f97316 50%, #eab308 100%);
-        color: #ffffff;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<!-- Hero Wishing & Working Live Date/Time Banner -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="hero-wishing-card p-4">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <!-- Left: Greeting & Special Day Highlight -->
-                <div>
-                    <div id="hero-special-day-banner" class="mb-2" style="display: none;">
-                        <span class="badge special-badge px-3 py-2 rounded-pill mb-2 d-inline-flex align-items-center gap-1 fs-6">
-                            <i class="bi bi-stars"></i> <span id="hero-special-day-title">Special Event</span>
-                        </span>
-                        <p id="hero-special-day-msg" class="text-body small mb-0 fw-semibold"></p>
-                    </div>
+<div class="space-y-8">
+    <!-- Hero Wishing & Live Clock Banner -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-900/90 via-slate-900 to-slate-900 border border-indigo-500/30 p-6 md:p-8 shadow-2xl">
+        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -top-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                    <h2 class="shimmer-title mb-1" id="hero-greeting-text" data-user-name="{{ user.display_name }}">
-                        Welcome, {{ user.display_name }}! 👋
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <div id="hero-special-day-banner" class="hidden">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 text-white shadow-lg shadow-rose-500/20">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span id="hero-special-day-title">Special Event</span>
+                    </span>
+                    <p id="hero-special-day-msg" class="text-xs font-semibold text-slate-300 mt-1"></p>
+                </div>
+
+                <h1 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight" id="hero-greeting-text" data-user-name="{{ user.display_name }}">
+                    Welcome back, {{ user.display_name }}! 👋
+                </h1>
+                <p class="text-sm text-slate-400 max-w-xl">
+                    Track your placement readiness, level up your DSA problem-solving skills, and follow personalized career recommendations.
+                </p>
+
+                <!-- Profile Completion Quick Bar -->
+                <div class="pt-2 flex items-center gap-3">
+                    <div class="w-48 bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
+                        <div class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full rounded-full transition-all duration-500" style="width: {{ placement_score }}%;"></div>
+                    </div>
+                    <span class="text-xs font-mono font-bold text-indigo-400">{{ placement_score }}% Career Ready</span>
+                </div>
+            </div>
+
+            <!-- Live Clock Card -->
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 backdrop-blur-md shadow-xl self-start md:self-auto">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl shadow-inner">
+                    <i class="fa-solid fa-clock animate-pulse"></i>
+                </div>
+                <div>
+                    <div class="font-mono text-xl font-bold text-indigo-400 tracking-wider" id="hero-live-time">
+                        00:00:00 AM
+                    </div>
+                    <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest" id="hero-live-date">
+                        Loading Date...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 Key Stat Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Stat 1: Placement Readiness -->
+        <div class="premium-card p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Placement Score</span>
+                    <div class="text-3xl font-extrabold text-white mt-1 group-hover:text-cyan-400 transition-colors">{{ placement_score }}%</div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/60 pt-3">
+                <span>ATS & Skills Evaluation</span>
+                <span class="text-cyan-400 font-semibold flex items-center gap-1"><i class="fa-solid fa-arrow-up text-[10px]"></i> Live</span>
+            </div>
+        </div>
+
+        <!-- Stat 2: Active Streak -->
+        <div class="premium-card p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Streak</span>
+                    <div class="text-3xl font-extrabold text-amber-400 mt-1 flex items-baseline gap-1.5">
+                        {{ current_streak }} <span class="text-xs font-medium text-slate-400">Days</span>
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-fire animate-bounce"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/60 pt-3">
+                <span>Longest: <strong class="text-white">{{ user.longest_streak }}d</strong></span>
+                <span class="text-amber-400 font-semibold">Keep it up!</span>
+            </div>
+        </div>
+
+        <!-- Stat 3: DSA Problems -->
+        <div class="premium-card p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">DSA Sheet Progress</span>
+                    <div class="text-3xl font-extrabold text-emerald-400 mt-1 flex items-baseline gap-1">
+                        {{ completed_dsa_count }} <span class="text-xs font-normal text-slate-400">/{{ total_dsa_problems }}</span>
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/60 pt-3">
+                <span>Completion Rate</span>
+                <span class="text-emerald-400 font-bold font-mono">{{ dsa_rate }}%</span>
+            </div>
+        </div>
+
+        <!-- Stat 4: Games Arcade Level -->
+        <div class="premium-card p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Arcade Level</span>
+                    <div class="text-3xl font-extrabold text-indigo-400 mt-1">Lvl {{ total_game_level }}</div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/60 pt-3">
+                <span>Typer & Bug Hunter</span>
+                <a href="{% url 'dashboard:cpp_calculator' %}" class="text-indigo-400 hover:text-indigo-300 font-semibold text-decoration-none">Play Hub &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts & Analytics Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Chart 1: Weekly Practice & Learning Hours -->
+        <div class="lg:col-span-2 premium-card p-6 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-indigo-400"></i>
+                        <span>Weekly Learning & Problem Practice</span>
                     </h2>
+                    <p class="text-xs text-slate-400 mb-0">Daily active practice hours and DSA problem solving breakdown</p>
+                </div>
+                <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-indigo-500/10 border border-indigo-500/30 text-indigo-300">Live Analytics</span>
+            </div>
+            <div class="h-64 w-full">
+                <canvas id="weeklyLearningChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart 2: Skill & LeetCode Distribution -->
+        <div class="premium-card p-6 flex flex-col justify-between">
+            <div class="mb-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-cyan-400"></i>
+                    <span>LeetCode & DSA Breakdown</span>
+                </h2>
+                <p class="text-xs text-slate-400 mb-0">Easy, Medium, and Hard problem status</p>
+            </div>
+            <div class="h-52 w-full flex items-center justify-center">
+                <canvas id="skillBreakdownChart"></canvas>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800 flex justify-around text-center text-xs">
+                <div>
+                    <span class="block text-slate-400">Easy</span>
+                    <span class="font-bold text-emerald-400 text-sm">{{ user.leetcode_easy_solved }}</span>
+                </div>
+                <div class="border-x border-slate-800 px-4">
+                    <span class="block text-slate-400">Medium</span>
+                    <span class="font-bold text-amber-400 text-sm">{{ user.leetcode_medium_solved }}</span>
+                </div>
+                <div>
+                    <span class="block text-slate-400">Hard</span>
+                    <span class="font-bold text-rose-400 text-sm">{{ user.leetcode_hard_solved }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preparation Hub & AI Recommendations Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Quick Preparation Hub -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="premium-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-rocket text-amber-400"></i>
+                        <span>Preparation Modules</span>
+                    </h2>
+                    <a href="{% url 'dashboard:study_materials' %}" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 text-decoration-none">Explore All &rarr;</a>
                 </div>
 
-                <!-- Right: Animated Working Clock & Date -->
-                <div class="clock-badge d-flex align-items-center gap-3 shadow-sm">
-                    <div class="fs-3 text-warning animated-clock-icon">
-                        <i class="bi bi-clock-fill"></i>
-                    </div>
-                    <div>
-                        <div class="fs-4 fw-bold font-monospace text-primary text-nowrap" id="hero-live-time">
-                            00:00:00 AM
-                        </div>
-                        <div class="extra-small text-muted text-uppercase fw-semibold text-nowrap" id="hero-live-date">
-                            Loading Date...
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Stats Cards -->
-<div class="row g-4 mb-4">
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small fw-medium">Placement Readiness</p>
-                    <div class="stat-value text-info">{{ placement_score }}%</div>
-                </div>
-                <div class="stat-icon bg-info bg-opacity-10 text-info"><i class="bi bi-briefcase-fill"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small fw-medium">Active Streak</p>
-                    <div class="stat-value text-warning">{{ current_streak }} <small class="fs-6">days</small></div>
-                </div>
-                <div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-fire"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small fw-medium">DSA Problems Solved</p>
-                    <div class="stat-value text-success">{{ completed_dsa_count }} <small class="fs-6 text-muted">/{{ total_dsa_problems }}</small></div>
-                </div>
-                <div class="stat-icon bg-success bg-opacity-10 text-success"><i class="bi bi-code-square"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small fw-medium">Games Level Reached</p>
-                    <div class="stat-value text-primary">Level {{ total_game_level }}</div>
-                </div>
-                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-controller"></i></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Main Content Grid -->
-<div class="row g-4">
-    <!-- Quick Access Hub -->
-    <div class="col-lg-8">
-        <div class="card-custom p-4 mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0"><i class="bi bi-rocket-takeoff-fill text-warning me-2"></i>Preparation Hub</h5>
-                <a href="{% url 'dashboard:study_materials' %}" class="btn btn-sm btn-outline-info rounded-pill px-3">View All Resources</a>
-            </div>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="p-3 rounded-4 border border-secondary border-opacity-25 bg-body-tertiary">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="fs-2 text-warning"><i class="bi bi-book-half"></i></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="{% url 'dashboard:study_materials' %}" class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/50 transition-all text-decoration-none group">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
                             <div>
-                                <h6 class="fw-bold mb-1">DSA & Problem Sheets</h6>
-                                <p class="text-muted small mb-0">{{ completed_dsa_count }} of {{ total_dsa_problems }} topics completed ({{ dsa_rate }}%)</p>
+                                <h3 class="font-bold text-white text-base group-hover:text-indigo-300 transition-colors">DSA & Problem Sheets</h3>
+                                <p class="text-xs text-slate-400 mt-1 mb-2">{{ completed_dsa_count }} of {{ total_dsa_problems }} topics completed ({{ dsa_rate }}%)</p>
+                                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-indigo-500 h-full rounded-full" style="width: {{ dsa_rate }}%;"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-3 rounded-4 border border-secondary border-opacity-25 bg-body-tertiary">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="fs-2 text-primary"><i class="bi bi-controller"></i></div>
+                    </a>
+
+                    <a href="{% url 'dashboard:dsa_visualizer' %}" class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-cyan-500/50 transition-all text-decoration-none group">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-code-branch"></i>
+                            </div>
                             <div>
-                                <h6 class="fw-bold mb-1">Coding Games Arcade</h6>
-                                <p class="text-muted small mb-0">Speed Typer, Bug Hunter & Big-O Master</p>
+                                <h3 class="font-bold text-white text-base group-hover:text-cyan-300 transition-colors">DSA Theory Studio</h3>
+                                <p class="text-xs text-slate-400 mt-1 mb-0">Interactive step-by-step algorithms, memory diagrams, and C++ code visualizer.</p>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
+                    <a href="{% url 'dashboard:cpp_calculator' %}" class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-amber-500/50 transition-all text-decoration-none group">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-gamepad"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-base group-hover:text-amber-300 transition-colors">Coding Games Hub</h3>
+                                <p class="text-xs text-slate-400 mt-1 mb-0">Speed Typer, Bug Hunter & Big-O Complexity Arcade.</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'dashboard:quiz_list' %}" class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-rose-500/50 transition-all text-decoration-none group">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-circle-question"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-base group-hover:text-rose-300 transition-colors">Live Quizzes</h3>
+                                <p class="text-xs text-slate-400 mt-1 mb-0">15 curated DSA quizzes & 375 instant evaluation questions.</p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
-        </div>
 
-        <div class="card-custom p-4">
-            <h5 class="fw-bold mb-3"><i class="bi bi-bar-chart-line-fill text-info me-2"></i>LeetCode Performance</h5>
-            {% if user.leetcode_username %}
-                <div class="d-flex align-items-center gap-4 flex-wrap">
-                    <div>
-                        <span class="hud-label d-block small">Rank</span>
-                        <span class="fs-3 fw-bold text-warning">#{{ user.leetcode_rank }}</span>
-                    </div>
-                    <div>
-                        <span class="hud-label d-block small">Easy Solved</span>
-                        <span class="fs-4 fw-bold text-success">{{ user.leetcode_easy_solved }}</span>
-                    </div>
-                    <div>
-                        <span class="hud-label d-block small">Medium Solved</span>
-                        <span class="fs-4 fw-bold text-warning">{{ user.leetcode_medium_solved }}</span>
-                    </div>
-                    <div>
-                        <span class="hud-label d-block small">Hard Solved</span>
-                        <span class="fs-4 fw-bold text-danger">{{ user.leetcode_hard_solved }}</span>
-                    </div>
-                </div>
-            {% else %}
-                <p class="text-muted mb-2">Link your LeetCode username in Leaderboard to automatically sync solved problem stats.</p>
-                <a href="{% url 'leaderboard:leaderboard' %}" class="btn btn-sm btn-outline-warning rounded-pill">Link LeetCode Account</a>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Right Column: AI Recommendations -->
-    <div class="col-lg-4">
-        <div class="card-custom p-4 h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0"><i class="bi bi-robot text-primary me-2"></i>AI Recommendations</h5>
-                <a href="{% url 'resumeanalyzer:upload' %}" class="btn btn-sm btn-link text-decoration-none">View All</a>
-            </div>
-            {% for rec in recommendations %}
-            <div class="p-3 mb-3 rounded-3 border border-secondary border-opacity-25 bg-body-tertiary">
-                <div class="d-flex align-items-center justify-content-between gap-2 mb-1">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge rounded-pill {% if rec.priority == 'high' %}bg-danger{% elif rec.priority == 'medium' %}bg-warning text-dark{% else %}bg-success{% endif %}">
-                            {{ rec.priority|title }}
-                        </span>
-                        <span class="small fw-semibold text-muted">{{ rec.category }}</span>
-                    </div>
-                    {% if rec.impact_badge %}
-                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill extra-small px-2 py-1">
-                        {{ rec.impact_badge }}
+            <!-- LeetCode Performance Summary Card -->
+            <div class="premium-card p-6">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-code text-amber-400"></i>
+                        <span>LeetCode Sync Profile</span>
+                    </h2>
+                    {% if user.leetcode_username %}
+                    <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        Synced: @{{ user.leetcode_username }}
                     </span>
                     {% endif %}
                 </div>
-                {% if rec.title %}
-                <h6 class="fw-bold text-body small mt-2 mb-1"><i class="bi {{ rec.icon|default:'bi-lightbulb-fill' }} text-warning me-1"></i>{{ rec.title }}</h6>
-                {% endif %}
-                <small class="d-block text-muted small mb-2">{{ rec.message }}</small>
-                {% if rec.action_url %}
-                <a href="{{ rec.action_url }}" class="btn btn-sm btn-outline-primary rounded-pill py-0 px-2 extra-small fw-semibold">
-                    {{ rec.action_text|default:"Take Action" }} <i class="bi bi-arrow-right-short"></i>
-                </a>
+
+                {% if user.leetcode_username %}
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-center">
+                        <span class="block text-xs font-semibold text-slate-400">Global Rank</span>
+                        <span class="text-2xl font-extrabold text-amber-400">#{{ user.leetcode_rank }}</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-center">
+                        <span class="block text-xs font-semibold text-slate-400">Easy Solved</span>
+                        <span class="text-2xl font-extrabold text-emerald-400">{{ user.leetcode_easy_solved }}</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-center">
+                        <span class="block text-xs font-semibold text-slate-400">Medium Solved</span>
+                        <span class="text-2xl font-extrabold text-amber-400">{{ user.leetcode_medium_solved }}</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-center">
+                        <span class="block text-xs font-semibold text-slate-400">Hard Solved</span>
+                        <span class="text-2xl font-extrabold text-rose-400">{{ user.leetcode_hard_solved }}</span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-center space-y-3">
+                    <p class="text-xs text-slate-400 max-w-md mx-auto">Link your LeetCode handle to automatically synchronize your solved problems, maintain daily streak multipliers, and rank on the student leaderboard.</p>
+                    <a href="{% url 'leaderboard:leaderboard' %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 text-decoration-none transition-all">
+                        <i class="fa-solid fa-link"></i>
+                        <span>Link LeetCode Handle</span>
+                    </a>
+                </div>
                 {% endif %}
             </div>
-            {% empty %}
-            <p class="text-muted small">No active recommendations right now. Keep practicing!</p>
-            {% endfor %}
+        </div>
+
+        <!-- AI Recommendations Side Panel -->
+        <div class="premium-card p-6 flex flex-col justify-between h-full">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-compass text-indigo-400"></i>
+                        <span>Action Points</span>
+                    </h2>
+                    <a href="{% url 'resumeanalyzer:upload' %}" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 text-decoration-none">Full Feed &rarr;</a>
+                </div>
+
+                <div class="space-y-3">
+                    {% for rec in recommendations %}
+                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/40 transition-all space-y-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {% if rec.priority == 'high' %}bg-rose-500/20 text-rose-300 border border-rose-500/30{% elif rec.priority == 'medium' %}bg-amber-500/20 text-amber-300 border border-amber-500/30{% else %}bg-emerald-500/20 text-emerald-300 border border-emerald-500/30{% endif %}">
+                                {{ rec.priority|title }} Priority
+                            </span>
+                            {% if rec.impact_badge %}
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                {{ rec.impact_badge }}
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        {% if rec.title %}
+                        <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-400 text-xs"></i>
+                            <span>{{ rec.title }}</span>
+                        </h3>
+                        {% endif %}
+
+                        <p class="text-xs text-slate-400 leading-relaxed mb-0">{{ rec.message }}</p>
+
+                        {% if rec.action_url %}
+                        <div class="pt-1">
+                            <a href="{{ rec.action_url }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-400 hover:text-indigo-300 text-decoration-none">
+                                <span>{{ rec.action_text|default:"Take Action" }}</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <div class="p-6 text-center text-slate-400 text-xs space-y-2">
+                        <i class="fa-solid fa-check-circle text-2xl text-emerald-400"></i>
+                        <p class="mb-0">No pending recommendations! Keep practicing problems.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-800">
+                <a href="{% url 'resumeanalyzer:upload' %}" class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 text-decoration-none transition-all">
+                    <i class="fa-solid fa-file-upload"></i>
+                    <span>Run Resume Diagnostic</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -255,6 +353,7 @@
 
 {% block extra_js %}
 <script>
+    // Live Clock & Time-based Greeting
     function updateDateTimeAndWishing() {
         const now = new Date();
         const hours = now.getHours();
@@ -262,7 +361,6 @@
         const seconds = String(now.getSeconds()).padStart(2, '0');
         const ampm = hours >= 12 ? 'PM' : 'AM';
         const displayHours = String(hours % 12 || 12).padStart(2, '0');
-
         const timeString = `${displayHours}:${minutes}:${seconds} ${ampm}`;
 
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' };
@@ -273,7 +371,6 @@
         if (heroTime) heroTime.textContent = timeString;
         if (heroDate) heroDate.textContent = dateString;
 
-        // Dynamic Time-based Greeting
         let greetingText = "Hello";
         let greetingEmoji = "👋";
         if (hours >= 5 && hours < 12) {
@@ -286,7 +383,7 @@
             greetingText = "Good Evening";
             greetingEmoji = "🌆";
         } else {
-            greetingText = "Late Night Coding Session";
+            greetingText = "Late Night Session";
             greetingEmoji = "🌙";
         }
 
@@ -295,59 +392,86 @@
             const userName = greetingElement.getAttribute('data-user-name') || '';
             greetingElement.innerHTML = `${greetingText}, ${userName}! ${greetingEmoji}`;
         }
+    }
 
-        // Special Days Detector Engine
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
-        const monthDayKey = `${month}-${day}`;
+    // Initialize Chart.js Graphs
+    function initDashboardCharts() {
+        // Chart 1: Weekly Learning Hours
+        const ctx1 = document.getElementById('weeklyLearningChart');
+        if (ctx1) {
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Study & Practice (Hours)',
+                        data: [2.5, 4.0, 3.2, 5.5, 4.8, 6.0, 3.8],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.15)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#6366f1',
+                        pointHoverRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 11 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#94a3b8', font: { family: 'Inter', size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
 
-        const specialDays = {
-            '1-1': { title: 'New Year\'s Day 🎉', msg: 'Happy New Year! Wishing you code success & top placement rankings!' },
-            '2-14': { title: 'Valentine\'s Day 💖', msg: 'Happy Valentine\'s Day! Code with passion, precision & love!' },
-            '3-8': { title: 'International Women\'s Day 👩‍💻', msg: 'Celebrating women engineers & tech innovators worldwide!' },
-            '4-22': { title: 'Earth Day 🌿', msg: 'Write green, optimized algorithms for a sustainable digital world!' },
-            '5-1': { title: 'Worker\'s & Labor Day 🛠️', msg: 'Saluting hard work, engineering dedication & continuous building!' },
-            '6-5': { title: 'World Environment Day 🌍', msg: 'Build clean, high-performance technology for tomorrow!' },
-            '8-2': { title: 'International Developer & Friendship Day 🚀', msg: 'Happy Friendship & Developer Day! Celebrate coding, teamwork & achievements!' },
-            '8-15': { title: 'Independence Day 🎆', msg: 'Celebrating Freedom, Leadership & Technology Innovation!' },
-            '9-15': { title: 'National Engineers\' Day ⚙️', msg: 'Happy Engineers\' Day! Keep innovating & building great software!' },
-            '10-2': { title: 'Gandhi Jayanti ☮️', msg: 'Promoting peace, truth, and ethical software development!' },
-            '10-31': { title: 'Halloween Day 🎃', msg: 'Happy Halloween! Beware of spooky bugs lurking in production!' },
-            '11-14': { title: 'Youth & Children Developer Day 🚀', msg: 'Inspiring future software engineers & tech leaders!' },
-            '12-25': { title: 'Christmas Day 🎄', msg: 'Merry Christmas! Joy, happiness & zero bug deployment to all!' },
-            '12-31': { title: 'New Year\'s Eve 🥂', msg: 'Cheers to another year of accomplishments & code mastery!' }
-        };
-
-        const specialDayBanner = document.getElementById('hero-special-day-banner');
-        const specialDayTitle = document.getElementById('hero-special-day-title');
-        const specialDayMsg = document.getElementById('hero-special-day-msg');
-
-        if (specialDays[monthDayKey]) {
-            const event = specialDays[monthDayKey];
-            if (specialDayTitle) specialDayTitle.textContent = event.title;
-            if (specialDayMsg) specialDayMsg.textContent = event.msg;
-            if (specialDayBanner) specialDayBanner.style.display = 'block';
-        } else if (specialDayBanner) {
-            const dayOfWeek = now.getDay();
-            const dailyMotivations = [
-                { title: 'Sunday Coding Sprint 🚀', msg: 'Perfect day to sharpen your DSA skills & prepare for placements!' },
-                { title: 'Monday Kickoff 🔥', msg: 'Start your week strong with a new coding challenge!' },
-                { title: 'Tech Tuesday 💻', msg: 'Keep the momentum high & conquer LeetCode problem sheets!' },
-                { title: 'Wisdom Wednesday 💡', msg: 'Refactor code, optimize time complexity & master algorithms!' },
-                { title: 'Thriving Thursday ⚡', msg: 'You are close to your weekly targets — push forward!' },
-                { title: 'Feature Friday 🎨', msg: 'Test your problem solving in the Coding Games Arcade!' },
-                { title: 'Super Saturday 🏆', msg: 'Review your weekly progress & climb the leaderboard!' }
-            ];
-            const todayMotiv = dailyMotivations[dayOfWeek];
-            if (specialDayTitle) specialDayTitle.textContent = todayMotiv.title;
-            if (specialDayMsg) specialDayMsg.textContent = todayMotiv.msg;
-            if (specialDayBanner) specialDayBanner.style.display = 'block';
+        // Chart 2: LeetCode & Skill Breakdown Doughnut
+        const ctx2 = document.getElementById('skillBreakdownChart');
+        if (ctx2) {
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Easy', 'Medium', 'Hard'],
+                    datasets: [{
+                        data: [
+                            {{ user.leetcode_easy_solved|default:12 }},
+                            {{ user.leetcode_medium_solved|default:8 }},
+                            {{ user.leetcode_hard_solved|default:2 }}
+                        ],
+                        backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { family: 'Inter', size: 11 }, padding: 14 }
+                        }
+                    },
+                    cutout: '72%'
+                }
+            });
         }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         updateDateTimeAndWishing();
         setInterval(updateDateTimeAndWishing, 1000);
+        initDashboardCharts();
     });
 </script>
 {% endblock %}

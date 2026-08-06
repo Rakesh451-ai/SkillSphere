@@ -1,32 +1,91 @@
 {% extends "base.html" %}
-{% block title %}Register - SkillSphere{% endblock %}
+{% block title %}Create Student Account - SkillSphere Career Studio{% endblock %}
 {% block public_content %}
-<div class="min-vh-100 d-flex align-items-center py-5" style="background: var(--bg-body); color: var(--text-color); transition: background-color 0.3s ease;">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="card border-0 shadow-lg rounded-4" style="background: var(--card-bg); color: var(--text-color); border: 1px solid var(--card-border) !important;">
-                    <div class="card-body p-5">
-                        <div class="text-center mb-4">
-                            <h3 class="fw-bold"><i class="bi bi-lightning-charge-fill" style="color:var(--primary);"></i> SkillSphere</h3>
-                            <p class="text-muted">Create your account</p>
+<div class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-[#090d16] text-slate-100 relative overflow-hidden">
+    <!-- Ambient Background Glows -->
+    <div class="absolute -top-32 -right-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="w-full max-w-4xl bg-slate-900/80 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur-xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+        <!-- Left Column: Branding Showcase -->
+        <div class="p-8 md:p-12 bg-gradient-to-br from-indigo-900/60 via-slate-900 to-slate-950 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800 relative">
+            <div>
+                <a href="/" class="flex items-center gap-3 text-decoration-none group mb-8">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-bolt text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-heading font-extrabold text-2xl text-white tracking-tight">SkillSphere</span>
+                        <span class="block text-xs uppercase font-mono tracking-widest text-indigo-400 font-bold">Career Studio</span>
+                    </div>
+                </a>
+
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white leading-tight mb-3">
+                    Start Building Your Tech Career Today
+                </h2>
+                <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                    Join thousands of students optimizing their DSA skills, tracking LeetCode streaks, and preparing for top tier software engineering roles.
+                </p>
+
+                <!-- Value Props List -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-700/50">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-check"></i>
                         </div>
-                        <form method="post">
-                            {% csrf_token %}
-                            {% for field in form %}
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">{{ field.label }}</label>
-                                {{ field }}
-                                {% for error in field.errors %}
-                                <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            {% endfor %}
-                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold mt-2">Create Account</button>
-                        </form>
-                        <p class="text-center mt-3 text-muted">Already have an account? <a href="{% url 'accounts:login' %}" class="fw-semibold text-primary">Login</a></p>
+                        <span class="text-xs font-semibold text-slate-300">Free Instant Access to All DSA Sheets</span>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-700/50">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-300">Automated ATS Resume Scoring Engine</span>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-700/50">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-300">Live Coding Quizzes & Gamified Arcade</span>
                     </div>
                 </div>
+            </div>
+
+            <div class="pt-8 text-xs text-slate-500 flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-indigo-400"></i>
+                <span>Designed specifically for student developers & campus placements</span>
+            </div>
+        </div>
+
+        <!-- Right Column: Registration Form -->
+        <div class="p-8 md:p-12 flex flex-col justify-center">
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-white mb-1">Create Account</h3>
+                <p class="text-xs text-slate-400">Fill in your details to create your student account</p>
+            </div>
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">{{ field.label }}</label>
+                    <div class="relative">
+                        {{ field }}
+                    </div>
+                    {% for error in field.errors %}
+                    <p class="text-xs text-rose-400 mt-1 font-medium">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 group mt-4">
+                    <span>Create Free Account</span>
+                    <i class="fa-solid fa-user-plus group-hover:scale-110 transition-transform"></i>
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-xs text-slate-400">
+                Already have an account? 
+                <a href="{% url 'accounts:login' %}" class="font-bold text-indigo-400 hover:text-indigo-300 text-decoration-none">Sign In &rarr;</a>
             </div>
         </div>
     </div>

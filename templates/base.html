@@ -1,468 +1,426 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SkillSphere{% endblock %}</title>
+    <title>{% block title %}SkillSphere - Student Career & Placement Platform{% endblock %}</title>
     <!-- Anti-FOUC Theme Initialization Script -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('skillsphere_theme') || 'dark';
             document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         })();
     </script>
-    <!-- Ultra-Modern Typography & Google Fonts -->
+
+    <!-- Google Fonts: Inter & Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        accent: {
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e',
+                        },
+                        dark: {
+                            body: '#090d16',
+                            card: '#111827',
+                            sidebar: '#0f172a',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Plus Jakarta Sans', '-apple-system', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glow-indigo': '0 0 25px rgba(99, 102, 241, 0.25)',
+                        'glow-cyan': '0 0 25px rgba(6, 182, 212, 0.25)',
+                        'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04)',
+                        'soft-dark': '0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.04)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Bootstrap 5 CSS (for legacy grid compatibility) & Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-    <style>
-        /* =========================================================
-           ULTRA-MODERN CLEAN DESIGN SYSTEM (Linear & Vercel Aesthetic)
-           ========================================================= */
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-        /* DARK THEME TOKENS (Deep Obsidian / Glassmorphic Tech) */
-        [data-bs-theme="dark"] {
+    <style>
+        /* CSS Variables System */
+        [data-bs-theme="dark"], .dark {
             --bg-body: #090d16;
             --topbar-bg: rgba(15, 23, 42, 0.85);
-            --topbar-border: rgba(255, 255, 255, 0.07);
-            --sidebar-bg: linear-gradient(180deg, #0f172a 0%, #070a11 100%);
+            --topbar-border: rgba(255, 255, 255, 0.08);
+            --sidebar-bg: #0f172a;
             --card-bg: #111827;
             --card-border: rgba(255, 255, 255, 0.08);
-            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.03);
-            --text-color: #f8fafc;       /* High-contrast pure slate 50 */
-            --text-muted: #94a3b8;       /* Medium slate 400 */
-            --heading-color: #ffffff;    /* Pure white headers */
-            --brand-accent: #6366f1;     /* Electric Indigo */
-            --brand-gradient: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
-            --toggle-btn-bg: rgba(99, 102, 241, 0.15);
-            --toggle-btn-color: #818cf8;
-            --toggle-border: rgba(129, 140, 248, 0.3);
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --heading-color: #ffffff;
             --input-bg: #0f172a;
             --input-border: rgba(255, 255, 255, 0.12);
-            --table-header-bg: rgba(255, 255, 255, 0.03);
         }
 
-        /* BRIGHT / LIGHT THEME TOKENS (Ultra Clean Slate / Polar White) */
-        [data-bs-theme="light"] {
+        [data-bs-theme="light"], html:not(.dark) {
             --bg-body: #f8fafc;
             --topbar-bg: rgba(255, 255, 255, 0.9);
             --topbar-border: #e2e8f0;
-            --sidebar-bg: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            --sidebar-bg: #0f172a;
             --card-bg: #ffffff;
-            --card-border: rgba(226, 232, 240, 0.9);
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
-            --text-color: #0f172a;       /* Deep slate 900 */
-            --text-muted: #64748b;       /* Slate 500 */
-            --heading-color: #0f172a;    /* Rich charcoal headers */
-            --brand-accent: #4f46e5;
-            --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #0284c7 100%);
-            --toggle-btn-bg: #e0e7ff;
-            --toggle-btn-color: #4338ca;
-            --toggle-border: #c7d2fe;
+            --card-border: #e2e8f0;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --heading-color: #0f172a;
             --input-bg: #ffffff;
             --input-border: #cbd5e1;
-            --table-header-bg: #f1f5f9;
         }
 
-        /* Universal Clean Typography Stack */
         body {
-            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-color);
-            line-height: 1.6;
-            letter-spacing: -0.015em;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        h1, h2, h3, h4, h5, h6, .fw-bold, .fw-semibold, .navbar-brand {
+        h1, h2, h3, h4, h5, h6, .font-heading {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            letter-spacing: -0.025em;
             color: var(--heading-color);
-            font-weight: 700;
         }
 
-        code, pre, kbd, samp, .font-monospace, #typer-editor, .game-panel code {
-            font-family: 'JetBrains Mono', 'Fira Code', SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-        }
-
-        /* Scope Theme Color Enforcement */
-        [data-bs-theme="dark"] body,
-        [data-bs-theme="dark"] h1, [data-bs-theme="dark"] h2, [data-bs-theme="dark"] h3,
-        [data-bs-theme="dark"] h4, [data-bs-theme="dark"] h5, [data-bs-theme="dark"] h6,
-        [data-bs-theme="dark"] p, [data-bs-theme="dark"] span, [data-bs-theme="dark"] div,
-        [data-bs-theme="dark"] td, [data-bs-theme="dark"] th, [data-bs-theme="dark"] label,
-        [data-bs-theme="dark"] input, [data-bs-theme="dark"] select, [data-bs-theme="dark"] textarea,
-        [data-bs-theme="dark"] button, [data-bs-theme="dark"] .card,
-        [data-bs-theme="dark"] .game-panel, [data-bs-theme="dark"] .admin-card,
-        [data-bs-theme="dark"] .stat-card, [data-bs-theme="dark"] .hud-label {
-            color: #f8fafc;
-        }
-
-        [data-bs-theme="dark"] .text-muted,
-        [data-bs-theme="dark"] .text-secondary,
-        [data-bs-theme="dark"] .text-light-50 {
-            color: #94a3b8 !important;
-        }
-
-        [data-bs-theme="dark"] .form-control,
-        [data-bs-theme="dark"] .form-select {
-            background-color: #0f172a !important;
-            color: #f8fafc !important;
-            border-color: rgba(255, 255, 255, 0.12) !important;
-            border-radius: 10px;
-        }
-
-        [data-bs-theme="light"] body,
-        [data-bs-theme="light"] h1, [data-bs-theme="light"] h2, [data-bs-theme="light"] h3,
-        [data-bs-theme="light"] h4, [data-bs-theme="light"] h5, [data-bs-theme="light"] h6,
-        [data-bs-theme="light"] p, [data-bs-theme="light"] span, [data-bs-theme="light"] div,
-        [data-bs-theme="light"] td, [data-bs-theme="light"] th, [data-bs-theme="light"] label,
-        [data-bs-theme="light"] input, [data-bs-theme="light"] select, [data-bs-theme="light"] textarea,
-        [data-bs-theme="light"] button, [data-bs-theme="light"] .card,
-        [data-bs-theme="light"] .game-panel, [data-bs-theme="light"] .admin-card,
-        [data-bs-theme="light"] .stat-card, [data-bs-theme="light"] .hud-label {
-            color: #0f172a;
-        }
-
-        [data-bs-theme="light"] .text-muted,
-        [data-bs-theme="light"] .text-secondary {
-            color: #64748b !important;
-        }
-
-        [data-bs-theme="light"] .form-control,
-        [data-bs-theme="light"] .form-select {
-            background-color: #ffffff !important;
-            color: #0f172a !important;
-            border-color: #cbd5e1 !important;
-            border-radius: 10px;
-        }
-
-        /* Sidebar Styling (Modern Dark Glassmorphism) */
-        .sidebar {
+        /* Sidebar Styling */
+        .app-sidebar {
+            width: 270px;
             height: 100vh;
-            max-height: 100vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: var(--sidebar-bg);
-            width: 260px;
             position: fixed;
             left: 0;
             top: 0;
-            z-index: 100;
-            transition: transform 0.3s ease, background 0.3s ease;
-            border-right: 1px solid rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(16px);
+            z-index: 50;
+            background: #0f172a;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            overflow-y: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Custom Scrollbar for Sidebar */
-        .sidebar::-webkit-scrollbar {
-            width: 5px;
+        .app-sidebar::-webkit-scrollbar {
+            width: 4px;
         }
-        .sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .sidebar::-webkit-scrollbar-thumb {
+        .app-sidebar::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
+            border-radius: 4px;
         }
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .sidebar .brand-logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #ffffff !important;
-            padding: 24px 22px;
-            letter-spacing: -0.03em;
-        }
-        .sidebar .brand-logo i {
-            background: var(--brand-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .sidebar .nav-link {
-            color: rgba(248, 250, 252, 0.75) !important;
-            padding: 12px 18px;
-            border-radius: 12px;
-            margin: 3px 14px;
-            font-weight: 500;
-            font-size: 0.92rem;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .sidebar-nav-item {
             display: flex;
             align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            margin: 4px 14px;
+            border-radius: 12px;
+            color: rgba(248, 250, 252, 0.75);
+            font-size: 0.925rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none !important;
         }
-        .sidebar .nav-link:hover {
+        .sidebar-nav-item:hover {
             background: rgba(255, 255, 255, 0.08);
-            color: #ffffff !important;
+            color: #ffffff;
             transform: translateX(4px);
         }
-        .sidebar .nav-link.active {
+        .sidebar-nav-item.active {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.15) 100%);
-            color: #ffffff !important;
+            color: #ffffff;
             font-weight: 600;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
-        }
-        .sidebar .nav-link i {
-            width: 22px;
-            font-size: 1.1rem;
-            margin-right: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2);
         }
 
-        .main-content {
-            margin-left: 260px;
+        .app-main {
+            margin-left: 270px;
             min-height: 100vh;
-            background-color: var(--bg-body);
-            transition: background-color 0.3s ease;
+            transition: margin-left 0.3s ease;
+        }
+
+        @media (max-width: 1024px) {
+            .app-sidebar {
+                transform: translateX(-100%);
+            }
+            .app-sidebar.show {
+                transform: translateX(0);
+            }
+            .app-main {
+                margin-left: 0;
+            }
         }
 
         /* Top Navbar */
-        .top-navbar {
-            background-color: var(--topbar-bg) !important;
-            border-bottom: 1px solid var(--topbar-border) !important;
-            padding: 16px 32px;
+        .app-topbar {
+            height: 72px;
+            background: var(--topbar-bg);
+            border-bottom: 1px solid var(--topbar-border);
             backdrop-filter: blur(12px);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            position: sticky;
+            top: 0;
+            z-index: 40;
         }
 
-        /* Modern Elevated Cards */
-        .stat-card, .card-custom, .card {
-            background-color: var(--card-bg) !important;
-            border: 1px solid var(--card-border) !important;
-            border-radius: 18px;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, background-color 0.3s ease;
+        /* Modern Card Containers */
+        .premium-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            transition: all 0.25s ease;
         }
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 14px 35px -5px rgba(0, 0, 0, 0.3), 0 0 25px rgba(99, 102, 241, 0.08);
+        .dark .premium-card {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.03);
         }
-        .stat-card .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.35rem;
-        }
-        .stat-card .stat-value {
-            font-size: 1.85rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
+        .premium-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 35px -5px rgba(0, 0, 0, 0.12), 0 0 25px rgba(99, 102, 241, 0.08);
         }
 
-        /* Modern Clean Buttons & Badges */
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            border: none;
-            color: #ffffff !important;
-            font-weight: 600;
-            border-radius: 12px;
-            padding: 0.55rem 1.25rem;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-            transition: all 0.2s ease;
+        /* Skeleton Loading State */
+        .skeleton-box {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.12) 37%, rgba(255,255,255,0.05) 63%);
+            background-size: 400% 100%;
+            animation: skeletonLoading 1.4s ease infinite;
         }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.4);
-            color: #ffffff !important;
-        }
-
-        .badge-xp {
-            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
-            color: #ffffff !important;
-            font-weight: 700;
-            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.25);
-        }
-
-        /* Top-Right Theme Toggle Switch (Compact Icon-Only) */
-        .theme-toggle-btn {
-            background: var(--toggle-btn-bg);
-            color: var(--toggle-btn-color) !important;
-            border: 1px solid var(--toggle-border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .theme-toggle-btn:hover {
-            transform: translateY(-2px) scale(1.08);
-            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.25);
-        }
-        .theme-toggle-btn i {
-            font-size: 1.15rem;
-            transition: transform 0.3s ease;
-        }
-        .theme-toggle-btn:hover i {
-            transform: rotate(25deg);
-        }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.show { transform: translateX(0); }
-            .main-content { margin-left: 0; }
+        @keyframes skeletonLoading {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0 50%; }
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="bg-[#090d16] text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
     {% if user.is_authenticated %}
     <!-- Sidebar Navigation -->
-    <nav class="sidebar" id="sidebar">
-        <div class="brand-logo d-flex align-items-center gap-2">
-            <i class="bi bi-lightning-charge-fill"></i> SkillSphere
+    <aside class="app-sidebar shadow-2xl flex flex-col justify-between" id="appSidebar">
+        <div>
+            <!-- Brand Logo Header -->
+            <div class="px-6 py-5 flex items-center justify-between border-b border-slate-800">
+                <a href="{% url 'dashboard:home' %}" class="flex items-center gap-3 text-decoration-none group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-bolt text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-heading font-extrabold text-xl text-white tracking-tight group-hover:text-indigo-400 transition-colors">SkillSphere</span>
+                        <span class="block text-[10px] uppercase font-mono tracking-widest text-indigo-400 font-bold">Career Studio</span>
+                    </div>
+                </a>
+                <button class="lg:hidden text-slate-400 hover:text-white" onclick="document.getElementById('appSidebar').classList.remove('show')">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="py-4 space-y-1">
+                <div class="px-6 pb-2 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">Main Menu</div>
+                
+                <a class="sidebar-nav-item {% if request.resolver_match.app_name == 'dashboard' and request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'dashboard:home' %}">
+                    <i class="fa-solid fa-chart-pie w-5 text-center text-indigo-400"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a class="sidebar-nav-item {% if request.resolver_match.url_name == 'study_materials' %}active{% endif %}" href="{% url 'dashboard:study_materials' %}">
+                    <i class="fa-solid fa-book-open w-5 text-center text-cyan-400"></i>
+                    <span>Study Resources</span>
+                </a>
+
+                <a class="sidebar-nav-item {% if request.resolver_match.url_name == 'dsa_visualizer' or request.resolver_match.url_name == 'dsa_theory' %}active{% endif %}" href="{% url 'dashboard:dsa_visualizer' %}">
+                    <i class="fa-solid fa-code-branch w-5 text-center text-emerald-400"></i>
+                    <span>DSA Theory Studio</span>
+                </a>
+
+                <a class="sidebar-nav-item {% if request.resolver_match.url_name == 'cpp_calculator' %}active{% endif %}" href="{% url 'dashboard:cpp_calculator' %}">
+                    <i class="fa-solid fa-gamepad w-5 text-center text-amber-400"></i>
+                    <span>Coding Games Hub</span>
+                </a>
+
+                <a class="sidebar-nav-item {% if request.resolver_match.url_name == 'quiz_list' or request.resolver_match.url_name == 'quiz_take' or request.resolver_match.url_name == 'quiz_result' %}active{% endif %}" href="{% url 'dashboard:quiz_list' %}">
+                    <i class="fa-solid fa-circle-question w-5 text-center text-rose-400"></i>
+                    <span>Live Quizzes</span>
+                </a>
+
+                <a class="sidebar-nav-item {% if request.resolver_match.app_name == 'leaderboard' %}active{% endif %}" href="{% url 'leaderboard:leaderboard' %}">
+                    <i class="fa-solid fa-trophy w-5 text-center text-yellow-400"></i>
+                    <span>Leaderboard</span>
+                </a>
+
+                <!-- Resume Analysis below Leaderboard -->
+                <a class="sidebar-nav-item {% if request.resolver_match.app_name == 'resumeanalyzer' or request.resolver_match.app_name == 'recommendations' %}active{% endif %}" href="{% url 'resumeanalyzer:upload' %}">
+                    <i class="fa-solid fa-file-lines w-5 text-center text-indigo-400"></i>
+                    <span>Resume Analysis</span>
+                </a>
+
+                <a class="sidebar-nav-item {% if request.resolver_match.app_name == 'notifications' %}active{% endif %}" href="{% url 'notifications:list' %}">
+                    <i class="fa-solid fa-bell w-5 text-center text-purple-400"></i>
+                    <span class="flex-1">Notifications</span>
+                    {% if unread_notifications > 0 %}
+                    <span class="px-2 py-0.5 text-xs font-bold bg-rose-500 text-white rounded-full">{{ unread_notifications }}</span>
+                    {% endif %}
+                </a>
+
+                {% if request.user.is_staff or request.user.is_superuser %}
+                <div class="px-6 pt-4 pb-2 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">Administration</div>
+                <a class="sidebar-nav-item {% if request.resolver_match.url_name == 'admin_user_dashboard' %}active{% endif %}" href="{% url 'dashboard:admin_user_dashboard' %}">
+                    <i class="fa-solid fa-user-shield w-5 text-center text-amber-400"></i>
+                    <span>Admin Panel</span>
+                </a>
+                <a class="sidebar-nav-item {% if request.resolver_match.url_name == 'admin_quiz_list' or request.resolver_match.url_name == 'admin_quiz_edit' %}active{% endif %}" href="{% url 'dashboard:admin_quiz_list' %}">
+                    <i class="fa-solid fa-list-check w-5 text-center text-cyan-400"></i>
+                    <span>Quiz Management</span>
+                </a>
+                {% endif %}
+            </nav>
         </div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'dashboard' and request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'dashboard:home' %}">
-                    <i class="bi bi-grid-1x2-fill"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'study_materials' %}active{% endif %}" href="{% url 'dashboard:study_materials' %}">
-                    <i class="bi bi-book-half"></i> Study Resources
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'dsa_visualizer' or request.resolver_match.url_name == 'dsa_theory' %}active{% endif %}" href="{% url 'dashboard:dsa_visualizer' %}">
-                    <i class="bi bi-journal-bookmark-fill text-info"></i> DSA Theory
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'cpp_calculator' %}active{% endif %}" href="{% url 'dashboard:cpp_calculator' %}">
-                    <i class="bi bi-controller"></i> Coding Games Hub
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'quiz_list' or request.resolver_match.url_name == 'quiz_take' or request.resolver_match.url_name == 'quiz_result' %}active{% endif %}" href="{% url 'dashboard:quiz_list' %}">
-                    <i class="bi bi-patch-question-fill text-warning"></i> Live Coding Quizzes
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'leaderboard' %}active{% endif %}" href="{% url 'leaderboard:leaderboard' %}">
-                    <i class="bi bi-trophy-fill"></i> Leaderboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.app_name == 'resumeanalyzer' or request.resolver_match.app_name == 'recommendations' %}active{% endif %}" href="{% url 'resumeanalyzer:upload' %}">
-                    <i class="bi bi-file-earmark-person-fill"></i> Resume Analysis
-                </a>
-            </li>
-            {% if request.user.is_staff or request.user.is_superuser %}
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'admin_user_dashboard' %}active{% endif %}" href="{% url 'dashboard:admin_user_dashboard' %}">
-                    <i class="bi bi-shield-lock-fill text-warning"></i> Admin Panel
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'admin_quiz_list' or request.resolver_match.url_name == 'admin_quiz_edit' %}active{% endif %}" href="{% url 'dashboard:admin_quiz_list' %}">
-                    <i class="bi bi-ui-checks text-info"></i> Admin Quiz Portal
-                </a>
-            </li>
-            {% endif %}
-            <li class="nav-item mt-3">
-                <a class="nav-link {% if request.resolver_match.app_name == 'accounts' %}active{% endif %}" href="{% url 'accounts:profile' %}">
-                    <i class="bi bi-person-circle"></i> Profile
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-danger-subtitle" href="{% url 'accounts:logout' %}">
-                    <i class="bi bi-box-arrow-left"></i> Logout
-                </a>
-            </li>
-        </ul>
-    </nav>
+
+        <!-- User Profile & Logout Bottom Footer -->
+        <div class="p-4 border-t border-slate-800 bg-slate-950/40">
+            <a href="{% url 'accounts:profile' %}" class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-800/80 transition-colors text-decoration-none group mb-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 p-0.5 shadow-md">
+                    <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center font-bold text-white text-sm">
+                        {{ user.username|slice:":2"|upper }}
+                    </div>
+                </div>
+                <div class="overflow-hidden flex-1">
+                    <div class="font-semibold text-sm text-white group-hover:text-indigo-300 transition-colors truncate">{{ user.display_name }}</div>
+                    <div class="text-xs text-slate-400 truncate font-mono">@{{ user.username }}</div>
+                </div>
+            </a>
+            <a href="{% url 'accounts:logout' %}" class="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors text-decoration-none">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
 
     <!-- Main Content Area -->
-    <div class="main-content">
-        <div class="top-navbar d-flex justify-content-between align-items-center">
-            <button class="btn btn-link d-md-none p-0 me-2" onclick="document.getElementById('sidebar').classList.toggle('show')">
-                <i class="bi bi-list fs-3"></i>
-            </button>
-            <div>
-                <h5 class="mb-0 fw-bold">{% block page_title %}Dashboard{% endblock %}</h5>
+    <div class="app-main flex flex-col">
+        <!-- Top Navbar -->
+        <header class="app-topbar px-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button class="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800" onclick="document.getElementById('appSidebar').classList.toggle('show')">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="hidden sm:block">
+                    <h1 class="text-lg font-bold text-white mb-0 flex items-center gap-2">
+                        {% block page_title %}Dashboard{% endblock %}
+                    </h1>
+                </div>
             </div>
-            <!-- Top Right Section -->
-            <div class="d-flex align-items-center gap-3">
+
+            <!-- Top Right Bar Controls -->
+            <div class="flex items-center gap-3">
                 {% if user.leetcode_username %}
-                <a href="{% url 'leaderboard:leaderboard' %}?sort=leetcode" class="btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 text-decoration-none rounded-pill" style="border-color: rgba(255, 255, 255, 0.15);">
-                    <i class="bi bi-code-slash text-warning"></i>
-                    <span class="small d-none d-sm-inline opacity-75">LeetCode Rank:</span>
-                    <span class="fw-bold">#{{ user.leetcode_rank }}</span>
-                    <span class="vr mx-1"></span>
-                    <span class="fw-semibold text-success">{{ user.leetcode_total_solved }} solved</span>
+                <a href="{% url 'leaderboard:leaderboard' %}?sort=leetcode" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-700/80 hover:border-indigo-500 text-decoration-none text-xs transition-colors">
+                    <i class="fa-solid fa-code text-amber-400"></i>
+                    <span class="text-slate-400">LeetCode Rank:</span>
+                    <span class="font-bold text-amber-400">#{{ user.leetcode_rank }}</span>
+                    <span class="w-1 h-1 rounded-full bg-slate-600"></span>
+                    <span class="font-semibold text-emerald-400">{{ user.leetcode_total_solved }} Solved</span>
                 </a>
                 {% endif %}
 
-                <!-- Community Discussion Link beside LeetCode Rank -->
-                <a href="{% url 'dashboard:discussions' %}" class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 text-decoration-none rounded-pill fw-bold shadow-sm">
-                    <i class="bi bi-chat-quote-fill"></i>
-                    <span>Community Discussion</span>
+                <!-- Community Discussion Button -->
+                <a href="{% url 'dashboard:discussions' %}" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold text-xs shadow-md shadow-indigo-600/30 text-decoration-none transition-all hover:scale-[1.02]">
+                    <i class="fa-solid fa-comments"></i>
+                    <span class="hidden sm:inline">Community Discussion</span>
                 </a>
 
                 <!-- Notification Bell -->
-                <a href="{% url 'notifications:list' %}" class="btn btn-light rounded-circle position-relative p-2" style="width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;">
-                    <i class="bi bi-bell fs-5"></i>
+                <a href="{% url 'notifications:list' %}" class="relative p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-full transition-colors text-decoration-none w-9 h-9 flex items-center justify-center">
+                    <i class="fa-solid fa-bell text-base"></i>
                     {% if unread_notifications > 0 %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ unread_notifications }}
-                    </span>
+                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping"></span>
+                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
                     {% endif %}
                 </a>
 
                 <!-- XP Badge -->
-                <span class="badge badge-xp px-3 py-2 rounded-pill">
-                    <i class="bi bi-lightning-charge-fill"></i> {{ user.xp_points }} XP
-                </span>
+                <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-600/30 to-cyan-500/30 border border-indigo-500/40 text-indigo-300 text-xs font-bold shadow-sm">
+                    <i class="fa-solid fa-bolt text-amber-400"></i>
+                    <span>{{ user.xp_points }} XP</span>
+                </div>
 
-                <span class="fw-semibold d-none d-md-inline">{{ user.display_name }}</span>
-
-                <!-- Top Right Dark/Bright Section Toggle Switch -->
-                <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Switch Theme">
-                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                <!-- Dark / Light Theme Toggle -->
+                <button class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-amber-400 transition-all" id="themeToggleBtn" onclick="toggleTheme()" title="Switch Theme">
+                    <i class="fa-solid fa-moon text-sm" id="themeIcon"></i>
                 </button>
             </div>
-        </div>
+        </header>
 
-        <div class="p-4">
+        <!-- Flash Messages & Page Body -->
+        <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">
             {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="space-y-3 mb-6">
+                {% for message in messages %}
+                <div class="p-4 rounded-xl border flex items-center justify-between shadow-lg backdrop-blur-md transition-all {% if message.tags == 'error' or message.tags == 'danger' %}bg-rose-500/10 border-rose-500/30 text-rose-300{% elif message.tags == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-300{% else %}bg-indigo-500/10 border-indigo-500/30 text-indigo-300{% endif %}">
+                    <div class="flex items-center gap-3 text-sm font-medium">
+                        <i class="fa-solid {% if message.tags == 'error' or message.tags == 'danger' %}fa-circle-xmark text-rose-400{% elif message.tags == 'success' %}fa-circle-check text-emerald-400{% else %}fa-circle-info text-indigo-400{% endif %}"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
             {% endif %}
+
             {% block content %}{% endblock %}
-        </div>
+        </main>
     </div>
     {% else %}
-    
-    <!-- Top-Right Floating Theme Toggle Switch for Public/Landing/Login Pages -->
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
-        <button class="theme-toggle-btn shadow" id="publicThemeToggleBtn" onclick="toggleTheme()" title="Switch Theme">
-            <i class="bi bi-moon-stars-fill" id="publicThemeIcon"></i>
+    <!-- Public / Authentication Top Right Controls -->
+    <div class="fixed top-4 right-4 z-50">
+        <button class="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-amber-400 shadow-xl transition-all" id="publicThemeToggleBtn" onclick="toggleTheme()" title="Switch Theme">
+            <i class="fa-solid fa-moon text-base" id="publicThemeIcon"></i>
         </button>
     </div>
 
     {% block public_content %}{% endblock %}
     {% endif %}
 
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function applyTheme(theme) {
@@ -470,26 +428,20 @@
             localStorage.setItem('skillsphere_theme', theme);
 
             const isDark = theme === 'dark';
-            const iconClass = isDark ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars-fill';
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+
+            const iconClass = isDark ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon text-indigo-600';
             const titleText = isDark ? 'Switch to Bright Mode' : 'Switch to Dark Mode';
 
-            const btn = document.getElementById('themeToggleBtn');
             const btnIcon = document.getElementById('themeIcon');
-            if (btnIcon) {
-                btnIcon.className = iconClass;
-            }
-            if (btn) {
-                btn.title = titleText;
-            }
+            if (btnIcon) btnIcon.className = iconClass;
 
-            const pubBtn = document.getElementById('publicThemeToggleBtn');
             const pubIcon = document.getElementById('publicThemeIcon');
-            if (pubIcon) {
-                pubIcon.className = iconClass;
-            }
-            if (pubBtn) {
-                pubBtn.title = titleText;
-            }
+            if (pubIcon) pubIcon.className = iconClass;
         }
 
         function toggleTheme() {

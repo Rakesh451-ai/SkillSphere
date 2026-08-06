@@ -1,80 +1,199 @@
 {% extends "base.html" %}
-{% block title %}Leaderboard - SkillSphere{% endblock %}
-{% block page_title %}Leaderboard{% endblock %}
-{% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="btn-group">
-        <a href="?sort=xp" class="btn btn-{% if sort_by == 'xp' %}primary{% else %}outline-primary{% endif %}">XP Points</a>
-        <a href="?sort=hours" class="btn btn-{% if sort_by == 'hours' %}primary{% else %}outline-primary{% endif %}">Study Hours</a>
-        <a href="?sort=leetcode" class="btn btn-{% if sort_by == 'leetcode' %}primary{% else %}outline-primary{% endif %}">LeetCode Solved</a>
-        <a href="?sort=streak" class="btn btn-{% if sort_by == 'streak' %}primary{% else %}outline-primary{% endif %}"><i class="bi bi-fire"></i> LeetCode Streak</a>
-    </div>
-    <a href="{% url 'leaderboard:badges' %}" class="btn btn-outline-primary"><i class="bi bi-award"></i> Badges</a>
-</div>
+{% block title %}Leaderboard - SkillSphere Student Rankings{% endblock %}
+{% block page_title %}Leaderboard & Rankings{% endblock %}
 
-<div class="card-custom">
-    <div class="table-responsive">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th>Rank</th>
-                    <th>Student</th>
-                    <th>XP Points</th>
-                    <th>Study Hours</th>
-                    <th>LeetCode (E/M/H)</th>
-                    <th>Goals Done</th>
-                    <th>LeetCode Streak</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for entry in ranked_users %}
-                <tr {% if entry.user == request.user %}class="table-primary"{% endif %}>
-                    <td>
-                        {% if entry.rank == 1 %}<span class="fs-5">&#x1F947;</span>
-                        {% elif entry.rank == 2 %}<span class="fs-5">&#x1F948;</span>
-                        {% elif entry.rank == 3 %}<span class="fs-5">&#x1F949;</span>
-                        {% else %}<span class="fw-bold text-muted">#{{ entry.rank }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <a href="{% url 'accounts:profile' %}?username={{ entry.user.username }}" class="text-decoration-none text-dark d-flex align-items-center gap-2 hover-primary">
-                               {% if entry.user.profile_image %}
-                                <img src="{{ entry.user.profile_image.url }}" class="rounded-circle" width="32" height="32" style="object-fit:cover;">
-                                {% else %}
-                                <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
-                                    <i class="bi bi-person-fill text-primary small"></i>
-                                </div>
-                                {% endif %}
-                                <div>
-                                    <span class="fw-semibold">{{ entry.user.display_name }}</span>
-                                    {% if entry.user == request.user %}<span class="badge bg-primary ms-1">You</span>{% endif %}
-                                </div>
-                            </a>
-                            <a href="{% url 'dashboard:study_materials' %}?username={{ entry.user.username }}" class="text-decoration-none ms-1" title="View DSA Sheet">
-                                <i class="bi bi-journal-check text-primary fs-5 align-middle"></i>
-                            </a>
-                        </div>
-                    </td>
-                    <td><span class="badge badge-xp text-white px-2 py-1"><i class="bi bi-lightning-charge-fill"></i> {{ entry.user.xp_points }}</span></td>
-                    <td>{{ entry.total_hours }}h</td>
-                    <td>
-                        {% if entry.user.leetcode_username %}
-                        <span class="text-success fw-semibold">{{ entry.user.leetcode_easy_solved }}</span> / 
-                        <span class="text-warning fw-semibold">{{ entry.user.leetcode_medium_solved }}</span> / 
-                        <span class="text-danger fw-semibold">{{ entry.user.leetcode_hard_solved }}</span>
-                        {% else %}
-                        <span class="text-muted small">Not Linked</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ entry.completed_goals }}</td>
-                    <td><i class="bi bi-fire text-danger"></i> {{ entry.user.current_streak }}d</td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="7" class="text-center text-muted py-4">No students registered yet.</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
+{% block content %}
+<div class="space-y-8">
+    <!-- Top Filter Controls & Badges Button -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div class="inline-flex p-1.5 rounded-2xl bg-slate-900 border border-slate-800 shadow-inner flex-wrap gap-1">
+            <a href="?sort=xp" class="px-4 py-2 rounded-xl text-xs font-bold text-decoration-none transition-all flex items-center gap-2 {% if sort_by == 'xp' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}text-slate-400 hover:text-white hover:bg-slate-800/60{% endif %}">
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+                <span>XP Points</span>
+            </a>
+            <a href="?sort=hours" class="px-4 py-2 rounded-xl text-xs font-bold text-decoration-none transition-all flex items-center gap-2 {% if sort_by == 'hours' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}text-slate-400 hover:text-white hover:bg-slate-800/60{% endif %}">
+                <i class="fa-solid fa-clock text-cyan-400"></i>
+                <span>Study Hours</span>
+            </a>
+            <a href="?sort=leetcode" class="px-4 py-2 rounded-xl text-xs font-bold text-decoration-none transition-all flex items-center gap-2 {% if sort_by == 'leetcode' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}text-slate-400 hover:text-white hover:bg-slate-800/60{% endif %}">
+                <i class="fa-solid fa-code text-emerald-400"></i>
+                <span>LeetCode Solved</span>
+            </a>
+            <a href="?sort=streak" class="px-4 py-2 rounded-xl text-xs font-bold text-decoration-none transition-all flex items-center gap-2 {% if sort_by == 'streak' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}text-slate-400 hover:text-white hover:bg-slate-800/60{% endif %}">
+                <i class="fa-solid fa-fire text-amber-500"></i>
+                <span>LeetCode Streak</span>
+            </a>
+        </div>
+
+        <a href="{% url 'leaderboard:badges' %}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-amber-500/50 text-amber-400 text-xs font-bold text-decoration-none shadow-md transition-all hover:scale-105">
+            <i class="fa-solid fa-award text-base"></i>
+            <span>Achievement Badges</span>
+        </a>
+    </div>
+
+    <!-- Top 3 Podium Showcase -->
+    {% if ranked_users|length >= 3 %}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end pt-4">
+        <!-- 2nd Place (Silver) -->
+        {% with entry=ranked_users.1 %}
+        <div class="premium-card p-6 text-center relative border-slate-700/60 bg-gradient-to-b from-slate-800/80 to-slate-900">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-slate-300 text-slate-950 font-extrabold flex items-center justify-center text-sm shadow-lg border-2 border-slate-100">2</div>
+            <div class="w-16 h-16 rounded-full mx-auto mb-3 bg-slate-700 p-1 ring-4 ring-slate-400/40">
+                {% if entry.user.profile_image %}
+                <img src="{{ entry.user.profile_image.url }}" class="w-full h-full rounded-full object-cover">
+                {% else %}
+                <div class="w-full h-full rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 text-lg">
+                    {{ entry.user.username|slice:":2"|upper }}
+                </div>
+                {% endif %}
+            </div>
+            <h3 class="font-bold text-white text-base mb-0 truncate">{{ entry.user.display_name }}</h3>
+            <p class="text-xs text-slate-400 font-mono mb-2">@{{ entry.user.username }}</p>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                <i class="fa-solid fa-bolt text-amber-400"></i> {{ entry.user.xp_points }} XP
+            </span>
+        </div>
+        {% endwith %}
+
+        <!-- 1st Place (Gold Winner) -->
+        {% with entry=ranked_users.0 %}
+        <div class="premium-card p-8 text-center relative border-amber-500/50 bg-gradient-to-b from-amber-500/10 via-slate-900 to-slate-900 shadow-glow-amber scale-105 z-10">
+            <div class="absolute -top-6 left-1/2 -translate-x-1/2 text-2xl text-amber-400 animate-bounce">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-amber-400 text-slate-950 font-extrabold flex items-center justify-center text-sm shadow-xl border-2 border-amber-200 mt-2">1</div>
+            <div class="w-20 h-20 rounded-full mx-auto mb-3 bg-amber-500 p-1 ring-4 ring-amber-400/50 shadow-lg mt-2">
+                {% if entry.user.profile_image %}
+                <img src="{{ entry.user.profile_image.url }}" class="w-full h-full rounded-full object-cover">
+                {% else %}
+                <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center font-extrabold text-amber-400 text-xl">
+                    {{ entry.user.username|slice:":2"|upper }}
+                </div>
+                {% endif %}
+            </div>
+            <h3 class="font-extrabold text-white text-lg mb-0 truncate">{{ entry.user.display_name }}</h3>
+            <p class="text-xs text-amber-400 font-mono mb-3">@{{ entry.user.username }}</p>
+            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/30">
+                <i class="fa-solid fa-bolt"></i> {{ entry.user.xp_points }} XP
+            </span>
+        </div>
+        {% endwith %}
+
+        <!-- 3rd Place (Bronze) -->
+        {% with entry=ranked_users.2 %}
+        <div class="premium-card p-6 text-center relative border-amber-700/60 bg-gradient-to-b from-amber-900/20 to-slate-900">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-amber-700 text-white font-extrabold flex items-center justify-center text-sm shadow-lg border-2 border-amber-500">3</div>
+            <div class="w-16 h-16 rounded-full mx-auto mb-3 bg-amber-800 p-1 ring-4 ring-amber-700/40">
+                {% if entry.user.profile_image %}
+                <img src="{{ entry.user.profile_image.url }}" class="w-full h-full rounded-full object-cover">
+                {% else %}
+                <div class="w-full h-full rounded-full bg-slate-800 flex items-center justify-center font-bold text-amber-300 text-lg">
+                    {{ entry.user.username|slice:":2"|upper }}
+                </div>
+                {% endif %}
+            </div>
+            <h3 class="font-bold text-white text-base mb-0 truncate">{{ entry.user.display_name }}</h3>
+            <p class="text-xs text-slate-400 font-mono mb-2">@{{ entry.user.username }}</p>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                <i class="fa-solid fa-bolt text-amber-400"></i> {{ entry.user.xp_points }} XP
+            </span>
+        </div>
+        {% endwith %}
+    </div>
+    {% endif %}
+
+    <!-- Student Rankings Table -->
+    <div class="premium-card overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+            <h2 class="text-base font-bold text-white flex items-center gap-2 mb-0">
+                <i class="fa-solid fa-list-ol text-indigo-400"></i>
+                <span>Student Rankings</span>
+            </h2>
+            <span class="text-xs text-slate-400 font-mono">{{ ranked_users|length }} Total Students</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-900/80 border-b border-slate-800 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                        <th class="py-3.5 px-6">Rank</th>
+                        <th class="py-3.5 px-6">Student</th>
+                        <th class="py-3.5 px-6">XP Points</th>
+                        <th class="py-3.5 px-6">Study Hours</th>
+                        <th class="py-3.5 px-6">LeetCode (E/M/H)</th>
+                        <th class="py-3.5 px-6">Goals Done</th>
+                        <th class="py-3.5 px-6">Streak</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 text-sm">
+                    {% for entry in ranked_users %}
+                    <tr class="transition-colors hover:bg-slate-800/40 {% if entry.user == request.user %}bg-indigo-500/10 font-semibold{% endif %}">
+                        <td class="py-4 px-6 font-bold">
+                            {% if entry.rank == 1 %}<span class="text-amber-400 font-mono text-base"><i class="fa-solid fa-medal"></i> #1</span>
+                            {% elif entry.rank == 2 %}<span class="text-slate-300 font-mono text-base"><i class="fa-solid fa-medal"></i> #2</span>
+                            {% elif entry.rank == 3 %}<span class="text-amber-600 font-mono text-base"><i class="fa-solid fa-medal"></i> #3</span>
+                            {% else %}<span class="text-slate-400 font-mono">#{{ entry.rank }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <a href="{% url 'accounts:profile' %}?username={{ entry.user.username }}" class="flex items-center gap-3 text-decoration-none text-white hover:text-indigo-300 transition-colors group">
+                                    {% if entry.user.profile_image %}
+                                    <img src="{{ entry.user.profile_image.url }}" class="w-9 h-9 rounded-full object-cover ring-2 ring-slate-700 group-hover:ring-indigo-500 transition-all">
+                                    {% else %}
+                                    <div class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-slate-300 text-xs group-hover:border-indigo-500 transition-colors">
+                                        {{ entry.user.username|slice:":2"|upper }}
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <div class="font-semibold text-white group-hover:text-indigo-300 flex items-center gap-2">
+                                            <span>{{ entry.user.display_name }}</span>
+                                            {% if entry.user == request.user %}
+                                            <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-indigo-500 text-white rounded-full">You</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-xs text-slate-400 font-mono">@{{ entry.user.username }}</div>
+                                    </div>
+                                </a>
+                                <a href="{% url 'dashboard:study_materials' %}?username={{ entry.user.username }}" class="p-1.5 text-slate-400 hover:text-indigo-400 text-decoration-none" title="View DSA Progress">
+                                    <i class="fa-solid fa-file-code"></i>
+                                </a>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 font-bold text-indigo-400">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-xs font-bold text-indigo-300">
+                                <i class="fa-solid fa-bolt text-amber-400"></i> {{ entry.user.xp_points }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 text-slate-300 font-mono">{{ entry.total_hours }}h</td>
+                        <td class="py-4 px-6 font-mono text-xs">
+                            {% if entry.user.leetcode_username %}
+                            <span class="text-emerald-400 font-bold">{{ entry.user.leetcode_easy_solved }}</span> / 
+                            <span class="text-amber-400 font-bold">{{ entry.user.leetcode_medium_solved }}</span> / 
+                            <span class="text-rose-400 font-bold">{{ entry.user.leetcode_hard_solved }}</span>
+                            {% else %}
+                            <span class="text-slate-500">Not Linked</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-4 px-6 text-slate-300 font-mono">{{ entry.completed_goals }}</td>
+                        <td class="py-4 px-6 font-bold text-amber-400">
+                            <div class="flex items-center gap-1">
+                                <i class="fa-solid fa-fire text-amber-500"></i>
+                                <span>{{ entry.user.current_streak }}d</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="py-12 text-center text-slate-500 text-sm">
+                            <i class="fa-solid fa-trophy text-3xl mb-2 text-slate-600"></i>
+                            <p class="mb-0">No students registered yet.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}

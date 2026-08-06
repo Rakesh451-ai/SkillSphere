@@ -1,192 +1,195 @@
 {% extends "base.html" %}
-{% block title %}Resume Analysis & AI Recommendations - SkillSphere{% endblock %}
-{% block page_title %}Resume Analysis & AI Recommendations{% endblock %}
-
-{% block extra_css %}
-<style>
-    .rec-card {
-        border-left: 4px solid #6366f1 !important;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .rec-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    }
-    .rec-card-high { border-left-color: #ef4444 !important; }
-    .rec-card-medium { border-left-color: #f59e0b !important; }
-    .rec-card-low { border-left-color: #10b981 !important; }
-    
-    .category-filter-btn.active {
-        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%) !important;
-        color: #ffffff !important;
-        border-color: transparent !important;
-    }
-</style>
-{% endblock %}
+{% block title %}Resume Analysis & Career Recommendations - SkillSphere{% endblock %}
+{% block page_title %}Resume Analysis & Career Recommendations{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-    <div>
-        <h4 class="fw-bold mb-1"><i class="bi bi-robot text-primary me-2"></i>Resume Analysis & AI Recommendations</h4>
-        <p class="text-muted mb-0 small">AI-driven resume diagnostic, ATS section breakdown, and personalized placement growth engine.</p>
-    </div>
-    <div class="d-flex gap-2">
-        <a href="{% url 'resumeanalyzer:upload' %}?refresh_recs=1" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
-            <i class="bi bi-arrow-clockwise me-1"></i> Regenerate AI Insights
-        </a>
-    </div>
-</div>
-
-<!-- Navigation Tabs -->
-<ul class="nav nav-pills mb-4 gap-2 border-bottom pb-3" id="resumeTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active rounded-pill px-4 fw-semibold" id="analyzer-tab" data-bs-toggle="tab" data-bs-target="#analyzer-pane" type="button" role="tab">
-            <i class="bi bi-cloud-arrow-up-fill me-2"></i>Resume Analyzer & History
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link rounded-pill px-4 fw-semibold" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations-pane" type="button" role="tab">
-            <i class="bi bi-stars text-warning me-2"></i>AI Recommendations
-            {% if recommendations %}
-            <span class="badge bg-primary bg-opacity-20 text-primary ms-1">{{ recommendations|length }}</span>
-            {% endif %}
-        </button>
-    </li>
-</ul>
-
-<!-- Tab Contents -->
-<div class="tab-content" id="resumeTabsContent">
-    <!-- Tab 1: Resume Analyzer -->
-    <div class="tab-pane fade show active" id="analyzer-pane" role="tabpanel">
-        <div class="row g-4">
-            <!-- Upload Box -->
-            <div class="col-lg-6">
-                <div class="card-custom p-4 h-100">
-                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                        <i class="bi bi-file-earmark-pdf-fill text-primary"></i> Upload Resume PDF
-                    </h5>
-                    <p class="text-muted small">Upload your resume as a PDF file to run instant AI section extraction, score analysis, and placement keyword check.</p>
-                    
-                    <form method="post" enctype="multipart/form-data" class="mt-4">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label fw-medium small">Select PDF File</label>
-                            <div class="p-4 border border-2 border-dashed rounded-4 text-center bg-body-tertiary">
-                                <i class="bi bi-cloud-upload fs-1 text-primary mb-2 d-block"></i>
-                                {{ form.resume_file }}
-                                <div class="form-text mt-2">Maximum file size: 5MB. PDF (.pdf) format supported.</div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2 mt-3 fw-bold shadow-sm">
-                            <i class="bi bi-magic me-1"></i> Analyze Resume Now
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Previous Analyses -->
-            <div class="col-lg-6">
-                <div class="card-custom p-4 h-100">
-                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                        <i class="bi bi-clock-history text-info"></i> Previous Resume Evaluations
-                    </h5>
-                    <p class="text-muted small mb-3">Historical evaluation scorecards and action points from past uploads.</p>
-
-                    {% for analysis in analyses %}
-                    <a href="{% url 'resumeanalyzer:result' analysis.pk %}" class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-2 text-decoration-none border border-secondary border-opacity-25 bg-body-tertiary transition-all hover-shadow">
-                        <div>
-                            <div class="fw-semibold text-body">
-                                <i class="bi bi-file-earmark-text me-1 text-primary"></i> Resume Evaluation #{{ analysis.pk }}
-                            </div>
-                            <small class="text-muted">{{ analysis.created_at|date:"M d, Y - h:i A" }}</small>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="badge {% if analysis.score >= 70 %}bg-success{% elif analysis.score >= 40 %}bg-warning text-dark{% else %}bg-danger{% endif %} fs-6 px-3 py-2 rounded-pill">
-                                {{ analysis.score }}/100
-                            </span>
-                            <i class="bi bi-chevron-right text-muted"></i>
-                        </div>
-                    </a>
-                    {% empty %}
-                    <div class="text-center py-5">
-                        <i class="bi bi-file-earmark-x fs-1 text-muted d-block mb-2"></i>
-                        <p class="text-muted mb-0">No resumes analyzed yet.</p>
-                        <small class="text-muted">Upload your first resume using the upload box on the left!</small>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-extrabold text-white flex items-center gap-3">
+                <i class="fa-solid fa-file-invoice text-indigo-400"></i>
+                <span>Resume Analysis & Career Engine</span>
+            </h1>
+            <p class="text-sm text-slate-400 mt-1 mb-0">
+                Run automated ATS diagnostic evaluation, section breakdown, and personalized placement recommendations.
+            </p>
+        </div>
+        <div>
+            <a href="{% url 'resumeanalyzer:upload' %}?refresh_recs=1" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 text-decoration-none transition-all">
+                <i class="fa-solid fa-arrows-rotate"></i>
+                <span>Refresh Insights</span>
+            </a>
         </div>
     </div>
 
-    <!-- Tab 2: AI Recommendations -->
-    <div class="tab-pane fade" id="recommendations-pane" role="tabpanel">
-        <div class="card-custom p-4 mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                <div>
-                    <h5 class="fw-bold mb-1"><i class="bi bi-stars text-warning me-2"></i>AI Action Engine</h5>
-                    <p class="text-muted small mb-0">Personalized action points generated across DSA sheet, LeetCode, games, quizzes, and resume feedback.</p>
+    <!-- Navigation Tabs -->
+    <div class="flex items-center gap-2 border-b border-slate-800 pb-3" id="resumeTabs" role="tablist">
+        <button class="px-5 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-md shadow-indigo-600/30" id="analyzer-tab" data-bs-toggle="tab" data-bs-target="#analyzer-pane" type="button" role="tab">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Resume Diagnostic & History</span>
+        </button>
+        <button class="px-5 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations-pane" type="button" role="tab">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+            <span>Action Points</span>
+            {% if recommendations %}
+            <span class="px-2 py-0.5 text-[10px] font-extrabold bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">{{ recommendations|length }}</span>
+            {% endif %}
+        </button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="tab-content" id="resumeTabsContent">
+        <!-- Tab 1: Resume Analyzer -->
+        <div class="tab-pane fade show active" id="analyzer-pane" role="tabpanel">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Upload Box -->
+                <div class="premium-card p-6 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-file-pdf text-rose-400"></i>
+                            <span>Upload Resume PDF</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-6">
+                            Upload your resume in PDF format to run instant ATS section extraction, keyword density diagnostic, and placement score rating.
+                        </p>
+
+                        <form method="post" enctype="multipart/form-data" class="space-y-4">
+                            {% csrf_token %}
+                            <div class="p-8 rounded-2xl border-2 border-dashed border-slate-700/80 hover:border-indigo-500 bg-slate-900/60 text-center transition-all group">
+                                <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <div class="text-xs font-semibold text-slate-300 mb-2">Drag and drop your PDF resume file here, or browse</div>
+                                <div class="max-w-xs mx-auto">
+                                    {{ form.resume_file }}
+                                </div>
+                                <p class="text-[11px] text-slate-500 mt-3 mb-0">Supported file format: PDF (.pdf) • Maximum file size: 5MB</p>
+                            </div>
+
+                            <button type="submit" class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Analyze Resume & Generate Score</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <div class="d-flex gap-2 align-items-center">
-                    <span class="small text-muted fw-semibold me-1">Filter:</span>
-                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 category-filter-btn active" onclick="filterRecs('all', this)">All</button>
-                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 category-filter-btn" onclick="filterRecs('high', this)">High Priority</button>
+
+                <!-- Previous Evaluations History -->
+                <div class="premium-card p-6 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i>
+                            <span>Evaluation History</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            Historical ATS scorecards and detailed feedback reports from previous uploads.
+                        </p>
+
+                        <div class="space-y-3">
+                            {% for analysis in analyses %}
+                            <a href="{% url 'resumeanalyzer:result' analysis.pk %}" class="flex items-center justify-between p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/50 text-decoration-none transition-all group">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-indigo-400 group-hover:border-indigo-500 transition-colors">
+                                        <i class="fa-solid fa-file-circle-check text-base"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-white text-xs group-hover:text-indigo-300 transition-colors">
+                                            Resume Evaluation #{{ analysis.pk }}
+                                        </div>
+                                        <div class="text-[11px] text-slate-400 font-mono mt-0.5">
+                                            {{ analysis.created_at|date:"M d, Y • h:i A" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold font-mono {% if analysis.score >= 70 %}bg-emerald-500/20 text-emerald-300 border border-emerald-500/30{% elif analysis.score >= 40 %}bg-amber-500/20 text-amber-300 border border-amber-500/30{% else %}bg-rose-500/20 text-rose-300 border border-rose-500/30{% endif %}">
+                                        {{ analysis.score }}/100
+                                    </span>
+                                    <i class="fa-solid fa-chevron-right text-xs text-slate-500 group-hover:text-white transition-colors"></i>
+                                </div>
+                            </a>
+                            {% empty %}
+                            <div class="p-8 text-center text-slate-500 text-xs space-y-2">
+                                <i class="fa-solid fa-file-circle-xmark text-3xl text-slate-600"></i>
+                                <p class="mb-0">No resumes analyzed yet.</p>
+                                <p class="text-slate-500 text-[11px]">Upload your first resume using the upload box on the left!</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            {% if recommendations %}
-            <div class="row g-3" id="recsContainer">
-                {% for rec in recommendations %}
-                <div class="col-md-6 rec-item" data-priority="{{ rec.priority }}">
-                    <div class="p-4 rounded-4 border border-secondary border-opacity-25 bg-body-tertiary h-100 rec-card rec-card-{{ rec.priority }} d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                                <div class="d-flex align-items-center gap-2 flex-wrap">
-                                    <span class="badge {% if rec.priority == 'high' %}bg-danger{% elif rec.priority == 'low' %}bg-success{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-1">
+        <!-- Tab 2: AI Recommendations Feed -->
+        <div class="tab-pane fade" id="recommendations-pane" role="tabpanel">
+            <div class="premium-card p-6">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                            <span>Placement Recommendations</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mb-0">Personalized action points compiled from DSA progress, LeetCode sync, and resume evaluation.</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-semibold text-slate-400">Filter:</span>
+                        <button class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow-sm category-filter-btn" onclick="filterRecs('all', this)">All</button>
+                        <button class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white category-filter-btn" onclick="filterRecs('high', this)">High Priority</button>
+                    </div>
+                </div>
+
+                {% if recommendations %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="recsContainer">
+                    {% for rec in recommendations %}
+                    <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/40 transition-all flex flex-col justify-between space-y-4 rec-item" data-priority="{{ rec.priority }}">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider {% if rec.priority == 'high' %}bg-rose-500/20 text-rose-300 border border-rose-500/30{% elif rec.priority == 'low' %}bg-emerald-500/20 text-emerald-300 border border-emerald-500/30{% else %}bg-amber-500/20 text-amber-300 border border-amber-500/30{% endif %}">
                                         {{ rec.priority|title }} Priority
                                     </span>
                                     {% if rec.category %}
-                                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1">{{ rec.category }}</span>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">{{ rec.category }}</span>
                                     {% endif %}
                                 </div>
                                 {% if rec.impact_badge %}
-                                <span class="badge bg-info bg-opacity-15 text-info rounded-pill extra-small px-2 py-1">
-                                    <i class="bi bi-lightning-fill"></i> {{ rec.impact_badge }}
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                                    <i class="fa-solid fa-bolt text-amber-400"></i> {{ rec.impact_badge }}
                                 </span>
                                 {% endif %}
                             </div>
 
-                            <h6 class="fw-bold text-body mb-2 d-flex align-items-center gap-2">
-                                <i class="bi {{ rec.icon|default:'bi-lightbulb-fill' }} text-primary fs-5"></i>
-                                {{ rec.title|default:rec.category }}
-                            </h6>
+                            <h3 class="font-bold text-white text-sm flex items-center gap-2 mb-0">
+                                <i class="fa-solid fa-lightbulb text-amber-400 text-xs"></i>
+                                <span>{{ rec.title|default:rec.category }}</span>
+                            </h3>
 
-                            <p class="text-muted small mb-3">{{ rec.message }}</p>
+                            <p class="text-xs text-slate-400 leading-relaxed mb-0">{{ rec.message }}</p>
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-10">
-                            <small class="text-muted extra-small"><i class="bi bi-clock me-1"></i>Updated {{ rec.created_at|timesince }} ago</small>
+                        <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                            <span class="text-[11px] text-slate-500 font-mono"><i class="fa-regular fa-clock me-1"></i>Updated {{ rec.created_at|timesince }} ago</span>
                             {% if rec.action_url %}
-                            <a href="{{ rec.action_url }}" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold">
-                                {{ rec.action_text|default:"Take Action" }} <i class="bi bi-arrow-right-short fs-6"></i>
+                            <a href="{{ rec.action_url }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs text-decoration-none shadow-sm transition-all">
+                                <span>{{ rec.action_text|default:"Take Action" }}</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </a>
                             {% endif %}
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+                {% else %}
+                <div class="p-12 text-center text-slate-500 text-xs space-y-3">
+                    <i class="fa-solid fa-lightbulb text-4xl text-amber-400/50"></i>
+                    <h3 class="font-bold text-white text-sm mb-0">No Active Recommendations</h3>
+                    <p class="text-slate-400 max-w-sm mx-auto mb-0">Solve DSA questions or analyze your resume to generate action points.</p>
+                </div>
+                {% endif %}
             </div>
-            {% else %}
-            <div class="text-center py-5">
-                <i class="bi bi-lightbulb fs-1 text-muted d-block mb-3"></i>
-                <h6 class="fw-bold">No active recommendations</h6>
-                <p class="text-muted small">Solve DSA questions or analyze your resume to generate AI action points.</p>
-                <a href="{% url 'resumeanalyzer:upload' %}?refresh_recs=1" class="btn btn-sm btn-primary rounded-pill px-4">
-                    <i class="bi bi-magic me-1"></i> Generate AI Recommendations
-                </a>
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>
@@ -195,13 +198,17 @@
 {% block extra_js %}
 <script>
     function filterRecs(priority, btn) {
-        document.querySelectorAll('.category-filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        document.querySelectorAll('.category-filter-btn').forEach(b => {
+            b.classList.remove('bg-indigo-600', 'text-white');
+            b.classList.add('bg-slate-800', 'text-slate-300');
+        });
+        btn.classList.remove('bg-slate-800', 'text-slate-300');
+        btn.classList.add('bg-indigo-600', 'text-white');
 
         const items = document.querySelectorAll('.rec-item');
         items.forEach(item => {
             if (priority === 'all' || item.getAttribute('data-priority') === priority) {
-                item.style.display = 'block';
+                item.style.display = 'flex';
             } else {
                 item.style.display = 'none';
             }
