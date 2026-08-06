@@ -24,22 +24,32 @@ def leaderboard_view(request):
 
     users = User.objects.filter(is_active=True, is_staff=False)
 
-    if sort_by == 'streak':
-        users = users.order_by('-current_streak')
-    elif sort_by == 'leetcode':
-        from django.db.models import F
-        users = users.annotate(
-            total_leetcode=F('leetcode_easy_solved') + F('leetcode_medium_solved') + F('leetcode_hard_solved')
-        ).order_by('-total_leetcode')
-    else:
-        users = users.order_by('-xp_points')
+    from django.db.models import F
+    users = users.annotate(
+        total_leetcode=F('leetcode_easy_solved') + F('leetcode_medium_solved') + F('leetcode_hard_solved')
+    )
 
-    # Add rank numbers
+    if sort_by == 'streak':
+        users = users.order_by('-current_streak', '-total_leetcode', '-xp_points')
+    elif sort_by == 'leetcode':
+        users = users.order_by('-total_leetcode', '-current_streak', '-xp_points')
+    elif sort_by == 'hours':
+        users = users.order_by('-total_leetcode', '-xp_points', '-current_streak')
+    else:
+        users = users.order_by('-xp_points', '-current_streak', '-total_leetcode')
+
+    # Add rank numbers & calculated activity stats
     ranked_users = []
-    for i, user in enumerate(users[:50], 1):
+    for i, u in enumerate(users[:50], 1):
+        completed_dsa = len(u.completed_dsa_problems) if isinstance(u.completed_dsa_problems, list) else 0
+        game_levels = u.game_typer_level + u.game_bug_level + u.game_complexity_level + u.game_parsons_level + u.game_predictor_level
+        total_hours = round((completed_dsa * 0.5) + (u.leetcode_total_solved * 0.4) + (game_levels * 0.2), 1)
+
         ranked_users.append({
             'rank': i,
-            'user': user,
+            'user': u,
+            'completed_goals': completed_dsa,
+            'total_hours': total_hours,
         })
 
     return render(request, 'leaderboard/leaderboard.html', {

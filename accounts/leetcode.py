@@ -6,7 +6,7 @@ from django.utils import timezone
 
 def fetch_leetcode_data(username):
     """
-    Fetch LeetCode solved questions count (Easy, Medium, Hard) and recent submissions
+    Fetch LeetCode solved questions count (Easy, Medium, Hard), streak, and recent submissions
     for a given username using the public GraphQL API.
     """
     url = "https://leetcode.com/graphql/"
@@ -18,6 +18,10 @@ def fetch_leetcode_data(username):
             difficulty
             count
           }
+        }
+        userCalendar {
+          streak
+          totalActiveDays
         }
       }
       recentSubmissionList(username: $username, limit: 15) {
@@ -74,12 +78,17 @@ def fetch_leetcode_data(username):
                 elif diff == 'Hard':
                     hard_solved = count
                     
+            user_calendar = matched_user.get('userCalendar') or {}
+            lc_streak = user_calendar.get('streak', 0)
+            total_active_days = user_calendar.get('totalActiveDays', 0)
             recent_submissions = data_dict.get('recentSubmissionList', [])
             
             return {
                 "easy": easy_solved,
                 "medium": medium_solved,
                 "hard": hard_solved,
+                "streak": lc_streak,
+                "active_days": total_active_days,
                 "recent_submissions": recent_submissions
             }
     except Exception as e:
@@ -89,7 +98,7 @@ def fetch_leetcode_data(username):
 def sync_leetcode_stats(user):
     """
     Sync user's LeetCode stats, award XP points for new questions solved,
-    and update daily streak / check for daily progress.
+    and update daily streak / check for daily progress based on LeetCode activity.
     """
     if not user.leetcode_username:
         return False
@@ -101,6 +110,7 @@ def sync_leetcode_stats(user):
     easy_new = data['easy']
     medium_new = data['medium']
     hard_new = data['hard']
+    lc_streak = data.get('streak', 0)
     
     # Calculate XP earned from new questions
     # Award: Easy = 2 XP, Medium = 5 XP, Hard = 10 XP
@@ -119,6 +129,12 @@ def sync_leetcode_stats(user):
     user.leetcode_hard_solved = max(user.leetcode_hard_solved, hard_new)
     user.leetcode_last_sync = timezone.now()
     
+    # Update LeetCode streak directly if returned from API
+    if lc_streak > 0:
+        user.current_streak = max(user.current_streak, lc_streak)
+        if user.current_streak > user.longest_streak:
+            user.longest_streak = user.current_streak
+
     # Track daily progress according to recent submissions
     today_date = timezone.localdate()
     yesterday_date = today_date - timezone.timedelta(days=1)
@@ -130,7 +146,7 @@ def sync_leetcode_stats(user):
         
     # Check if they solved an accepted question today
     solved_today = False
-    for sub in data['recent_submissions']:
+    for sub in data.get('recent_submissions', []):
         if sub.get('statusDisplay') == 'Accepted':
             slug = sub.get('titleSlug')
             if slug and slug not in completed_problems:
@@ -149,21 +165,20 @@ def sync_leetcode_stats(user):
     if solved_today:
         # User solved a question today!
         if user.last_activity_date == yesterday_date:
-            user.current_streak += 1
+            user.current_streak = max(user.current_streak, user.current_streak + 1)
         elif user.last_activity_date != today_date:
-            user.current_streak = 1
+            user.current_streak = max(user.current_streak, 1)
         user.last_activity_date = today_date
         
         if user.current_streak > user.longest_streak:
             user.longest_streak = user.current_streak
     else:
-        # Not solved today. Check if streak has broken
-        if user.last_activity_date and user.last_activity_date < yesterday_date:
+        # Not solved today. Check if streak has broken (if no API streak reported)
+        if lc_streak == 0 and user.last_activity_date and user.last_activity_date < yesterday_date:
             user.current_streak = 0
             
         # Subtract points if they did not solve today and haven't been penalized today
         if user.leetcode_last_penalty_date != today_date:
-            # Deduct 5 XP points, ensuring XP doesn't drop below 0
             user.xp_points = max(0, user.xp_points - 5)
             user.leetcode_last_penalty_date = today_date
             

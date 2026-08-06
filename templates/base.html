@@ -145,16 +145,34 @@
 
         /* Sidebar Styling (Modern Dark Glassmorphism) */
         .sidebar {
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
             background: var(--sidebar-bg);
             width: 260px;
             position: fixed;
             left: 0;
             top: 0;
             z-index: 100;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease;
             border-right: 1px solid rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(16px);
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
         .sidebar .brand-logo {
             font-size: 1.4rem;
@@ -265,29 +283,29 @@
             box-shadow: 0 3px 10px rgba(99, 102, 241, 0.25);
         }
 
-        /* Top-Right Theme Toggle Switch */
+        /* Top-Right Theme Toggle Switch (Compact Icon-Only) */
         .theme-toggle-btn {
             background: var(--toggle-btn-bg);
             color: var(--toggle-btn-color) !important;
             border: 1px solid var(--toggle-border);
-            border-radius: 50rem;
-            padding: 0.45rem 1.1rem;
-            font-size: 0.85rem;
-            font-weight: 700;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            padding: 0;
             display: inline-flex;
             align-items: center;
-            gap: 0.55rem;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .theme-toggle-btn:hover {
-            transform: translateY(-2px) scale(1.03);
+            transform: translateY(-2px) scale(1.08);
             box-shadow: 0 6px 18px rgba(99, 102, 241, 0.25);
         }
         .theme-toggle-btn i {
-            font-size: 1rem;
+            font-size: 1.15rem;
             transition: transform 0.3s ease;
         }
         .theme-toggle-btn:hover i {
@@ -415,9 +433,8 @@
                 <span class="fw-semibold d-none d-md-inline">{{ user.display_name }}</span>
 
                 <!-- Top Right Dark/Bright Section Toggle Switch -->
-                <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark / Bright Theme">
+                <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Switch Theme">
                     <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
-                    <span id="themeText">Dark Theme</span>
                 </button>
             </div>
         </div>
@@ -438,9 +455,8 @@
     
     <!-- Top-Right Floating Theme Toggle Switch for Public/Landing/Login Pages -->
     <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
-        <button class="theme-toggle-btn shadow" id="publicThemeToggleBtn" onclick="toggleTheme()" title="Toggle Dark / Bright Theme">
+        <button class="theme-toggle-btn shadow" id="publicThemeToggleBtn" onclick="toggleTheme()" title="Switch Theme">
             <i class="bi bi-moon-stars-fill" id="publicThemeIcon"></i>
-            <span id="publicThemeText">Dark Theme</span>
         </button>
     </div>
 
@@ -455,20 +471,24 @@
 
             const isDark = theme === 'dark';
             const iconClass = isDark ? 'bi bi-sun-fill text-warning' : 'bi bi-moon-stars-fill';
-            const text = isDark ? 'Bright Mode' : 'Dark Mode';
+            const titleText = isDark ? 'Switch to Bright Mode' : 'Switch to Dark Mode';
 
+            const btn = document.getElementById('themeToggleBtn');
             const btnIcon = document.getElementById('themeIcon');
-            const btnText = document.getElementById('themeText');
-            if (btnIcon && btnText) {
+            if (btnIcon) {
                 btnIcon.className = iconClass;
-                btnText.textContent = text;
+            }
+            if (btn) {
+                btn.title = titleText;
             }
 
+            const pubBtn = document.getElementById('publicThemeToggleBtn');
             const pubIcon = document.getElementById('publicThemeIcon');
-            const pubText = document.getElementById('publicThemeText');
-            if (pubIcon && pubText) {
+            if (pubIcon) {
                 pubIcon.className = iconClass;
-                pubText.textContent = text;
+            }
+            if (pubBtn) {
+                pubBtn.title = titleText;
             }
         }
 

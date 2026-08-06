@@ -315,46 +315,157 @@
                 </div>
             </div>
 
-            <!-- DSA TAB -->
+            <!-- DSA TAB: SIMPLE LOGIC FOR ALL IMPORTANT ALGORITHMS & PATTERNS -->
             <div class="tab-pane fade" id="dsa-content" role="tabpanel">
                 <div class="row g-4">
-                    <div class="col-md-6">
+                    <!-- Top Essential Algorithm Patterns & Simple Logic -->
+                    <div class="col-lg-7">
                         <div class="card-custom p-4 h-100">
-                            <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-compass-fill me-2"></i>DSA Roadmap</h5>
-                            <ul class="roadmap-list">
-                                <li><strong>Arrays & Strings</strong>: Basic manipulation, two pointers, sliding window.</li>
-                                <li><strong>Linked Lists</strong>: Node definitions, reversal, cycle detection.</li>
-                                <li><strong>Stacks & Queues</strong>: LIFO/FIFO patterns, mononotic stacks.</li>
-                                <li><strong>Trees & Graphs</strong>: DFS, BFS, Binary Search Trees, Graph Traversals.</li>
-                                <li><strong>Dynamic Programming</strong>: Recursion memoization, knapsack, LCS.</li>
-                            </ul>
-                            <div class="alert alert-info mt-3 small mb-0">
-                                <i class="bi bi-lightbulb-fill me-1"></i> Consistent focus on Big-O space and time complexity is crucial for technical rounds.
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-cpu-fill me-2"></i>Core Algorithm Patterns & Simple Logic</h5>
+                                <span class="badge bg-primary bg-opacity-20 text-primary rounded-pill px-3 py-1 extra-small fw-bold">Cheat Sheet</span>
+                            </div>
+                            
+                            <div class="accordion accordion-flush" id="patternAccordion">
+                                <!-- Pattern 1: Two Pointers -->
+                                <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+                                    <h6 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-transparent text-body fw-bold py-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#pat1">
+                                            <i class="bi bi-arrow-left-right text-info me-2"></i>1. Two Pointers Pattern <span class="badge bg-success bg-opacity-15 text-success ms-2 extra-small">O(N) Time | O(1) Space</span>
+                                        </button>
+                                    </h6>
+                                    <div id="pat1" class="accordion-collapse collapse" data-bs-parent="#patternAccordion">
+                                        <div class="pb-3 text-muted small">
+                                            <strong>Simple Logic:</strong> Place <code>L=0</code> and <code>R=N-1</code>. Move <code>L++</code> if sum is too small; <code>R--</code> if sum is too large.<br>
+                                            <strong>Key Use Cases:</strong> Two Sum Sorted, 3Sum, Valid Palindrome, Container With Most Water, Trapping Rainwater.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pattern 2: Sliding Window -->
+                                <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+                                    <h6 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-transparent text-body fw-bold py-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#pat2">
+                                            <i class="bi bi-border-style text-warning me-2"></i>2. Sliding Window Pattern <span class="badge bg-success bg-opacity-15 text-success ms-2 extra-small">O(N) Time</span>
+                                        </button>
+                                    </h6>
+                                    <div id="pat2" class="accordion-collapse collapse" data-bs-parent="#patternAccordion">
+                                        <div class="pb-3 text-muted small">
+                                            <strong>Simple Logic:</strong> Expand <code>right</code> pointer to include elements into window. When constraint is violated (e.g. duplicate character), shrink <code>left</code> pointer until valid again.<br>
+                                            <strong>Key Use Cases:</strong> Longest Substring Without Repeating Chars, Min Window Substring, Max Sum Subarray of K size.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pattern 3: Fast & Slow Pointers (Floyd's Cycle) -->
+                                <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+                                    <h6 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-transparent text-body fw-bold py-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#pat3">
+                                            <i class="bi bi-speedometer text-danger me-2"></i>3. Fast & Slow Pointers <span class="badge bg-success bg-opacity-15 text-success ms-2 extra-small">O(N) Time | O(1) Space</span>
+                                        </button>
+                                    </h6>
+                                    <div id="pat3" class="accordion-collapse collapse" data-bs-parent="#patternAccordion">
+                                        <div class="pb-3 text-muted small">
+                                            <strong>Simple Logic:</strong> Move <code>slow</code> by 1 step (<code>slow.next</code>) and <code>fast</code> by 2 steps (<code>fast.next.next</code>). If <code>slow == fast</code>, a cycle exists!<br>
+                                            <strong>Key Use Cases:</strong> Linked List Cycle Detection, Happy Number, Find Middle Node, Find Duplicate Number.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pattern 4: Monotonic Stack -->
+                                <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+                                    <h6 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-transparent text-body fw-bold py-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#pat4">
+                                            <i class="bi bi-layers-fill text-primary me-2"></i>4. Monotonic Stack Pattern <span class="badge bg-success bg-opacity-15 text-success ms-2 extra-small">O(N) Time</span>
+                                        </button>
+                                    </h6>
+                                    <div id="pat4" class="accordion-collapse collapse" data-bs-parent="#patternAccordion">
+                                        <div class="pb-3 text-muted small">
+                                            <strong>Simple Logic:</strong> Keep stack elements in strictly increasing or decreasing order. Before pushing element <code>x</code>, pop all smaller/larger top elements. Popped elements found their answer!<br>
+                                            <strong>Key Use Cases:</strong> Daily Temperatures, Next Greater Element, Largest Rectangle in Histogram, Trapping Water.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pattern 5: Binary Search Range -->
+                                <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+                                    <h6 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-transparent text-body fw-bold py-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#pat5">
+                                            <i class="bi bi-search text-info me-2"></i>5. Binary Search Range <span class="badge bg-info bg-opacity-15 text-info ms-2 extra-small">O(log N) Time</span>
+                                        </button>
+                                    </h6>
+                                    <div id="pat5" class="accordion-collapse collapse" data-bs-parent="#patternAccordion">
+                                        <div class="pb-3 text-muted small">
+                                            <strong>Simple Logic:</strong> Calculate <code>mid = low + (high - low) // 2</code>. Test <code>isValid(mid)</code>. If true, record <code>ans = mid</code> and eliminate 50% search space.<br>
+                                            <strong>Key Use Cases:</strong> Search in Rotated Array, Koko Bananas, Capacity To Ship Packages within D Days.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pattern 6: Top-K Heap -->
+                                <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+                                    <h6 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-transparent text-body fw-bold py-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#pat6">
+                                            <i class="bi bi-pyramid text-warning me-2"></i>6. Top-K Heap / Priority Queue <span class="badge bg-warning bg-opacity-15 text-warning ms-2 extra-small">O(N log K) Time</span>
+                                        </button>
+                                    </h6>
+                                    <div id="pat6" class="accordion-collapse collapse" data-bs-parent="#patternAccordion">
+                                        <div class="pb-3 text-muted small">
+                                            <strong>Simple Logic:</strong> Maintain a Min-Heap of fixed size <code>K</code>. Push elements; if size exceeds <code>K</code>, pop smallest element. Heap keeps the Top-K largest!<br>
+                                            <strong>Key Use Cases:</strong> Kth Largest Element, Top K Frequent Words, Merge K Sorted Lists, Median Stream.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pattern 7: Backtracking Template -->
+                                <div class="accordion-item bg-transparent border-0">
+                                    <h6 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-transparent text-body fw-bold py-3 px-0" type="button" data-bs-toggle="collapse" data-bs-target="#pat7">
+                                            <i class="bi bi-diagram-3-fill text-danger me-2"></i>7. Backtracking Pattern <span class="badge bg-danger bg-opacity-15 text-danger ms-2 extra-small">O(2^N) / O(N!) Time</span>
+                                        </button>
+                                    </h6>
+                                    <div id="pat7" class="accordion-collapse collapse" data-bs-parent="#patternAccordion">
+                                        <div class="pb-3 text-muted small">
+                                            <strong>Simple Logic:</strong> <code>def solve(state):</code> 1) Base case check & save result, 2) Loop choices: <strong>Make Choice &rarr; Recurse &rarr; Undo Choice (Backtrack)</strong>.<br>
+                                            <strong>Key Use Cases:</strong> Subsets, Permutations, Combination Sum, N-Queens, Word Search.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+
+                    <!-- Right Column: Pattern Questions & Matrix/Pattern Printing Simple Logic -->
+                    <div class="col-lg-5">
                         <div class="card-custom p-4 h-100">
-                            <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-file-code-fill me-2"></i>Binary Search Template</h5>
-                            <pre class="bg-dark text-light p-3 rounded small mb-0" style="overflow:auto;"><code>def binary_search(arr, target):
-    low = 0
-    high = len(arr) - 1
-    
-    while low <= high:
-        mid = low + (high - low) // 2
-        if arr[mid] == target:
-            return mid
-        elif arr[mid] < target:
-            low = mid + 1
-        else:
-            high = mid - 1
-            
-    return -1 # Not found</code></pre>
+                            <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Pattern Questions & Matrix Logic</h5>
+                            
+                            <div class="mb-3 p-3 rounded-3 bg-body-tertiary border border-secondary border-opacity-25">
+                                <h6 class="fw-bold mb-1 text-warning"><i class="bi bi-star-fill me-1"></i>1. Star Pyramid / Diamond Pattern</h6>
+                                <p class="small text-muted mb-0">For row <code>i</code> (1 to N): Print <code>N - i</code> spaces, then <code>2*i - 1</code> stars.</p>
+                            </div>
+
+                            <div class="mb-3 p-3 rounded-3 bg-body-tertiary border border-secondary border-opacity-25">
+                                <h6 class="fw-bold mb-1 text-info"><i class="bi bi-table me-1"></i>2. Spiral Matrix Traversal</h6>
+                                <p class="small text-muted mb-0">Maintain 4 boundary variables: <code>top, bottom, left, right</code>. Traverse Right &rarr; Down &rarr; Left &rarr; Up, then shrink boundaries inward.</p>
+                            </div>
+
+                            <div class="mb-3 p-3 rounded-3 bg-body-tertiary border border-secondary border-opacity-25">
+                                <h6 class="fw-bold mb-1 text-success"><i class="bi bi-calculator me-1"></i>3. Pascal Triangle Matrix</h6>
+                                <p class="small text-muted mb-0">Matrix cell <code>val[i][j] = val[i-1][j-1] + val[i-1][j]</code>. Boundaries <code>j=0</code> & <code>j=i</code> are always 1.</p>
+                            </div>
+
+                            <div class="p-3 rounded-3 bg-body-tertiary border border-secondary border-opacity-25">
+                                <h6 class="fw-bold mb-1 text-danger"><i class="bi bi-diagram-2-fill me-1"></i>4. Dynamic Programming 0/1 Knapsack</h6>
+                                <p class="small text-muted mb-0">State <code>dp[i][w]</code> = max profit using items 1..i and weight limit w. <code>dp[i][w] = max(include, exclude)</code>.</p>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Bottom Section: Top Free Interactive DSA Sheets -->
                     <div class="col-12">
                         <div class="card-custom p-4">
-                            <h5 class="fw-bold mb-3"><i class="bi bi-grid-3x3-gap-fill text-warning me-2"></i>Top 5 Free Interactive DSA Sheets</h5>
+                            <h5 class="fw-bold mb-3"><i class="bi bi-grid-3x3-gap-fill text-warning me-2"></i>Top Free Interactive DSA Sheets</h5>
                             <div class="row row-cols-1 row-cols-lg-5 row-cols-md-3 g-3">
                                 <div class="col">
                                     <a href="https://www.naukri.com/code360/problem-lists/striver-sde-sheet-problems" target="_blank" class="card p-3 text-decoration-none resource-card h-100">

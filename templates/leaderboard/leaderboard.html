@@ -7,7 +7,7 @@
         <a href="?sort=xp" class="btn btn-{% if sort_by == 'xp' %}primary{% else %}outline-primary{% endif %}">XP Points</a>
         <a href="?sort=hours" class="btn btn-{% if sort_by == 'hours' %}primary{% else %}outline-primary{% endif %}">Study Hours</a>
         <a href="?sort=leetcode" class="btn btn-{% if sort_by == 'leetcode' %}primary{% else %}outline-primary{% endif %}">LeetCode Solved</a>
-        <a href="?sort=streak" class="btn btn-{% if sort_by == 'streak' %}primary{% else %}outline-primary{% endif %}">Streaks</a>
+        <a href="?sort=streak" class="btn btn-{% if sort_by == 'streak' %}primary{% else %}outline-primary{% endif %}"><i class="bi bi-fire"></i> LeetCode Streak</a>
     </div>
     <a href="{% url 'leaderboard:badges' %}" class="btn btn-outline-primary"><i class="bi bi-award"></i> Badges</a>
 </div>
@@ -23,7 +23,7 @@
                     <th>Study Hours</th>
                     <th>LeetCode (E/M/H)</th>
                     <th>Goals Done</th>
-                    <th>Streak</th>
+                    <th>LeetCode Streak</th>
                 </tr>
             </thead>
             <tbody>
