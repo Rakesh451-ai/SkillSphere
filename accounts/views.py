@@ -10,13 +10,6 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Automatic Admin grant for target usernames or if no superuser exists
-            from accounts.models import User
-            admin_targets = ['admin', 'admin_user', 'ayush', 'test', 'rakesh']
-            if user.username.lower() in admin_targets or User.objects.filter(is_superuser=True).count() <= 1:
-                user.is_staff = True
-                user.is_superuser = True
-                user.save()
             login(request, user)
             messages.success(request, 'Account created successfully!')
             return redirect('dashboard:home')
@@ -30,14 +23,6 @@ def login_view(request):
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            # Ensure admin status on login for master usernames or if system lacks superuser
-            from accounts.models import User
-            admin_targets = ['admin', 'admin_user', 'ayush', 'test', 'rakesh']
-            if user.username.lower() in admin_targets or User.objects.filter(is_superuser=True).count() == 0:
-                if not user.is_staff or not user.is_superuser:
-                    user.is_staff = True
-                    user.is_superuser = True
-                    user.save()
             login(request, user)
             messages.success(request, f'Welcome back, {user.display_name}!')
             return redirect('dashboard:home')

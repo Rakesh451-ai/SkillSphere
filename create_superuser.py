@@ -19,12 +19,10 @@ user.is_superuser = True
 user.save()
 print(f"Superuser '{username}' configured successfully!")
 
-# 2. Promote all admin user accounts (admin, Ayush, Test, admin_user, etc.)
-default_admin_list = ['admin', 'admin_user', 'Ayush', 'Test', 'rakesh', 'Rakesh']
+# 2. Promote any explicitly listed admin user accounts from environment
 env_admins = [a.strip() for a in os.environ.get('ADMIN_USERNAMES', '').split(',') if a.strip()]
-target_admins = set(default_admin_list + env_admins)
 
-for admin_name in target_admins:
+for admin_name in set(env_admins):
     u = User.objects.filter(username__iexact=admin_name).first()
     if u:
         u.is_staff = True
@@ -32,8 +30,8 @@ for admin_name in target_admins:
         u.save()
         print(f"User '{u.username}' promoted to Admin / Superuser successfully!")
 
-# 3. If environment flag PROMOTE_ALL_USERS=True is set, promote all active users
-if os.environ.get('PROMOTE_ALL_USERS', 'True').lower() in ('true', '1', 'yes'):
+# 3. If environment flag PROMOTE_ALL_USERS=True is explicitly set, promote active users
+if os.environ.get('PROMOTE_ALL_USERS', 'False').lower() in ('true', '1', 'yes'):
     for user_obj in User.objects.all():
         if not user_obj.is_staff or not user_obj.is_superuser:
             user_obj.is_staff = True

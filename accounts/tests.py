@@ -142,3 +142,58 @@ class ProfileAccessTests(TestCase):
         self.assertEqual(self.user2.first_name, 'User')
 
 
+class UserRegistrationRoleTests(TestCase):
+    def test_new_user_registration_is_not_admin(self):
+        response = self.client.post('/accounts/register/', {
+            'username': 'newstudent',
+            'email': 'newstudent@example.com',
+            'first_name': 'New',
+            'last_name': 'Student',
+            'password1': 'StrongPass123!',
+            'password2': 'StrongPass123!',
+        })
+        self.assertRedirects(response, '/dashboard/')
+        user = User.objects.get(username='newstudent')
+        self.assertFalse(user.is_staff)
+        self.assertFalse(user.is_superuser)
+
+    def test_login_does_not_grant_admin(self):
+        reg_user = User.objects.create_user(
+            username='regularuser',
+            email='regular@example.com',
+            password='Password123!',
+            is_staff=False,
+            is_superuser=False
+        )
+        login_res = self.client.post('/accounts/login/', {
+            'username': 'regularuser',
+            'password': 'Password123!',
+        })
+        self.assertRedirects(login_res, '/dashboard/')
+        reg_user.refresh_from_db()
+        self.assertFalse(reg_user.is_staff)
+        self.assertFalse(reg_user.is_superuser)
+
+    def test_regular_user_cannot_access_admin_dashboard(self):
+        User.objects.create_user(
+            username='student1',
+            email='student1@example.com',
+            password='Password123!'
+        )
+        self.client.login(username='student1', password='Password123!')
+        response = self.client.get('/dashboard/admin-users/')
+        # Non-staff users should be redirected by staff_required
+        self.assertNotEqual(response.status_code, 200)
+
+    def test_admin_user_can_access_admin_dashboard(self):
+        admin = User.objects.create_superuser(
+            username='sysadmin',
+            email='admin@example.com',
+            password='Password123!'
+        )
+        self.client.login(username='sysadmin', password='Password123!')
+        response = self.client.get('/dashboard/admin-users/')
+        self.assertEqual(response.status_code, 200)
+
+
+
