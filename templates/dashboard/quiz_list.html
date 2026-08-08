@@ -53,6 +53,25 @@
         border-radius: 16px;
         padding: 16px 20px;
     }
+
+    #quizSearchInput {
+        background-color: #0f172a !important;
+        color: #f8fafc !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        font-weight: 500;
+    }
+    #quizSearchInput::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1;
+        font-weight: 500;
+    }
+
+    .badge-topic-tag {
+        background: rgba(99, 102, 241, 0.25) !important;
+        border: 1px solid rgba(99, 102, 241, 0.5) !important;
+        color: #a5b4fc !important;
+        font-weight: 700 !important;
+    }
 </style>
 {% endblock %}
 
@@ -138,9 +157,9 @@
             </div>
         </div>
         <div class="col-md-5">
-            <div class="input-group input-group-sm">
-                <span class="input-group-text bg-body-tertiary border-secondary border-opacity-25"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" class="form-control bg-body-tertiary border-secondary border-opacity-25 text-body" id="quizSearchInput" placeholder="Search quiz topic (e.g. Array, LinkedList, Graph, DP)..." onkeyup="searchQuizzes()">
+            <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary border-opacity-25 text-warning"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" id="quizSearchInput" placeholder="Search quiz topic (e.g. Array, LinkedList, Graph, DP)..." onkeyup="searchQuizzes()">
             </div>
         </div>
     </div>
@@ -153,8 +172,8 @@
         <div class="quiz-card p-4 h-100 d-flex flex-column justify-content-between">
             <div>
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-pill extra-small fw-bold">
-                        <i class="bi bi-tag-fill me-1"></i>{{ q.topic }}
+                    <span class="badge badge-topic-tag px-3 py-1 rounded-pill extra-small fw-bold">
+                        <i class="bi bi-tag-fill me-1 text-warning"></i>{{ q.topic }}
                     </span>
                     
                     {% if not q.is_live %}
