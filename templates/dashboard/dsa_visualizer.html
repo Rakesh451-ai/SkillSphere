@@ -116,16 +116,26 @@
     <!-- Right Column: Interactive Visual Step-by-Step Studio -->
     <div class="col-lg-8" id="rightWorkspaceColumn">
         <div class="card-custom p-4">
-            <!-- Topic Header -->
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                <div>
-                    <h5 class="fw-bold mb-1 text-white" id="topicTitle"><i class="bi bi-grid-fill text-warning me-2"></i>1. Binary Search Algorithm</h5>
-                    <small class="text-muted fw-semibold me-2">Asked in:</small>
-                    <span class="badge bg-danger bg-opacity-15 text-danger rounded-pill px-3 py-1 extra-small fw-bold" id="exampleQuestionCompany">Amazon, Meta, Google</span>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-success bg-opacity-20 text-success rounded-pill px-3 py-1 extra-small fw-bold" id="topicTimeBadge">Time: O(log N)</span>
-                    <span class="badge bg-info bg-opacity-20 text-info rounded-pill px-3 py-1 extra-small fw-bold" id="topicSpaceBadge">Space: O(1)</span>
+            <!-- Topic Header Banner Box -->
+            <div class="p-3 rounded-4 bg-body-tertiary border border-secondary border-opacity-25 mb-4 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h4 class="fw-bold mb-2 text-white" id="topicTitle">
+                            <i class="bi bi-grid-fill text-warning me-2"></i>1. Binary Search Algorithm
+                        </h4>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <small class="text-muted fw-bold me-1"><i class="bi bi-building text-danger me-1"></i>Asked In:</small>
+                            <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50 rounded-pill px-3 py-1 fw-bold extra-small" id="exampleQuestionCompany">Amazon, Meta, Google</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 rounded-pill px-3 py-2 fw-bold extra-small" id="topicTimeBadge">
+                            <i class="bi bi-clock-history me-1"></i>Time: O(log N)
+                        </span>
+                        <span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-50 rounded-pill px-3 py-2 fw-bold extra-small" id="topicSpaceBadge">
+                            <i class="bi bi-memory me-1"></i>Space: O(1)
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -995,6 +1005,16 @@
         container.innerHTML = html;
     }
 
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
     function selectTopic(key, element) {
         currentTopicKey = key;
         currentStepIndex = 0;
@@ -1010,11 +1030,11 @@
         const data = TOPIC_THEORY_DATA[key];
         if (!data) return;
 
-        document.getElementById('topicTitle').textContent = data.title;
+        document.getElementById('topicTitle').innerHTML = `<i class="bi bi-grid-fill text-warning me-2"></i>${escapeHtml(data.title)}`;
         document.getElementById('exampleQuestionCompany').textContent = data.companyTags;
-        document.getElementById('topicTimeBadge').textContent = `Time: ${data.timeComplexity}`;
-        document.getElementById('topicSpaceBadge').textContent = `Space: ${data.spaceComplexity}`;
-        document.getElementById('activeTopicBadge').textContent = data.title;
+        document.getElementById('topicTimeBadge').innerHTML = `<i class="bi bi-clock-history me-1"></i>Time: ${escapeHtml(data.timeComplexity)}`;
+        document.getElementById('topicSpaceBadge').innerHTML = `<i class="bi bi-memory me-1"></i>Space: ${escapeHtml(data.spaceComplexity)}`;
+        document.getElementById('activeTopicBadge').innerHTML = `<i class="bi bi-play-circle-fill me-1"></i>${escapeHtml(data.title)}`;
 
         document.getElementById('exampleQuestionProblem').textContent = data.problem;
         document.getElementById('exampleInputText').textContent = data.input;
