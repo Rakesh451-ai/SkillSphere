@@ -2016,16 +2016,10 @@ def seed_quizzes(force=False):
                 description=item["description"],
                 start_time=start_time,
                 end_time=end_time,
-                is_live=True,
+                is_live=False,
                 total_xp=250
             )
             created_quizzes_count += 1
-        else:
-            # Ensure quiz stays live permanently
-            quiz.is_live = True
-            quiz.start_time = start_time
-            quiz.end_time = end_time
-            quiz.save()
 
         # Check existing questions
         if quiz.questions.count() < len(item["questions"]):

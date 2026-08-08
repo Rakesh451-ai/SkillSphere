@@ -20,9 +20,21 @@
         <div class="admin-quiz-card p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
                 <h3 class="fw-bold mb-1"><i class="bi bi-shield-lock-fill text-warning me-2"></i>Admin Quiz Conduct Portal</h3>
-                <p class="text-muted mb-0">Create single-choice, multiple-choice, or text-answer quizzes, schedule start/end times, and broadcast live to all students.</p>
+                <p class="text-muted mb-0">Publish quizzes live for students, schedule start/end times, and manage question banks.</p>
             </div>
-            <div>
+            <div class="d-flex gap-2 flex-wrap">
+                <form method="POST" action="{% url 'dashboard:admin_quiz_publish_all' %}" onsubmit="return confirm('Publish all 15 DSA quizzes live for students?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success text-dark fw-bold px-3 py-2 rounded-3">
+                        <i class="bi bi-broadcast me-1"></i>Publish All Live
+                    </button>
+                </form>
+                <form method="POST" action="{% url 'dashboard:admin_quiz_unpublish_all' %}" onsubmit="return confirm('Unpublish all quizzes (move to draft)?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-secondary px-3 py-2 rounded-3">
+                        <i class="bi bi-eye-slash me-1"></i>Unpublish All
+                    </button>
+                </form>
                 <button class="btn btn-warning px-4 py-2 rounded-3 fw-bold" data-bs-toggle="modal" data-bs-target="#createQuizModal">
                     <i class="bi bi-plus-circle-fill me-2"></i>Create New Quiz
                 </button>
@@ -54,12 +66,12 @@
                                 <div class="small text-muted">{{ q.description|truncatewords:8 }}</div>
                             </td>
                             <td>
-                                {% if q.status == 'live' %}
+                                {% if not q.is_live %}
+                                    <span class="badge bg-secondary px-3 py-2 rounded-pill"><i class="bi bi-pencil me-1"></i>Draft (Hidden)</span>
+                                {% elif q.status == 'live' %}
                                     <span class="badge bg-success px-3 py-2 rounded-pill fw-bold"><i class="bi bi-broadcast me-1"></i>Live Now</span>
                                 {% elif q.status == 'upcoming' %}
                                     <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold"><i class="bi bi-clock-history me-1"></i>Upcoming</span>
-                                {% elif q.status == 'draft' %}
-                                    <span class="badge bg-secondary px-3 py-2 rounded-pill"><i class="bi bi-pencil me-1"></i>Draft</span>
                                 {% else %}
                                     <span class="badge bg-dark px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i>Ended</span>
                                 {% endif %}
@@ -69,9 +81,22 @@
                             <td class="fw-bold text-info">{{ q.questions.count }} Qs</td>
                             <td class="fw-bold text-warning">{{ q.submissions.count }} Users</td>
                             <td class="text-end pe-4">
-                                <div class="d-flex gap-2 justify-content-end">
+                                <div class="d-flex gap-2 justify-content-end align-items-center">
+                                    <form method="POST" action="{% url 'dashboard:admin_quiz_toggle_live' q.id %}">
+                                        {% csrf_token %}
+                                        {% if q.is_live and q.status == 'live' %}
+                                            <button type="submit" class="btn btn-sm btn-outline-warning rounded-pill px-3" title="Unpublish this quiz">
+                                                <i class="bi bi-pause-circle me-1"></i>Unpublish
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-sm btn-success text-dark fw-bold rounded-pill px-3" title="Make this quiz Live for students">
+                                                <i class="bi bi-broadcast me-1"></i>Publish / Make Live
+                                            </button>
+                                        {% endif %}
+                                    </form>
+
                                     <a href="{% url 'dashboard:admin_quiz_edit' q.id %}" class="btn btn-sm btn-outline-info rounded-pill px-3">
-                                        <i class="bi bi-pencil-square me-1"></i>Edit & Questions
+                                        <i class="bi bi-pencil-square me-1"></i>Edit
                                     </a>
                                     <form method="POST" action="{% url 'dashboard:admin_quiz_delete' q.id %}" onsubmit="return confirm('Delete this quiz?');">
                                         {% csrf_token %}

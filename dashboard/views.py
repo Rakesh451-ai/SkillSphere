@@ -947,13 +947,19 @@ def quiz_list(request):
         except Exception:
             pass
 
+    user_submissions = {s.quiz_id: s for s in QuizSubmission.objects.filter(user=request.user)}
+
     # Only show quizzes allowed/published by admin (is_live=True) unless user is staff
     if request.user.is_staff:
         quizzes = Quiz.objects.all().prefetch_related('questions', 'submissions')
     else:
-        quizzes = Quiz.objects.filter(is_live=True).prefetch_related('questions', 'submissions')
-
-    user_submissions = {s.quiz_id: s for s in QuizSubmission.objects.filter(user=request.user)}
+        # Students see ONLY published quizzes (is_live=True) that are currently Live or Upcoming or previously completed
+        all_published = Quiz.objects.filter(is_live=True).prefetch_related('questions', 'submissions')
+        visible_quiz_ids = []
+        for q in all_published:
+            if q.status in ['live', 'upcoming'] or q.id in user_submissions:
+                visible_quiz_ids.append(q.id)
+        quizzes = Quiz.objects.filter(id__in=visible_quiz_ids).prefetch_related('questions', 'submissions')
 
     context = {
         'quizzes': quizzes,
@@ -1171,6 +1177,44 @@ def admin_quiz_delete(request, quiz_id):
     title = quiz.title
     quiz.delete()
     messages.success(request, f'Quiz "{title}" deleted.')
+    return redirect('dashboard:admin_quiz_list')
+
+
+@staff_required
+def admin_quiz_toggle_live(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    now = timezone.now()
+
+    if quiz.is_live and quiz.status == 'live':
+        quiz.is_live = False
+        quiz.save()
+        messages.info(request, f'Quiz "{quiz.title}" has been unpublished and moved to Draft mode.')
+    else:
+        quiz.is_live = True
+        quiz.start_time = now - timezone.timedelta(minutes=5)
+        quiz.end_time = now + timezone.timedelta(days=30)
+        quiz.save()
+        messages.success(request, f'Quiz "{quiz.title}" is now LIVE and published for all students!')
+
+    return redirect('dashboard:admin_quiz_list')
+
+
+@staff_required
+def admin_quiz_publish_all(request):
+    now = timezone.now()
+    Quiz.objects.all().update(
+        is_live=True,
+        start_time=now - timezone.timedelta(minutes=5),
+        end_time=now + timezone.timedelta(days=30)
+    )
+    messages.success(request, 'All 15 DSA quizzes have been published and made LIVE for students!')
+    return redirect('dashboard:admin_quiz_list')
+
+
+@staff_required
+def admin_quiz_unpublish_all(request):
+    Quiz.objects.all().update(is_live=False)
+    messages.info(request, 'All quizzes have been unpublished and moved to Draft mode.')
     return redirect('dashboard:admin_quiz_list')
 
 
