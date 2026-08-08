@@ -27,6 +27,7 @@ class User(AbstractUser):
     game_complexity_level = models.PositiveIntegerField(default=0)
     game_parsons_level = models.PositiveIntegerField(default=0)
     game_predictor_level = models.PositiveIntegerField(default=0)
+    game_algo_level = models.PositiveIntegerField(default=0)
     leetcode_username = models.CharField(max_length=100, blank=True)
     leetcode_easy_solved = models.PositiveIntegerField(default=0)
     leetcode_medium_solved = models.PositiveIntegerField(default=0)

@@ -568,6 +568,11 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
+                        <button class="nav-link game-tab-btn" id="algo-tab" data-bs-toggle="tab" data-bs-target="#algo-content" type="button" role="tab">
+                            <i class="bi bi-diagram-3-fill me-2 text-warning"></i>Algo Master
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
                         <button class="nav-link game-tab-btn" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-content" type="button" role="tab">
                             <i class="bi bi-clock-history me-2"></i>Game History
                         </button>
@@ -889,6 +894,79 @@
                     </div>
                 </div>
 
+                <!-- GAME 6: ALGORITHM SEQUENCE MASTER -->
+                <div class="tab-pane fade" id="algo-content" role="tabpanel">
+                    <div class="game-panel">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                            <div>
+                                <h4 class="fw-bold mb-1 text-white"><i class="bi bi-diagram-3-fill text-warning me-2"></i>Algorithm Sequence Master</h4>
+                                <p class="text-muted small mb-0">Reconstruct essential interview algorithms step-by-step in correct execution sequence.</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 120px;">
+                                    <span class="hud-label d-block">Level</span>
+                                    <span class="fw-bold text-warning fs-6" id="algo-level-indicator">Level 1 / 12</span>
+                                </div>
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 100px;">
+                                    <span class="hud-label d-block">Score</span>
+                                    <span class="fw-bold text-success fs-5" id="algo-score">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Left Column: Current Algorithm Info & Scrambled Pool -->
+                            <div class="col-lg-6">
+                                <div class="p-3 mb-3 rounded-4" style="background: rgba(3, 7, 18, 0.6); border: 1px solid rgba(245, 158, 11, 0.3);">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <h5 class="fw-bold text-warning mb-0" id="algo-title">Binary Search Algorithm</h5>
+                                        <span class="badge bg-warning text-dark font-mono px-2 py-1" id="algo-difficulty">Basic</span>
+                                    </div>
+                                    <p class="text-light-50 small mb-2" id="algo-desc">Efficiently locate target element in a sorted array.</p>
+                                    <div class="d-flex flex-wrap gap-3 text-xs font-mono text-muted">
+                                        <span>Time: <strong class="text-info" id="algo-time">O(log N)</strong></span>
+                                        <span>Space: <strong class="text-info" id="algo-space">O(1)</strong></span>
+                                        <span class="text-warning">Topic: <strong id="algo-category">Searching</strong></span>
+                                    </div>
+                                </div>
+
+                                <h6 class="fw-bold text-uppercase font-mono text-muted small mb-2"><i class="bi bi-shuffle me-1"></i>Scrambled Algorithm Steps (Click to add)</h6>
+                                <div id="algo-scrambled-pool" class="d-flex flex-column gap-2">
+                                    <!-- Shuffled step cards inserted dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Right Column: User Workspace Sequence -->
+                            <div class="col-lg-6">
+                                <div class="p-3 rounded-4 h-100 d-flex flex-column justify-content-between" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);">
+                                    <div>
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h6 class="fw-bold text-uppercase font-mono text-success small mb-0"><i class="bi bi-list-ol me-1"></i>Your Algorithm Execution Sequence</h6>
+                                            <button class="btn btn-outline-secondary btn-sm py-0 px-2 text-xs" onclick="resetAlgoWorkspace()"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+                                        </div>
+                                        
+                                        <div id="algo-workspace" class="d-flex flex-column gap-2 p-2 rounded-3" style="background: #090d16; border: 2px dashed rgba(255, 255, 255, 0.1); min-height: 260px;">
+                                            <!-- Ordered steps placed here by user -->
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <div id="algo-feedback" class="alert alert-dark border-0 text-center py-2 mb-3 small" style="display: none;"></div>
+                                        <div class="d-flex justify-content-between gap-2">
+                                            <button id="algo-verify-btn" class="btn btn-warning flex-grow-1 fw-bold text-dark text-uppercase py-2 rounded-3" onclick="checkAlgoSequence()">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Verify Sequence
+                                            </button>
+                                            <button id="algo-next-btn" class="btn btn-success fw-bold text-uppercase py-2 px-4 rounded-3" style="display: none;" onclick="nextAlgoLevel()">
+                                                Next Algo <i class="bi bi-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- TAB 6: GAME HISTORY -->
                 <div class="tab-pane fade" id="history-content" role="tabpanel">
                     <div class="game-panel p-4">
@@ -1045,7 +1123,8 @@ let savedLevels = {
     bug: {{ bug_level|default:0 }},
     complexity: {{ complexity_level|default:0 }},
     parsons: {{ parsons_level|default:0 }},
-    predictor: {{ predictor_level|default:0 }}
+    predictor: {{ predictor_level|default:0 }},
+    algo: {{ algo_level|default:0 }}
 };
 
 // CSRF Helper & Save game progress function
@@ -1088,6 +1167,7 @@ function saveGameProgress(gameType, level, score) {
             if (data.complexity_level !== undefined) savedLevels.complexity = data.complexity_level;
             if (data.parsons_level !== undefined) savedLevels.parsons = data.parsons_level;
             if (data.predictor_level !== undefined) savedLevels.predictor = data.predictor_level;
+            if (data.algo_level !== undefined) savedLevels.algo = data.algo_level;
 
             const xpBadge = document.querySelector('.badge-xp');
             if (xpBadge) {
@@ -3377,6 +3457,420 @@ document.getElementById('pred-next-btn').addEventListener('click', () => {
 });
 
 // ----------------------------------------------------
+// GAME 6: ALGORITHM SEQUENCE MASTER LOGIC
+// ----------------------------------------------------
+const ALGORITHM_MASTER_LEVELS = [
+    {
+        title: "Binary Search Algorithm",
+        category: "Searching & Arrays",
+        difficulty: "Basic",
+        timeComplexity: "O(log N)",
+        spaceComplexity: "O(1)",
+        description: "Locate a target element in a sorted array by halving the search space recursively.",
+        interviewTip: "Binary search requires the array to be sorted. Always compute mid safely to avoid integer overflow.",
+        steps: [
+            "Initialize low = 0 and high = array.length - 1",
+            "Loop while low <= high",
+            "Calculate middle index mid = low + Math.floor((high - low) / 2)",
+            "If array[mid] == target, return index mid (Element Found!)",
+            "If array[mid] < target, update search boundary low = mid + 1",
+            "Else update search boundary high = mid - 1",
+            "If loop ends with low > high, return -1 (Target Not Present)"
+        ]
+    },
+    {
+        title: "Selection Sort Algorithm",
+        category: "Sorting Algorithms",
+        difficulty: "Basic",
+        timeComplexity: "O(N²)",
+        spaceComplexity: "O(1)",
+        description: "Repeatedly find the minimum element from the unsorted region and place it at the front.",
+        interviewTip: "Selection sort performs at most O(N) swaps, making it useful when write operations are costly.",
+        steps: [
+            "Outer loop i from 0 to N - 1",
+            "Initialize minIndex = i for the unsorted partition",
+            "Inner loop j from i + 1 to N - 1 to inspect remaining elements",
+            "If array[j] < array[minIndex], update minIndex = j",
+            "Swap element array[i] with minimum element array[minIndex]",
+            "Repeat until outer loop finishes; array is now sorted"
+        ]
+    },
+    {
+        title: "Merge Sort Divide & Conquer",
+        category: "Divide & Conquer",
+        difficulty: "Intermediate",
+        timeComplexity: "O(N log N)",
+        spaceComplexity: "O(N)",
+        description: "Split array into halves, recursively sort each half, and merge them in sorted order.",
+        interviewTip: "Merge sort guarantees O(N log N) worst-case time complexity and is a stable sorting algorithm.",
+        steps: [
+            "Base Case: If array length <= 1, array is already sorted, return array",
+            "Divide: Calculate mid = floor(length / 2) to split array into left and right halves",
+            "Conquer: Recursively call mergeSort(leftHalf) and mergeSort(rightHalf)",
+            "Initialize two pointers i = 0 for left array and j = 0 for right array",
+            "Compare left[i] and right[j], append the smaller element into merged output array",
+            "Append any remaining unmerged elements from left or right subarray to output",
+            "Return fully merged sorted array"
+        ]
+    },
+    {
+        title: "Two Pointers Target Sum",
+        category: "Optimized Array Search",
+        difficulty: "Intermediate",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        description: "Find two numbers in a sorted array that sum up to a target using converging pointers.",
+        interviewTip: "Using two pointers on a sorted array reduces time complexity from O(N²) down to linear O(N).",
+        steps: [
+            "Set left = 0 (start of array) and right = N - 1 (end of array)",
+            "Loop while left < right",
+            "Compute currentSum = array[left] + array[right]",
+            "If currentSum == target, return pair [array[left], array[right]]",
+            "If currentSum < target, increment left pointer (left++) to increase sum",
+            "Else decrement right pointer (right--) to decrease sum",
+            "If pointers cross without match, return No Pair Found"
+        ]
+    },
+    {
+        title: "Floyd's Cycle Detection (Tortoise & Hare)",
+        category: "Linked List Pointers",
+        difficulty: "Intermediate",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(1)",
+        description: "Detect if a linked list contains a cycle using slow (1-step) and fast (2-steps) pointers.",
+        interviewTip: "If a cycle exists, the fast pointer will catch up to the slow pointer inside the cycle loop.",
+        steps: [
+            "Initialize slow = head and fast = head",
+            "Loop while fast is not null and fast.next is not null",
+            "Advance slow pointer by 1 node: slow = slow.next",
+            "Advance fast pointer by 2 nodes: fast = fast.next.next",
+            "If slow == fast, pointers met inside cycle! Return True (Cycle Detected)",
+            "If fast or fast.next becomes null, loop ends. Return False (No Cycle)"
+        ]
+    },
+    {
+        title: "Valid Parentheses Stack Matching",
+        category: "Stacks & Queues",
+        difficulty: "Intermediate",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(N)",
+        description: "Validate if opening brackets are properly closed in correct order using a LIFO Stack.",
+        interviewTip: "Matching brackets require Last-In, First-Out (LIFO) stack evaluation.",
+        steps: [
+            "Initialize an empty stack",
+            "Iterate through each character char in the input string",
+            "If char is an opening bracket '(', '{', or '[', push it onto stack",
+            "If char is a closing bracket, check if stack is empty (If empty, Return Invalid)",
+            "Pop top bracket from stack and check if it matches the closing bracket type",
+            "If popped bracket does not match closing bracket, Return Invalid",
+            "After processing string, return True if stack is empty, False otherwise"
+        ]
+    },
+    {
+        title: "Binary Tree Inorder Traversal",
+        category: "Trees & BST",
+        difficulty: "Intermediate",
+        timeComplexity: "O(N)",
+        spaceComplexity: "O(H)",
+        description: "Traverse a binary tree recursively: Left Subtree -> Current Root Node -> Right Subtree.",
+        interviewTip: "Inorder traversal of a Binary Search Tree (BST) visits nodes in strictly sorted order.",
+        steps: [
+            "Base Case: If current root is null, return",
+            "Recursively traverse Left Subtree: inorder(root.left)",
+            "Process / Visit current Root Node (e.g. record root.value)",
+            "Recursively traverse Right Subtree: inorder(root.right)",
+            "Complete traversal when all recursive function calls return"
+        ]
+    },
+    {
+        title: "Breadth-First Search (BFS) Traversal",
+        category: "Graph Algorithms",
+        difficulty: "Intermediate to Advanced",
+        timeComplexity: "O(V + E)",
+        spaceComplexity: "O(V)",
+        description: "Traverse graph level-by-level using a Queue to explore nearest neighbors first.",
+        interviewTip: "BFS computes the shortest path in unweighted graphs or trees.",
+        steps: [
+            "Initialize a Queue and a visited set",
+            "Enqueue startNode into Queue and add to visited set",
+            "Loop while Queue is not empty",
+            "Dequeue current front node from Queue and process it",
+            "Iterate through all adjacent neighbor nodes of current node",
+            "If neighbor is not in visited set, mark neighbor visited and enqueue into Queue",
+            "Repeat until Queue becomes completely empty"
+        ]
+    },
+    {
+        title: "Min-Heap Top-K Elements Extraction",
+        category: "Heaps & Priority Queues",
+        difficulty: "Advanced",
+        timeComplexity: "O(N log K)",
+        spaceComplexity: "O(K)",
+        description: "Find K largest elements in an unsorted array using a Min-Heap of fixed size K.",
+        interviewTip: "Maintaining a Min-Heap of size K takes O(N log K) time, outperforming full sorting O(N log N).",
+        steps: [
+            "Initialize an empty Min-Heap of size constraint K",
+            "Iterate through each number num in the input list",
+            "Push / Insert num into the Min-Heap",
+            "If Min-Heap size exceeds K, extract / pop the minimum element (root)",
+            "After iterating through all elements, Min-Heap contains top K largest values"
+        ]
+    },
+    {
+        title: "0/1 Knapsack Dynamic Programming",
+        category: "Dynamic Programming",
+        difficulty: "Advanced",
+        timeComplexity: "O(N × W)",
+        spaceComplexity: "O(N × W)",
+        description: "Maximize profit under capacity limit W using bottom-up 2D subproblem table DP[i][w].",
+        interviewTip: "0/1 Knapsack means each item can either be taken completely or excluded.",
+        steps: [
+            "Create 2D DP array DP[N+1][W+1] initialized to 0",
+            "Outer loop i from 1 to N (items), Inner loop w from 1 to W (capacity)",
+            "If weight of item i-1 <= w, option1 = val[i-1] + DP[i-1][w - weight[i-1]]",
+            "option2 = DP[i-1][w] (exclude current item)",
+            "Set DP[i][w] = Math.max(option1, option2)",
+            "Else (item too heavy) set DP[i][w] = DP[i-1][w]",
+            "Return DP[N][W] as maximum achievable total value"
+        ]
+    },
+    {
+        title: "Dijkstra's Shortest Path Algorithm",
+        category: "Graph Shortest Path",
+        difficulty: "Hard / Interview Classic",
+        timeComplexity: "O((V + E) log V)",
+        spaceComplexity: "O(V)",
+        description: "Find shortest distance from source vertex to all vertices using Priority Queue.",
+        interviewTip: "Dijkstra assumes non-negative edge weights and selects greedy minimum distance nodes.",
+        steps: [
+            "Initialize dist[source] = 0 and dist[v] = infinity for all other vertices",
+            "Push tuple (dist[source]=0, source) into Min-Priority Queue",
+            "Loop while Priority Queue is not empty",
+            "Pop vertex u with smallest current distance dist[u]",
+            "For each adjacent neighbor v of u with edge weight w, calculate newDist = dist[u] + w",
+            "If newDist < dist[v], update dist[v] = newDist and push (newDist, v) into Priority Queue",
+            "Return dist array when Priority Queue becomes empty"
+        ]
+    },
+    {
+        title: "Backtracking N-Queens Placement",
+        category: "Backtracking & Recursion",
+        difficulty: "Hard / FAANG Level",
+        timeComplexity: "O(N!)",
+        spaceComplexity: "O(N)",
+        description: "Place N non-attacking queens on an N×N board using recursive backtracking.",
+        interviewTip: "Backtracking explores state space tree: place, validate, recurse, and backtrack if blocked.",
+        steps: [
+            "Call solve(row = 0) to start placement",
+            "Base Case: If row == N, valid N-Queens configuration completed! Record solution and return",
+            "Loop col from 0 to N - 1 for current row",
+            "Check if placing queen at (row, col) is safe (no column or diagonal conflicts)",
+            "If safe: Place Queen at board[row][col]",
+            "Recursively call solve(row + 1) to place queen in next row",
+            "Backtrack: Remove Queen from board[row][col] to explore next column choice"
+        ]
+    }
+];
+
+let algoState = {
+    level: Math.max(0, Math.min(savedLevels.algo || 0, ALGORITHM_MASTER_LEVELS.length - 1)),
+    score: 0,
+    active: true,
+    userWorkspace: [],
+    scrambledPool: []
+};
+
+function initAlgoGame() {
+    algoState.level = Math.max(0, Math.min(savedLevels.algo || 0, ALGORITHM_MASTER_LEVELS.length - 1));
+    algoState.score = 0;
+    algoState.active = true;
+    renderAlgoLevel();
+}
+
+function renderAlgoLevel() {
+    if (algoState.level >= ALGORITHM_MASTER_LEVELS.length) {
+        algoState.active = false;
+        showArcadeModal(
+            'Mastered All Algorithms!',
+            'Outstanding! You completed all 12 interview algorithm levels!',
+            algoState.score,
+            'Restart Quest',
+            () => {
+                algoState.level = 0;
+                initAlgoGame();
+            }
+        );
+        return;
+    }
+
+    const algo = ALGORITHM_MASTER_LEVELS[algoState.level];
+    
+    document.getElementById('algo-title').textContent = algo.title;
+    document.getElementById('algo-difficulty').textContent = algo.difficulty;
+    document.getElementById('algo-desc').textContent = algo.description;
+    document.getElementById('algo-time').textContent = algo.timeComplexity;
+    document.getElementById('algo-space').textContent = algo.spaceComplexity;
+    document.getElementById('algo-category').textContent = algo.category;
+    document.getElementById('algo-score').textContent = algoState.score;
+    document.getElementById('algo-level-indicator').textContent = `Level ${algoState.level + 1} / ${ALGORITHM_MASTER_LEVELS.length}`;
+    
+    document.getElementById('algo-feedback').style.display = 'none';
+    document.getElementById('algo-verify-btn').style.display = 'block';
+    document.getElementById('algo-next-btn').style.display = 'none';
+
+    let stepsCopy = algo.steps.map((text, idx) => ({ id: idx, text: text }));
+    for (let i = stepsCopy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [stepsCopy[i], stepsCopy[j]] = [stepsCopy[j], stepsCopy[i]];
+    }
+
+    algoState.scrambledPool = stepsCopy;
+    algoState.userWorkspace = [];
+
+    renderAlgoPoolAndWorkspace();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function renderAlgoPoolAndWorkspace() {
+    const poolContainer = document.getElementById('algo-scrambled-pool');
+    const workspaceContainer = document.getElementById('algo-workspace');
+
+    poolContainer.innerHTML = '';
+    workspaceContainer.innerHTML = '';
+
+    if (algoState.scrambledPool.length === 0) {
+        poolContainer.innerHTML = '<div class="text-muted text-center py-3 small font-mono">All steps added to sequence workspace!</div>';
+    } else {
+        algoState.scrambledPool.forEach((item, poolIdx) => {
+            const card = document.createElement('div');
+            card.className = 'repair-block text-white small shadow-sm d-flex justify-content-between align-items-start gap-2';
+            card.innerHTML = `
+                <div class="me-2 text-wrap lh-sm"><i class="bi bi-grip-vertical text-warning me-1"></i> ${escapeHtml(item.text)}</div>
+                <button class="repair-controls-btn flex-shrink-0" onclick="addStepToWorkspace(${poolIdx})"><i class="bi bi-plus-lg"></i> Add</button>
+            `;
+            poolContainer.appendChild(card);
+        });
+    }
+
+    if (algoState.userWorkspace.length === 0) {
+        workspaceContainer.innerHTML = '<div class="text-muted text-center py-4 small font-mono">Click "+ Add" on steps above to assemble sequence...</div>';
+    } else {
+        algoState.userWorkspace.forEach((item, wsIdx) => {
+            const card = document.createElement('div');
+            card.className = `workspace-block text-white small shadow-sm d-flex justify-content-between align-items-start gap-2 ${item.statusClass || ''}`;
+            card.innerHTML = `
+                <div class="d-flex align-items-start me-2">
+                    <span class="badge bg-warning text-dark font-mono me-2 mt-1">${wsIdx + 1}</span>
+                    <span class="text-wrap lh-sm">${escapeHtml(item.text)}</span>
+                </div>
+                <div class="d-flex gap-1 flex-shrink-0 ms-auto">
+                    <button class="repair-controls-btn" onclick="moveStepUp(${wsIdx})" ${wsIdx === 0 ? 'disabled' : ''}><i class="bi bi-arrow-up"></i></button>
+                    <button class="repair-controls-btn" onclick="moveStepDown(${wsIdx})" ${wsIdx === algoState.userWorkspace.length - 1 ? 'disabled' : ''}><i class="bi bi-arrow-down"></i></button>
+                    <button class="repair-controls-btn btn-remove" onclick="removeStepFromWorkspace(${wsIdx})"><i class="bi bi-x-lg"></i></button>
+                </div>
+            `;
+            workspaceContainer.appendChild(card);
+        });
+    }
+}
+
+function addStepToWorkspace(poolIdx) {
+    if (!algoState.active) return;
+    const step = algoState.scrambledPool.splice(poolIdx, 1)[0];
+    step.statusClass = '';
+    algoState.userWorkspace.push(step);
+    renderAlgoPoolAndWorkspace();
+}
+
+function removeStepFromWorkspace(wsIdx) {
+    if (!algoState.active) return;
+    const step = algoState.userWorkspace.splice(wsIdx, 1)[0];
+    step.statusClass = '';
+    algoState.scrambledPool.push(step);
+    renderAlgoPoolAndWorkspace();
+}
+
+function moveStepUp(wsIdx) {
+    if (!algoState.active || wsIdx <= 0) return;
+    [algoState.userWorkspace[wsIdx - 1], algoState.userWorkspace[wsIdx]] = [algoState.userWorkspace[wsIdx], algoState.userWorkspace[wsIdx - 1]];
+    renderAlgoPoolAndWorkspace();
+}
+
+function moveStepDown(wsIdx) {
+    if (!algoState.active || wsIdx >= algoState.userWorkspace.length - 1) return;
+    [algoState.userWorkspace[wsIdx], algoState.userWorkspace[wsIdx + 1]] = [algoState.userWorkspace[wsIdx + 1], algoState.userWorkspace[wsIdx]];
+    renderAlgoPoolAndWorkspace();
+}
+
+function resetAlgoWorkspace() {
+    if (!algoState.active) return;
+    renderAlgoLevel();
+}
+
+function checkAlgoSequence() {
+    if (!algoState.active) return;
+
+    const algo = ALGORITHM_MASTER_LEVELS[algoState.level];
+    const feedbackBox = document.getElementById('algo-feedback');
+
+    if (algoState.userWorkspace.length !== algo.steps.length) {
+        feedbackBox.className = 'alert alert-warning border-0 text-center py-2 mb-3 small';
+        feedbackBox.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> Please include all algorithm steps in your sequence!';
+        feedbackBox.style.display = 'block';
+        return;
+    }
+
+    let isCorrect = true;
+    algoState.userWorkspace.forEach((item, idx) => {
+        if (item.text === algo.steps[idx]) {
+            item.statusClass = 'line-correct';
+        } else {
+            item.statusClass = 'line-error';
+            isCorrect = false;
+        }
+    });
+
+    renderAlgoPoolAndWorkspace();
+
+    if (isCorrect) {
+        gameAudio.onSuccess();
+        algoState.score += 150;
+        document.getElementById('algo-score').textContent = algoState.score;
+
+        feedbackBox.className = 'alert alert-success border-0 py-3 mb-3 text-start';
+        feedbackBox.innerHTML = `
+            <div class="fw-bold text-success mb-1"><i class="bi bi-patch-check-fill me-1"></i> Perfect Sequence! Algorithm Verified</div>
+            <div class="small text-light mb-1"><strong>Interview Tip:</strong> ${escapeHtml(algo.interviewTip)}</div>
+            <div class="text-xs font-mono text-warning">Time Complexity: ${algo.timeComplexity} | Space: ${algo.spaceComplexity}</div>
+        `;
+        feedbackBox.style.display = 'block';
+
+        document.getElementById('algo-verify-btn').style.display = 'none';
+        document.getElementById('algo-next-btn').style.display = 'block';
+    } else {
+        gameAudio.onFailure();
+        feedbackBox.className = 'alert alert-danger border-0 text-center py-2 mb-3 small';
+        feedbackBox.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Incorrect Step Order. Mismatched steps are highlighted in red!';
+        feedbackBox.style.display = 'block';
+    }
+}
+
+function nextAlgoLevel() {
+    algoState.level++;
+    saveGameProgress('algo', algoState.level, 50);
+    renderAlgoLevel();
+}
+
+// ----------------------------------------------------
 // Tab Navigation Handlers
 // ----------------------------------------------------
 function clearAllTimers() {
@@ -3389,6 +3883,7 @@ function clearAllTimers() {
     bugState.active = false;
     parsonsState.active = false;
     predState.active = false;
+    algoState.active = false;
 }
 
 document.getElementById('typer-tab').addEventListener('click', () => {
@@ -3415,6 +3910,11 @@ document.getElementById('parsons-tab').addEventListener('click', () => {
 document.getElementById('predictor-tab').addEventListener('click', () => {
     clearAllTimers();
     initPredGame();
+});
+
+document.getElementById('algo-tab').addEventListener('click', () => {
+    clearAllTimers();
+    initAlgoGame();
 });
 
 document.getElementById('history-tab').addEventListener('click', () => {
@@ -3462,6 +3962,14 @@ function initArcadePage() {
             bsTab.show();
             clearAllTimers();
             initPredGame();
+        }
+    } else if (gameParam === 'algo') {
+        const tabBtn = document.getElementById('algo-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+            initAlgoGame();
         }
     } else {
         loadTyperLevel();

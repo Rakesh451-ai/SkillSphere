@@ -165,7 +165,7 @@ def sync_leetcode_stats(user):
     if solved_today:
         # User solved a question today!
         if user.last_activity_date == yesterday_date:
-            user.current_streak = max(user.current_streak, user.current_streak + 1)
+            user.current_streak += 1
         elif user.last_activity_date != today_date:
             user.current_streak = max(user.current_streak, 1)
         user.last_activity_date = today_date
@@ -173,14 +173,12 @@ def sync_leetcode_stats(user):
         if user.current_streak > user.longest_streak:
             user.longest_streak = user.current_streak
     else:
-        # Not solved today. Check if streak has broken (if no API streak reported)
-        if lc_streak == 0 and user.last_activity_date and user.last_activity_date < yesterday_date:
+        # Not solved today yet. Check if previous active day was before yesterday (missed full day)
+        if user.last_activity_date and user.last_activity_date < yesterday_date:
             user.current_streak = 0
-            
-        # Subtract points if they did not solve today and haven't been penalized today
-        if user.leetcode_last_penalty_date != today_date:
-            user.xp_points = max(0, user.xp_points - 5)
-            user.leetcode_last_penalty_date = today_date
+            if user.leetcode_last_penalty_date != today_date:
+                user.xp_points = max(0, user.xp_points - 5)
+                user.leetcode_last_penalty_date = today_date
             
     user.save()
     return True

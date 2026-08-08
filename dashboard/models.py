@@ -10,6 +10,7 @@ class GameHistory(models.Model):
         ('complexity', 'Big-O Complexity Master'),
         ('parsons', 'Code Repair Shop'),
         ('predictor', 'Output Predictor'),
+        ('algo', 'Algorithm Sequence Master'),
     ]
 
     user = models.ForeignKey(

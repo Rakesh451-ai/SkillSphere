@@ -54,7 +54,7 @@ def home(request):
     total_game_level = (
         user.game_typer_level + user.game_bug_level +
         user.game_complexity_level + user.game_parsons_level +
-        user.game_predictor_level
+        user.game_predictor_level + user.game_algo_level
     )
 
     context = {
@@ -92,7 +92,7 @@ def calculate_placement_readiness(user):
     total_game_level = (
         user.game_typer_level + user.game_bug_level +
         user.game_complexity_level + user.game_parsons_level +
-        user.game_predictor_level
+        user.game_predictor_level + user.game_algo_level
     )
     score += min(int(total_game_level * 1.5), 20)
 
@@ -119,6 +119,7 @@ def cpp_calculator(request):
         'complexity_level': user.game_complexity_level,
         'parsons_level': user.game_parsons_level,
         'predictor_level': user.game_predictor_level,
+        'algo_level': user.game_algo_level,
         'game_histories': game_histories,
         'total_games_played': total_games_played,
     }
@@ -140,21 +141,17 @@ def update_game_progress(request):
                 return JsonResponse({'status': 'error', 'message': 'Missing data'}, status=400)
                 
             user = request.user
-            if game_type == 'typer':
-                user.game_typer_level = max(user.game_typer_level, level)
-            elif game_type == 'bug':
-                user.game_bug_level = max(user.game_bug_level, level)
-            elif game_type == 'complexity':
-                user.game_complexity_level = max(user.game_complexity_level, level)
-            elif game_type == 'parsons':
-                user.game_parsons_level = max(user.game_parsons_level, level)
-            elif game_type == 'predictor':
-                user.game_predictor_level = max(user.game_predictor_level, level)
+            attr_name = f'game_{game_type}_level'
+            if hasattr(user, attr_name):
+                current_lvl = getattr(user, attr_name, 0)
+                is_new_level = level > current_lvl
+                setattr(user, attr_name, max(current_lvl, level))
             else:
                 return JsonResponse({'status': 'error', 'message': 'Invalid game type'}, status=400)
-                
-            # Award XP points
-            user.xp_points += score
+
+            # Award XP points safely (award on new level progression to prevent XP farming)
+            awarded_xp = max(0, min(int(score), 50)) if is_new_level else 0
+            user.xp_points += awarded_xp
             user.save()
 
             # Record Game History entry
@@ -173,6 +170,7 @@ def update_game_progress(request):
                 'complexity_level': user.game_complexity_level,
                 'parsons_level': user.game_parsons_level,
                 'predictor_level': user.game_predictor_level,
+                'algo_level': user.game_algo_level,
                 'history_item': {
                     'game_type': history_entry.game_type,
                     'game_display_name': history_entry.game_display_name,
@@ -652,15 +650,18 @@ def admin_user_delete(request, user_id):
 
     username = target_user.username
     try:
-        from django.db import connection
-        with connection.cursor() as cursor:
-            # Clean up all user relations before deleting target user
-            cursor.execute("DELETE FROM dashboard_gamehistory WHERE user_id = %s", [user_id])
-            cursor.execute("DELETE FROM leaderboard_userbadge WHERE user_id = %s", [user_id])
-            cursor.execute("DELETE FROM leaderboard_achievement WHERE user_id = %s", [user_id])
-            cursor.execute("DELETE FROM notifications_notification WHERE user_id = %s", [user_id])
-            cursor.execute("DELETE FROM recommendations_recommendation WHERE user_id = %s", [user_id])
-            cursor.execute("DELETE FROM resumeanalyzer_resumeanalysis WHERE user_id = %s", [user_id])
+        from .models import GameHistory
+        from leaderboard.models import UserBadge, Achievement
+        from notifications.models import Notification
+        from recommendations.models import Recommendation
+        from resumeanalyzer.models import ResumeAnalysis
+
+        GameHistory.objects.filter(user=target_user).delete()
+        UserBadge.objects.filter(user=target_user).delete()
+        Achievement.objects.filter(user=target_user).delete()
+        Notification.objects.filter(user=target_user).delete()
+        Recommendation.objects.filter(user=target_user).delete()
+        ResumeAnalysis.objects.filter(user=target_user).delete()
 
         target_user.delete()
         messages.success(request, f'User account "@{username}" has been deleted successfully.')

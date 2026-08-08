@@ -42,7 +42,7 @@ def leaderboard_view(request):
     ranked_users = []
     for i, u in enumerate(users[:50], 1):
         completed_dsa = len(u.completed_dsa_problems) if isinstance(u.completed_dsa_problems, list) else 0
-        game_levels = u.game_typer_level + u.game_bug_level + u.game_complexity_level + u.game_parsons_level + u.game_predictor_level
+        game_levels = u.game_typer_level + u.game_bug_level + u.game_complexity_level + u.game_parsons_level + u.game_predictor_level + u.game_algo_level
         total_hours = round((completed_dsa * 0.5) + (u.leetcode_total_solved * 0.4) + (game_levels * 0.2), 1)
 
         ranked_users.append({
