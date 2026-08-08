@@ -70,11 +70,11 @@
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
         <h4 class="fw-bold mb-1"><i class="bi bi-diagram-3-fill text-warning me-2"></i>DSA Step-by-Step Visual Algorithm Studio</h4>
-        <p class="text-muted mb-0 small">Clean Step-by-Step Visual Logic Diagrams for Every Core Interview Algorithm (Basic to Advanced).</p>
+        <p class="text-muted mb-0 small">Clean, Structured 4-Step Visual Diagrams for All 12 Core Interview Algorithms (Basic to Advanced).</p>
     </div>
     <div>
         <span class="badge bg-primary bg-opacity-20 text-primary rounded-pill px-3 py-2 fw-semibold">
-            <i class="bi bi-eye-fill me-1 text-warning"></i> 12 Essential Interview Algorithms
+            <i class="bi bi-eye-fill me-1 text-warning"></i> 12 Structured Interview Algorithms
         </span>
     </div>
 </div>
@@ -529,53 +529,75 @@
             archImg: STATIC_BASE + 'linkedlist_flowchart.jpg',
             visualSteps: [
                 {
-                    title: 'Step 1: Initialize Slow & Fast Pointers at Head',
-                    desc: 'Both slow pointer (1 step) and fast pointer (2 steps) start at Head Node 1.',
+                    title: 'Step 1: Initialize Slow & Fast Pointers at Head Node',
+                    desc: 'Set slow = head and fast = head. Both slow pointer (1 step) and fast pointer (2 steps) start at Head Node 1.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="60" y="40" width="60" height="40" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
-                        <text x="90" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">1</text>
-                        <text x="90" y="25" fill="#22c55e" font-size="12" font-weight="bold" text-anchor="middle">slow & fast</text>
+                        <rect x="40" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+                        <text x="67" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">1</text>
+                        <text x="67" y="25" fill="#22c55e" font-size="12" font-weight="bold" text-anchor="middle">slow &amp; fast</text>
 
-                        <path d="M 120 60 L 170 60" stroke="#94a3b8" stroke-width="2"/>
-                        <rect x="180" y="40" width="60" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
-                        <text x="210" y="65" fill="#94a3b8" font-size="16" text-anchor="middle">2</text>
+                        <line x1="95" y1="60" x2="135" y2="60" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
 
-                        <path d="M 240 60 L 290 60" stroke="#94a3b8" stroke-width="2"/>
-                        <rect x="300" y="40" width="60" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
-                        <text x="330" y="65" fill="#94a3b8" font-size="16" text-anchor="middle">3</text>
+                        <rect x="140" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="167" y="65" fill="#94a3b8" font-size="16" text-anchor="middle">2</text>
+
+                        <line x1="195" y1="60" x2="235" y2="60" stroke="#94a3b8" stroke-width="2"/>
+
+                        <rect x="240" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="267" y="65" fill="#94a3b8" font-size="16" text-anchor="middle">3</text>
+
+                        <line x1="295" y1="60" x2="335" y2="60" stroke="#94a3b8" stroke-width="2"/>
+
+                        <rect x="340" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="367" y="65" fill="#94a3b8" font-size="16" text-anchor="middle">4</text>
+
+                        <path d="M 367 40 Q 267 5 167 40" fill="none" stroke="#eab308" stroke-width="2" stroke-dasharray="4"/>
+                        <text x="267" y="20" fill="#eab308" font-size="10" text-anchor="middle">Loop back to Node 2</text>
                     </svg>`
                 },
                 {
                     title: 'Step 2: Advance Pointers (slow = 1 step, fast = 2 steps)',
-                    desc: 'slow moves to Node 2, fast moves to Node 3.',
+                    desc: 'Advance slow by 1 node (slow = slow.next) to Node 2. Advance fast by 2 nodes (fast = fast.next.next) to Node 3.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="60" y="40" width="60" height="40" rx="6" fill="#1e293b" opacity="0.5"/>
-                        <text x="90" y="65" fill="#94a3b8" font-size="16" text-anchor="middle">1</text>
+                        <rect x="40" y="40" width="55" height="40" rx="6" fill="#0f172a" opacity="0.4"/>
+                        <text x="67" y="65" fill="#64748b" font-size="16" text-anchor="middle">1</text>
 
-                        <rect x="180" y="40" width="60" height="40" rx="6" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
-                        <text x="210" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">2</text>
-                        <text x="210" y="25" fill="#22c55e" font-size="12" font-weight="bold" text-anchor="middle">slow (1 step)</text>
+                        <rect x="140" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+                        <text x="167" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+                        <text x="167" y="25" fill="#22c55e" font-size="12" font-weight="bold" text-anchor="middle">slow (1 step)</text>
 
-                        <rect x="300" y="40" width="60" height="40" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
-                        <text x="330" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">3</text>
-                        <text x="330" y="25" fill="#ef4444" font-size="12" font-weight="bold" text-anchor="middle">fast (2 steps)</text>
+                        <rect x="240" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+                        <text x="267" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">3</text>
+                        <text x="267" y="25" fill="#ef4444" font-size="12" font-weight="bold" text-anchor="middle">fast (2 steps)</text>
+
+                        <rect x="340" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="367" y="65" fill="#94a3b8" font-size="16" text-anchor="middle">4</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 3: Pointers Meet Inside Cycle Loop!',
-                    desc: 'fast loops around and meets slow pointer at Node 3. Pointer collision occurs!',
+                    title: 'Step 3: Fast Pointer Enters Cycle Loop & Traverses Ahead',
+                    desc: 'slow advances to Node 3. fast moves from Node 4 back to Node 2 via loop edge. Distance between them shrinks.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="220" y="40" width="80" height="45" rx="8" fill="#166534" stroke="#22c55e" stroke-width="3"/>
-                        <text x="260" y="68" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">Node 3</text>
-                        <text x="260" y="25" fill="#eab308" font-size="12" font-weight="bold" text-anchor="middle">slow == fast (Collision!)</text>
+                        <rect x="140" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+                        <text x="167" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">2</text>
+                        <text x="167" y="25" fill="#ef4444" font-size="12" font-weight="bold" text-anchor="middle">fast (looped)</text>
+
+                        <rect x="240" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+                        <text x="267" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">3</text>
+                        <text x="267" y="25" fill="#22c55e" font-size="12" font-weight="bold" text-anchor="middle">slow</text>
+
+                        <rect x="340" y="40" width="55" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="367" y="65" fill="#94a3b8" font-size="16" text-anchor="middle">4</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 4: Cycle Confirmed & Returned',
-                    desc: 'Collision proves the linked list contains a loop. Return True.',
+                    title: 'Step 4: Pointer Collision Confirmed inside Cycle!',
+                    desc: 'slow and fast pointers collide at Node 3! Collision inside loop guarantees cycle presence. Return True.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="120" y="35" width="260" height="50" rx="10" fill="#166534" stroke="#22c55e" stroke-width="3"/>
-                        <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ Cycle Detected: Return True</text>
+                        <rect x="200" y="35" width="100" height="50" rx="8" fill="#166534" stroke="#22c55e" stroke-width="3"/>
+                        <text x="250" y="65" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">Node 3</text>
+                        <text x="250" y="25" fill="#eab308" font-size="12" font-weight="bold" text-anchor="middle">slow == fast (Collision!)</text>
+                        <text x="390" y="65" fill="#22c55e" font-size="16" font-weight="bold">✔ Cycle = True</text>
                     </svg>`
                 }
             ]
@@ -593,35 +615,42 @@
             archImg: STATIC_BASE + 'stack_queue_diagram_1785693812823.jpg',
             visualSteps: [
                 {
-                    title: 'Step 1: Push Opening Brackets onto Stack',
-                    desc: 'Push \'{\', \'[\', and \'(\' onto Stack. Stack top = \'(\'.',
+                    title: 'Step 1: Push Opening Brackets onto LIFO Stack',
+                    desc: 'Iterate input string. Push opening brackets \'{\', \'[\', and \'(\' onto Stack. Top of stack holds \'(\'.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="180" y="30" width="140" height="60" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">Stack: [ {, [, ( ]</text>
+                        <rect x="180" y="20" width="140" height="85" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+                        <rect x="195" y="30" width="110" height="22" rx="4" fill="#312e81" stroke="#818cf8" stroke-width="1"/>
+                        <text x="250" y="46" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">( (Top)</text>
+                        <rect x="195" y="56" width="110" height="22" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="250" y="72" fill="#94a3b8" font-size="14" text-anchor="middle">[</text>
+                        <rect x="195" y="82" width="110" height="18" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="250" y="95" fill="#94a3b8" font-size="12" text-anchor="middle">{</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 2: Encounter \')\' -> Pop and Match Top Stack',
-                    desc: '\')\' matches top \'(\'. Pop \'(\'. Stack remains: [ {, [ ].',
+                    title: 'Step 2: Encounter \')\' -> Pop & Match Top \'(\'',
+                    desc: 'Encounter closing bracket \')\'. Top element \'(\' matches \')\'. Pop \'(\' from stack.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="180" y="30" width="140" height="60" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">Match! Stack: [ {, [ ]</text>
+                        <rect x="180" y="30" width="140" height="75" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="250" y="55" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">✔ Popped ( for )</text>
+                        <rect x="195" y="70" width="110" height="22" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="250" y="86" fill="#94a3b8" font-size="14" text-anchor="middle">[ (New Top)</text>
                     </svg>`
                 },
                 {
                     title: 'Step 3: Process Remaining Closing Brackets \']\' and \'}\'',
-                    desc: 'Pop \'[\' for \']\', pop \'{\' for \'}\'. All opening brackets matched.',
+                    desc: 'Next char \']\' matches top \'[\' -> Pop. Next char \'}\' matches top \'{\' -> Pop. All matches verified.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="160" y="30" width="180" height="60" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">Stack Empty!</text>
+                        <rect x="160" y="35" width="180" height="55" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="250" y="68" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ Matched ] and }</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 4: Stack Empty -> Valid Parentheses',
-                    desc: 'Stack is empty after string processing. Return True.',
+                    title: 'Step 4: Stack Empty -> Valid Parentheses Confirmed',
+                    desc: 'String processing complete. Stack size equals 0. All brackets closed properly. Return True.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
                         <rect x="120" y="35" width="260" height="50" rx="10" fill="#166534" stroke="#22c55e" stroke-width="3"/>
-                        <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ Valid Brackets: Return True</text>
+                        <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ Stack Empty: Return True</text>
                     </svg>`
                 }
             ]
@@ -639,36 +668,44 @@
             archImg: STATIC_BASE + 'tree_diagram_1785693716468.jpg',
             visualSteps: [
                 {
-                    title: 'Step 1: Recurse to Leftmost Subtree',
-                    desc: 'Traverse left until null node. Visit left subtree nodes first.',
+                    title: 'Step 1: Recurse to Leftmost Subtree Node',
+                    desc: 'Call inorder(root.left). Traverse left branches first until hitting null node.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <circle cx="250" cy="40" r="20" fill="#1e293b" stroke="#eab308" stroke-width="2"/>
-                        <text x="250" y="46" fill="#fff" font-size="16" text-anchor="middle">Root 1</text>
-                        <circle cx="330" cy="85" r="18" fill="#1e293b" stroke="#475569" stroke-width="1"/>
-                        <text x="330" y="90" fill="#94a3b8" font-size="14" text-anchor="middle">Node 2</text>
+                        <circle cx="250" cy="35" r="18" fill="#1e293b" stroke="#eab308" stroke-width="2"/>
+                        <text x="250" y="40" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">1</text>
+                        <line x1="262" y1="48" x2="310" y2="72" stroke="#94a3b8" stroke-width="2"/>
+                        <circle cx="320" cy="80" r="16" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="320" y="85" fill="#94a3b8" font-size="14" text-anchor="middle">2</text>
+                        <line x1="310" y1="90" x2="280" y2="105" stroke="#94a3b8" stroke-width="2"/>
+                        <circle cx="270" cy="110" r="14" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="270" y="114" fill="#94a3b8" font-size="12" text-anchor="middle">3</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 2: Visit & Record Current Root Node',
-                    desc: 'Record current Root Node value into traversal output array.',
+                    title: 'Step 2: Visit & Record Current Root Node Value',
+                    desc: 'Left subtree returns null. Visit current root node 1. Record value 1 into output array.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <circle cx="250" cy="40" r="22" fill="#166534" stroke="#22c55e" stroke-width="3"/>
-                        <text x="250" y="46" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">1</text>
-                        <text x="360" y="50" fill="#22c55e" font-size="16" font-weight="bold">Output: [1]</text>
+                        <circle cx="200" cy="45" r="22" fill="#166534" stroke="#22c55e" stroke-width="3"/>
+                        <text x="200" y="51" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">1</text>
+                        <rect x="300" y="30" width="140" height="40" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+                        <text x="370" y="55" fill="#22c55e" font-size="16" font-weight="bold" text-anchor="middle">Array: [ 1 ]</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 3: Recurse Right Subtree',
-                    desc: 'Inorder traverse Right Subtree nodes (Inorder on BST produces sorted order).',
+                    title: 'Step 3: Recurse Right Subtree (Visit Node 3 then Node 2)',
+                    desc: 'Call inorder(root.right). Traverse right child: visit Node 3 first, then visit Node 2.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <circle cx="330" cy="50" r="22" fill="#166534" stroke="#22c55e" stroke-width="3"/>
-                        <text x="330" y="56" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">2</text>
-                        <text x="180" y="56" fill="#22c55e" font-size="16" font-weight="bold">Output: [1, 3, 2]</text>
+                        <circle cx="150" cy="45" r="18" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="150" y="50" fill="#fff" font-size="14" text-anchor="middle">3</text>
+                        <circle cx="220" cy="45" r="18" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="220" y="50" fill="#fff" font-size="14" text-anchor="middle">2</text>
+                        <rect x="290" y="30" width="160" height="40" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="370" y="55" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Array: [ 1, 3, 2 ]</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 4: Return Complete Inorder Traversal',
-                    desc: 'Traversal finishes with all nodes processed in Left-Root-Right order.',
+                    title: 'Step 4: Return Complete Inorder Traversal Array',
+                    desc: 'All nodes visited in Left-Root-Right sequence. Output [1, 3, 2] returned.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
                         <rect x="120" y="35" width="260" height="50" rx="10" fill="#166534" stroke="#22c55e" stroke-width="3"/>
                         <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ Inorder Result: [1, 3, 2]</text>
@@ -689,35 +726,41 @@
             archImg: STATIC_BASE + 'graph_diagram_1785693740271.jpg',
             visualSteps: [
                 {
-                    title: 'Step 1: Enqueue Start Node (Node 0) into Queue',
-                    desc: 'Push start node 0 into Queue and mark node 0 as visited.',
+                    title: 'Step 1: Enqueue Start Node 0 into Queue & Mark Visited',
+                    desc: 'Push start node 0 into FIFO Queue. Mark node 0 in Visited Set {0}.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="160" y="35" width="180" height="50" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Queue: [ Node 0 ]</text>
+                        <rect x="80" y="35" width="160" height="50" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="160" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Queue: [ Node 0 ]</text>
+                        <rect x="280" y="35" width="160" height="50" rx="8" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+                        <text x="360" y="65" fill="#06b6d4" font-size="14" font-weight="bold" text-anchor="middle">Visited Set: {0}</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 2: Dequeue Node 0 & Enqueue Unvisited Neighbors',
-                    desc: 'Dequeue Node 0. Enqueue adjacent unvisited neighbors Node 1 and Node 2.',
+                    title: 'Step 2: Dequeue Node 0 & Enqueue Neighbors 1 and 2',
+                    desc: 'Dequeue Node 0. Inspect adjacent unvisited neighbors 1 and 2. Enqueue 1 and 2 into Queue.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="140" y="35" width="220" height="50" rx="8" fill="#1e293b" stroke="#eab308" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Queue: [ Node 1, Node 2 ]</text>
+                        <rect x="60" y="35" width="190" height="50" rx="8" fill="#1e1b4b" stroke="#eab308" stroke-width="2"/>
+                        <text x="155" y="65" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">Queue: [ Node 1, Node 2 ]</text>
+                        <rect x="280" y="35" width="160" height="50" rx="8" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+                        <text x="360" y="65" fill="#06b6d4" font-size="14" font-weight="bold" text-anchor="middle">Visited: {0, 1, 2}</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 3: Dequeue Level 1 Nodes & Enqueue Level 2',
-                    desc: 'Dequeue Node 1 and Node 2, enqueue neighbor Node 3.',
+                    title: 'Step 3: Dequeue Level 1 Nodes & Enqueue Level 2 Neighbor 3',
+                    desc: 'Dequeue Node 1 and Node 2. Enqueue neighbor Node 3. Queue now holds [ Node 3 ].',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="160" y="35" width="180" height="50" rx="8" fill="#1e293b" stroke="#eab308" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Queue: [ Node 3 ]</text>
+                        <rect x="80" y="35" width="160" height="50" rx="8" fill="#1e293b" stroke="#eab308" stroke-width="2"/>
+                        <text x="160" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Queue: [ Node 3 ]</text>
+                        <rect x="280" y="35" width="160" height="50" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="360" y="65" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">Visited: {0, 1, 2, 3}</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 4: Queue Empty -> BFS Complete',
-                    desc: 'Queue becomes empty. All graph nodes visited in level order.',
+                    title: 'Step 4: Dequeue Node 3 -> Queue Empty (BFS Complete)',
+                    desc: 'Dequeue Node 3. Queue becomes empty. Level-order traversal finished: [0, 1, 2, 3].',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
                         <rect x="120" y="35" width="260" height="50" rx="10" fill="#166534" stroke="#22c55e" stroke-width="3"/>
-                        <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ BFS Traversal: [0, 1, 2, 3]</text>
+                        <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ BFS Result: [0, 1, 2, 3]</text>
                     </svg>`
                 }
             ]
@@ -735,38 +778,38 @@
             archImg: STATIC_BASE + 'trie_diagram_1785693789271.jpg',
             visualSteps: [
                 {
-                    title: 'Step 1: Insert Elements into Min-Heap of Size K=2',
-                    desc: 'Push elements into Min-Heap. Root node always holds the minimum element of the Heap.',
+                    title: 'Step 1: Initialize Min-Heap of Fixed Capacity K = 2',
+                    desc: 'Initialize empty Min-Heap of max size K = 2. Root node always holds the minimum element.',
+                    svg: `<svg viewBox="0 0 500 120" class="w-100">
+                        <rect x="140" y="35" width="220" height="50" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+                        <text x="250" y="65" fill="#fff" font-size="16" text-anchor="middle">Min-Heap (Max Capacity K = 2)</text>
+                    </svg>`
+                },
+                {
+                    title: 'Step 2: Insert Array Elements (Heap Holds [3, 5])',
+                    desc: 'Insert 3, then 5. Min-Heap maintains min-heap property with root = 3.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
                         <circle cx="250" cy="35" r="18" fill="#1e1b4b" stroke="#eab308" stroke-width="2"/>
-                        <text x="250" y="41" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">3</text>
-                        <circle cx="210" cy="80" r="16" fill="#1e293b" stroke="#475569" stroke-width="1"/>
-                        <text x="210" y="85" fill="#fff" font-size="14" text-anchor="middle">5</text>
-                        <text x="350" y="60" fill="#eab308" font-size="14" font-weight="bold">Min-Heap Size = 2</text>
+                        <text x="250" y="40" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">3 (Root Min)</text>
+                        <circle cx="310" cy="80" r="16" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="310" y="85" fill="#94a3b8" font-size="14" text-anchor="middle">5</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 2: Pop Min Root When Heap Size > K',
-                    desc: 'When a larger element is pushed, pop minimum root so heap retains top K largest values.',
+                    title: 'Step 3: Heap Size Exceeds K -> Pop Minimum Root Element',
+                    desc: 'Insert 6. Heap size becomes 3 (> 2). Pop min root 3. Heap reorganizes with root = 5 and child = 6.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <circle cx="250" cy="35" r="18" fill="#166534" stroke="#22c55e" stroke-width="2"/>
-                        <text x="250" y="41" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">5</text>
-                        <circle cx="290" cy="80" r="16" fill="#166534" stroke="#22c55e" stroke-width="2"/>
-                        <text x="290" y="85" fill="#fff" font-size="14" text-anchor="middle">6</text>
-                        <text x="120" y="60" fill="#ef4444" font-size="14" font-weight="bold">Popped smaller values</text>
+                        <rect x="80" y="40" width="130" height="40" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1"/>
+                        <text x="145" y="65" fill="#ef4444" font-size="14" font-weight="bold" text-anchor="middle">Popped Root (3)</text>
+                        <circle cx="300" cy="40" r="18" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="300" y="45" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">5</text>
+                        <circle cx="360" cy="80" r="16" fill="#166534" stroke="#22c55e" stroke-width="1"/>
+                        <text x="360" y="85" fill="#fff" font-size="14" text-anchor="middle">6</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 3: Heap Holds Top K Largest Elements',
-                    desc: 'After processing all N elements, Min-Heap contains top K largest elements [5, 6].',
-                    svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="160" y="35" width="180" height="50" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Top K Heap: [5, 6]</text>
-                    </svg>`
-                },
-                {
-                    title: 'Step 4: Return Min Root as K-th Largest Value',
-                    desc: 'Root of size K Min-Heap (5) is the K-th largest element.',
+                    title: 'Step 4: Return Min Root as K-th Largest Value (5)',
+                    desc: 'After processing all elements, Heap holds top 2 largest elements [5, 6]. Root 5 is 2nd largest!',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
                         <rect x="120" y="35" width="260" height="50" rx="10" fill="#166534" stroke="#22c55e" stroke-width="3"/>
                         <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ 2nd Largest Element = 5</text>
@@ -787,32 +830,34 @@
             archImg: STATIC_BASE + 'dp_matrix_diagram_1785693763528.jpg',
             visualSteps: [
                 {
-                    title: 'Step 1: Initialize 2D DP Matrix (N+1 x W+1)',
-                    desc: 'Row 0 and Col 0 initialized to 0 (base cases for 0 items or 0 capacity).',
+                    title: 'Step 1: Construct 2D DP Matrix DP[N+1][W+1]',
+                    desc: 'Create DP table 4 rows x 7 cols. Row 0 (0 items) and Col 0 (0 capacity) initialized to 0.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="140" y="30" width="220" height="60" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" text-anchor="middle">DP Table: 4 rows x 7 cols</text>
+                        <rect x="120" y="25" width="260" height="70" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+                        <text x="250" y="55" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">DP Table: 4 rows x 7 cols</text>
+                        <text x="250" y="80" fill="#94a3b8" font-size="12" text-anchor="middle">Row 0 = 0 | Col 0 = 0</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 2: Evaluate Choice: Include vs Exclude Item',
-                    desc: 'For item i: DP[i][w] = max(val[i] + DP[i-1][w-wt[i]], DP[i-1][w]).',
+                    title: 'Step 2: Evaluate Choice: Include Item vs Exclude Item',
+                    desc: 'For item 3 (wt 3, val 40) at capacity 6: Compare Include (40 + DP[2][3] = 65) vs Exclude (DP[2][6] = 25).',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="120" y="30" width="260" height="60" rx="8" fill="#1e1b4b" stroke="#eab308" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">max(40 + DP[2][3], DP[2][6])</text>
+                        <rect x="100" y="30" width="300" height="60" rx="8" fill="#1e1b4b" stroke="#eab308" stroke-width="2"/>
+                        <text x="250" y="55" fill="#eab308" font-size="14" font-weight="bold" text-anchor="middle">max( 40 + DP[2][3], DP[2][6] )</text>
+                        <text x="250" y="78" fill="#fff" font-size="14" text-anchor="middle">= max( 40 + 25, 25 ) = 65</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 3: Fill Bottom-Up Table Iteratively',
-                    desc: 'Populate DP table row by row from item 1 to item N.',
+                    title: 'Step 3: Fill Table Bottom-Up Iteratively',
+                    desc: 'Populate DP table row by row for items 1, 2, and 3 across all capacity columns.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="150" y="30" width="200" height="60" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <rect x="140" y="30" width="220" height="60" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
                         <text x="250" y="65" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">DP[3][6] = 65</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 4: Return Max Achievable Value (65)',
-                    desc: 'Cell DP[N][W] contains the optimal max profit = 65.',
+                    title: 'Step 4: Optimal Result Cell DP[N][W] (65)',
+                    desc: 'Bottom-right cell DP[3][6] contains maximum achievable total value = 65.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
                         <rect x="120" y="35" width="260" height="50" rx="10" fill="#166534" stroke="#22c55e" stroke-width="3"/>
                         <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ Max Profit = 65</text>
@@ -833,35 +878,41 @@
             archImg: STATIC_BASE + 'graph_flowchart.jpg',
             visualSteps: [
                 {
-                    title: 'Step 1: Set Source Dist = 0 & Push into Min-Priority Queue',
-                    desc: 'dist[source] = 0, all other dist = infinity. Push (0, Source) into Min-PQ.',
+                    title: 'Step 1: Set Source Dist = 0 & Push (0, Source) into Min-PQ',
+                    desc: 'Initialize dist[source] = 0 and all other vertices to infinity. Push starting pair (0, Node A) into Min-PQ.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="150" y="35" width="200" height="50" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Min-PQ: [(0, Node A)]</text>
+                        <rect x="60" y="35" width="180" height="50" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="150" y="65" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">Min-PQ: [ (0, Node A) ]</text>
+                        <rect x="270" y="35" width="170" height="50" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+                        <text x="355" y="65" fill="#94a3b8" font-size="14" text-anchor="middle">Distances: {A:0, B:∞, C:∞}</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 2: Pop Min Distance Vertex & Relax Edges',
-                    desc: 'Pop Node A (dist 0). For neighbor B: dist[B] = min(inf, 0 + 2) = 2. Push (2, B).',
+                    title: 'Step 2: Pop Vertex A (dist 0) & Relax Edges to B and C',
+                    desc: 'Pop Node A. Edge A->B (wt 2) updates dist[B] = 2. Edge A->C (wt 5) updates dist[C] = 5. Push (2, B) and (5, C).',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="130" y="35" width="240" height="50" rx="8" fill="#1e1b4b" stroke="#eab308" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">Relaxed: dist[B] = 2, dist[C] = 5</text>
+                        <rect x="60" y="35" width="200" height="50" rx="8" fill="#1e1b4b" stroke="#eab308" stroke-width="2"/>
+                        <text x="160" y="65" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">Min-PQ: [ (2, B), (5, C) ]</text>
+                        <rect x="280" y="35" width="160" height="50" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="360" y="65" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">Relaxed: B=2, C=5</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 3: Repeat Edge Relaxation via Priority Queue',
-                    desc: 'Pop Node B (dist 2). Relax edge to D: dist[D] = min(inf, 2 + 2) = 4. Push (4, D).',
+                    title: 'Step 3: Pop Vertex B (dist 2) & Relax Edge to D',
+                    desc: 'Pop Node B (dist 2). Edge B->D (wt 2) updates dist[D] = 2 + 2 = 4 < ∞. Push (4, D) into Min-PQ.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="150" y="35" width="200" height="50" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Shortest dist[D] = 4</text>
+                        <rect x="60" y="35" width="200" height="50" rx="8" fill="#166534" stroke="#22c55e" stroke-width="2"/>
+                        <text x="160" y="65" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">Relaxed D: dist[D] = 4</text>
+                        <rect x="280" y="35" width="160" height="50" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="360" y="65" fill="#94a3b8" font-size="14" text-anchor="middle">Min-PQ: [ (4, D) ]</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 4: All Shortest Distances Determined',
-                    desc: 'Min-PQ empties. Final shortest path array calculated for all vertices.',
+                    title: 'Step 4: Min-PQ Empties -> Final Shortest Path Array',
+                    desc: 'All vertices visited. Final shortest path distance array calculated for all graph nodes.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
                         <rect x="100" y="35" width="300" height="50" rx="10" fill="#166534" stroke="#22c55e" stroke-width="3"/>
-                        <text x="250" y="66" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">✔ Final Shortest Paths Computed</text>
+                        <text x="250" y="66" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">✔ Distances: {A:0, B:2, C:5, D:4}</text>
                     </svg>`
                 }
             ]
@@ -879,32 +930,35 @@
             archImg: STATIC_BASE + 'tree_diagram_1785693716468.jpg',
             visualSteps: [
                 {
-                    title: 'Step 1: Start solve(row = 0) -> Place Queen at (0, 0)',
-                    desc: 'Place Queen Q at row 0, col 0. Recurse to solve(row = 1).',
+                    title: 'Step 1: Start solve(row = 0) -> Place Queen Q1 at (0, 0)',
+                    desc: 'Place Queen Q1 at row 0, col 0. Mark column 0 and diagonals as attacked. Recurse to solve(row = 1).',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="170" y="25" width="160" height="70" rx="8" fill="#1e293b" stroke="#eab308" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Placed Q at (0, 0)</text>
+                        <rect x="150" y="25" width="200" height="70" rx="8" fill="#1e293b" stroke="#eab308" stroke-width="2"/>
+                        <text x="250" y="55" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Row 0: Placed Q at (0, 0)</text>
+                        <text x="250" y="78" fill="#eab308" font-size="12" text-anchor="middle">Recurse to solve(row = 1)</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 2: Check Safety & Recurse to Row 1 & Row 2',
-                    desc: 'Check column and diagonal safety. Place Q at safe column in next row.',
+                    title: 'Step 2: Check Safety & Place Queen Q2 at (1, 2)',
+                    desc: 'row 1: Cols 0 and 1 are under attack. Place Queen Q2 at safe column (1, 2). Recurse to solve(row = 2).',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="150" y="25" width="200" height="70" rx="8" fill="#1e1b4b" stroke="#3b82f6" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Row 1 Safe Q at (1, 2)</text>
+                        <rect x="140" y="25" width="220" height="70" rx="8" fill="#1e1b4b" stroke="#3b82f6" stroke-width="2"/>
+                        <text x="250" y="55" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">Row 1: Safe Q at (1, 2)</text>
+                        <text x="250" y="78" fill="#3b82f6" font-size="12" text-anchor="middle">Recurse to solve(row = 2)</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 3: Blocked Cell -> Backtrack (Remove Queen & Undo Choice)',
-                    desc: 'No safe column in row 3! Backtrack: Remove Queen from row 2 and try next column.',
+                    title: 'Step 3: Blocked Cell -> Backtrack (Remove Queen & Try Next Col)',
+                    desc: 'row 3 has no safe columns! Backtrack: Remove Queen from row 2 and explore next column choice.',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
-                        <rect x="140" y="25" width="220" height="70" rx="8" fill="#450a0a" stroke="#ef4444" stroke-width="2"/>
-                        <text x="250" y="65" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">Conflict! Backtrack to prev row</text>
+                        <rect x="130" y="25" width="240" height="70" rx="8" fill="#450a0a" stroke="#ef4444" stroke-width="2"/>
+                        <text x="250" y="55" fill="#fff" font-size="15" font-weight="bold" text-anchor="middle">No safe col in Row 3!</text>
+                        <text x="250" y="78" fill="#ef4444" font-size="12" font-weight="bold" text-anchor="middle">Backtrack: Undo choice in Row 2</text>
                     </svg>`
                 },
                 {
-                    title: 'Step 4: Valid 4-Queens Solution Board Completed!',
-                    desc: 'Reached row == 4. Valid 4-Queens board configuration found and stored!',
+                    title: 'Step 4: Valid 4-Queens Placement Found & Returned',
+                    desc: 'Reached row == 4. Complete non-attacking 4-Queens board configuration found and stored!',
                     svg: `<svg viewBox="0 0 500 120" class="w-100">
                         <rect x="100" y="35" width="300" height="50" rx="10" fill="#166534" stroke="#22c55e" stroke-width="3"/>
                         <text x="250" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">✔ Valid N-Queens Board Solution!</text>
