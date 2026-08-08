@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Coding Games Arcade - SkillSphere{% endblock %}
-{% block page_title %}Coding Games Arcade{% endblock %}
+{% block title %}Coding Game - SkillSphere{% endblock %}
+{% block page_title %}Coding Game{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -508,7 +508,7 @@
 {% block content %}
 <!-- Arcade Header Card -->
 <div class="card-custom p-4 mb-4 text-center" style="background: linear-gradient(135deg, #1e1b4b 0%, #311084 100%); border: 2px solid var(--cyber-border); box-shadow: 0 10px 30px rgba(0,0,0,0.25);">
-    <h2 class="arcade-title mb-2"><i class="bi bi-controller me-2"></i>SkillSphere Coding Arcade</h2>
+    <h2 class="arcade-title mb-2"><i class="bi bi-controller me-2"></i>SkillSphere Coding Game</h2>
     <p class="text-light-50 mb-0 max-w-2xl mx-auto">Boost your programmer muscle memory, compiler inspection speed, and logical capabilities across multiple games and stages!</p>
 </div>
 
@@ -903,9 +903,11 @@
                                 <p class="text-muted small mb-0">Reconstruct essential interview algorithms step-by-step in correct execution sequence.</p>
                             </div>
                             <div class="d-flex align-items-center gap-3">
-                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 120px;">
-                                    <span class="hud-label d-block">Level</span>
-                                    <span class="fw-bold text-warning fs-6" id="algo-level-indicator">Level 1 / 12</span>
+                                <div class="hud-panel px-3 py-2 text-center" style="min-width: 170px;">
+                                    <span class="hud-label d-block mb-1"><i class="bi bi-layers-fill text-warning me-1"></i>Select Level</span>
+                                    <select id="algo-level-select" class="form-select form-select-sm bg-dark text-warning border-warning font-mono fw-bold text-center" onchange="jumpToAlgoLevel(this.value)">
+                                        <!-- Options 1 to 12 dynamically populated -->
+                                    </select>
                                 </div>
                                 <div class="hud-panel px-3 py-2 text-center" style="min-width: 100px;">
                                     <span class="hud-label d-block">Score</span>
@@ -3684,6 +3686,28 @@ function initAlgoGame() {
     algoState.level = Math.max(0, Math.min(savedLevels.algo || 0, ALGORITHM_MASTER_LEVELS.length - 1));
     algoState.score = 0;
     algoState.active = true;
+    populateAlgoLevelSelect();
+    renderAlgoLevel();
+}
+
+function populateAlgoLevelSelect() {
+    const select = document.getElementById('algo-level-select');
+    if (!select) return;
+    select.innerHTML = '';
+    ALGORITHM_MASTER_LEVELS.forEach((algo, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = `Lvl ${index + 1}: ${algo.title}`;
+        if (index === algoState.level) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
+function jumpToAlgoLevel(lvlIndex) {
+    const idx = parseInt(lvlIndex);
+    if (isNaN(idx) || idx < 0 || idx >= ALGORITHM_MASTER_LEVELS.length) return;
+    algoState.level = idx;
+    algoState.active = true;
     renderAlgoLevel();
 }
 
@@ -3712,7 +3736,14 @@ function renderAlgoLevel() {
     document.getElementById('algo-space').textContent = algo.spaceComplexity;
     document.getElementById('algo-category').textContent = algo.category;
     document.getElementById('algo-score').textContent = algoState.score;
-    document.getElementById('algo-level-indicator').textContent = `Level ${algoState.level + 1} / ${ALGORITHM_MASTER_LEVELS.length}`;
+    
+    const select = document.getElementById('algo-level-select');
+    if (select) {
+        if (select.children.length !== ALGORITHM_MASTER_LEVELS.length) {
+            populateAlgoLevelSelect();
+        }
+        select.value = algoState.level;
+    }
     
     document.getElementById('algo-feedback').style.display = 'none';
     document.getElementById('algo-verify-btn').style.display = 'block';
