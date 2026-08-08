@@ -129,7 +129,9 @@
     <div class="row g-3 align-items-center">
         <div class="col-md-7">
             <div class="d-flex flex-wrap gap-2">
-                <button class="topic-filter-btn active" onclick="filterCategory('all', this)">All Topics (15)</button>
+                <button class="topic-filter-btn active" onclick="filterCategory('all', this)">All Quizzes</button>
+                <button class="topic-filter-btn" onclick="filterStatus('live', this)"><i class="bi bi-broadcast text-success me-1"></i>Live Now</button>
+                <button class="topic-filter-btn" onclick="filterStatus('upcoming', this)"><i class="bi bi-clock-history text-warning me-1"></i>Upcoming</button>
                 <button class="topic-filter-btn" onclick="filterCategory('linear', this)">Linear DS</button>
                 <button class="topic-filter-btn" onclick="filterCategory('tree', this)">Trees & Heaps</button>
                 <button class="topic-filter-btn" onclick="filterCategory('graph', this)">Graph & DP</button>
@@ -147,16 +149,31 @@
 <!-- Quizzes Grid -->
 <div class="row g-4" id="quizzesGridContainer">
     {% for q in quizzes %}
-    <div class="col-md-6 col-lg-4 quiz-item-col" data-topic="{{ q.topic|lower }}" data-title="{{ q.title|lower }}">
+    <div class="col-md-6 col-lg-4 quiz-item-col" data-topic="{{ q.topic|lower }}" data-title="{{ q.title|lower }}" data-status="{{ q.status }}" data-submitted="{% if q.id in user_submissions %}true{% else %}false{% endif %}">
         <div class="quiz-card p-4 h-100 d-flex flex-column justify-content-between">
             <div>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span class="badge bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-pill extra-small fw-bold">
                         <i class="bi bi-tag-fill me-1"></i>{{ q.topic }}
                     </span>
-                    <span class="badge bg-warning bg-opacity-20 text-warning px-3 py-1 rounded-pill extra-small fw-bold">
-                        <i class="bi bi-lightning-charge-fill me-1"></i>{{ q.total_xp }} XP
-                    </span>
+                    
+                    {% if not q.is_live %}
+                        <span class="badge bg-danger text-light px-3 py-1 rounded-pill extra-small fw-bold">
+                            <i class="bi bi-lock-fill me-1"></i>Draft (Unpublished)
+                        </span>
+                    {% elif q.status == 'live' %}
+                        <span class="badge badge-status-live px-3 py-1 rounded-pill extra-small fw-bold">
+                            <i class="bi bi-broadcast me-1"></i>Live Now
+                        </span>
+                    {% elif q.status == 'upcoming' %}
+                        <span class="badge bg-warning text-dark px-3 py-1 rounded-pill extra-small fw-bold">
+                            <i class="bi bi-clock-history me-1"></i>Upcoming
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary text-light px-3 py-1 rounded-pill extra-small fw-bold">
+                            <i class="bi bi-calendar-x me-1"></i>Ended
+                        </span>
+                    {% endif %}
                 </div>
 
                 <h5 class="fw-bold mb-2 text-body">{{ q.title }}</h5>
@@ -164,19 +181,23 @@
 
                 <div class="p-3 bg-body-tertiary rounded-3 border border-secondary border-opacity-10 mb-3 extra-small">
                     <div class="d-flex justify-content-between mb-1">
-                        <span class="text-muted"><i class="bi bi-list-check me-1"></i>Questions:</span>
-                        <span class="fw-bold text-success">25 Questions</span>
+                        <span class="text-muted"><i class="bi bi-list-check me-1"></i>Questions & XP:</span>
+                        <span class="fw-bold text-success">25 Questions • {{ q.total_xp }} XP</span>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
-                        <span class="text-muted"><i class="bi bi-bar-chart-steps me-1"></i>Level:</span>
-                        <span class="fw-bold text-warning">Basic to Advanced</span>
+                        <span class="text-muted"><i class="bi bi-clock me-1"></i>Schedule:</span>
+                        <span class="fw-bold text-info">{{ q.start_time|date:"M d, H:i" }}</span>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span class="text-muted"><i class="bi bi-check2-circle me-1"></i>Status:</span>
                         {% if q.id in user_submissions %}
                             <span class="fw-bold text-success"><i class="bi bi-check-all me-1"></i>Completed</span>
+                        {% elif q.status == 'live' %}
+                            <span class="fw-bold text-success"><i class="bi bi-broadcast me-1"></i>Live Now</span>
+                        {% elif q.status == 'upcoming' %}
+                            <span class="fw-bold text-warning"><i class="bi bi-clock-history me-1"></i>Starts {{ q.start_time|date:"M d, H:i" }}</span>
                         {% else %}
-                            <span class="fw-bold text-info"><i class="bi bi-play-fill me-1"></i>Ready to Take</span>
+                            <span class="fw-bold text-muted"><i class="bi bi-x-circle me-1"></i>Ended</span>
                         {% endif %}
                     </div>
                 </div>
@@ -187,10 +208,18 @@
                     <a href="{% url 'dashboard:quiz_result' q.id %}" class="btn btn-outline-success w-100 rounded-pill fw-bold">
                         <i class="bi bi-bar-chart-line-fill me-2"></i>View Score & Explanations
                     </a>
-                {% else %}
-                    <a href="{% url 'dashboard:quiz_take' q.id %}" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
-                        <i class="bi bi-play-circle-fill me-2"></i>Start 25-Question Quiz
+                {% elif q.status == 'live' %}
+                    <a href="{% url 'dashboard:quiz_take' q.id %}" class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow-sm">
+                        <i class="bi bi-play-circle-fill me-2"></i>Start Live Quiz Now
                     </a>
+                {% elif q.status == 'upcoming' %}
+                    <button class="btn btn-outline-warning w-100 rounded-pill fw-bold py-2" disabled>
+                        <i class="bi bi-clock-history me-2"></i>Starts {{ q.start_time|date:"M d, H:i" }}
+                    </button>
+                {% else %}
+                    <button class="btn btn-outline-secondary w-100 rounded-pill fw-bold py-2" disabled>
+                        <i class="bi bi-x-circle me-2"></i>Quiz Ended
+                    </button>
                 {% endif %}
             </div>
         </div>
@@ -199,8 +228,8 @@
     <div class="col-12">
         <div class="quiz-card p-5 text-center text-muted">
             <i class="bi bi-card-checklist fs-1 d-block mb-3 text-secondary"></i>
-            <h5>No quizzes found.</h5>
-            <p>Use the refresh button or reset search criteria.</p>
+            <h5>No published live or upcoming quizzes available right now.</h5>
+            <p>Admin published live and upcoming quizzes will appear here automatically.</p>
         </div>
     </div>
     {% endfor %}
@@ -209,6 +238,37 @@
 
 {% block extra_js %}
 <script>
+    function filterStatus(statusFilter, btn) {
+        document.querySelectorAll('.topic-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const items = document.querySelectorAll('.quiz-item-col');
+        items.forEach(item => {
+            const status = item.getAttribute('data-status') || '';
+            const isSubmitted = item.getAttribute('data-submitted') === 'true';
+
+            if (statusFilter === 'live') {
+                if (status === 'live') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            } else if (statusFilter === 'upcoming') {
+                if (status === 'upcoming') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            } else if (statusFilter === 'submitted') {
+                if (isSubmitted) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+    }
+
     function filterCategory(cat, btn) {
         document.querySelectorAll('.topic-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');

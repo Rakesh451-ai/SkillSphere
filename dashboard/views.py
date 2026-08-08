@@ -947,7 +947,12 @@ def quiz_list(request):
         except Exception:
             pass
 
-    quizzes = Quiz.objects.all().prefetch_related('questions', 'submissions')
+    # Only show quizzes allowed/published by admin (is_live=True) unless user is staff
+    if request.user.is_staff:
+        quizzes = Quiz.objects.all().prefetch_related('questions', 'submissions')
+    else:
+        quizzes = Quiz.objects.filter(is_live=True).prefetch_related('questions', 'submissions')
+
     user_submissions = {s.quiz_id: s for s in QuizSubmission.objects.filter(user=request.user)}
 
     context = {
@@ -960,6 +965,11 @@ def quiz_list(request):
 @login_required
 def quiz_take(request, quiz_id):
     quiz = get_object_or_404(Quiz.objects.prefetch_related('questions'), id=quiz_id)
+
+    # Access Protection: check if quiz is allowed/published by admin
+    if not quiz.is_live and not request.user.is_staff:
+        messages.error(request, "This quiz is currently draft/unpublished by the admin.")
+        return redirect('dashboard:quiz_list')
 
     submission = QuizSubmission.objects.filter(quiz=quiz, user=request.user).first()
     if submission:
@@ -979,6 +989,10 @@ def quiz_take(request, quiz_id):
 @login_required
 def quiz_submit(request, quiz_id):
     quiz = get_object_or_404(Quiz.objects.prefetch_related('questions'), id=quiz_id)
+
+    if not quiz.is_live and not request.user.is_staff:
+        messages.error(request, "This quiz is currently unavailable.")
+        return redirect('dashboard:quiz_list')
 
     existing = QuizSubmission.objects.filter(quiz=quiz, user=request.user).first()
     if existing:
