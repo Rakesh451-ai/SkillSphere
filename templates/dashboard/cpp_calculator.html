@@ -235,38 +235,57 @@
         transition: width 0.1s linear;
     }
 
-    /* Speed Typer Highlighting */
-    .char-node {
-        color: #a3a3a3 !important; /* Make untyped characters a clearly readable light gray */
-        display: inline-block;
-        padding-bottom: 3px;
-        line-height: 1.4;
-        border-bottom: 2px solid transparent;
-        transition: all 0.1s;
+    /* Speed Typer Highlighting & Indentation Fix */
+    #typer-editor {
+        white-space: pre !important;
+        font-family: 'Fira Code', 'Cascadia Code', 'Source Code Pro', Consolas, monospace !important;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        overflow-x: auto;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
     }
 
+    .char-node {
+        display: inline !important;
+        padding-bottom: 2px;
+        line-height: 1.7;
+        border-bottom: 2px solid transparent;
+        transition: color 0.1s, background-color 0.1s;
+    }
+
+    /* Syntax Highlighting Colors for Untyped Code */
+    .char-node.syn-keyword { color: #c084fc !important; font-weight: 600; } /* Purple/Indigo */
+    .char-node.syn-string  { color: #34d399 !important; } /* Emerald Green */
+    .char-node.syn-number  { color: #fbbf24 !important; } /* Amber Gold */
+    .char-node.syn-comment { color: #64748b !important; font-style: italic; } /* Slate Gray */
+    .char-node.syn-func    { color: #38bdf8 !important; } /* Sky Blue */
+    .char-node.syn-ident   { color: #e2e8f0 !important; } /* Soft White */
+    .char-node.syn-punct   { color: #94a3b8 !important; } /* Muted Slate */
+
+    /* Active, Correct & Wrong Character States */
     .char-node.char-correct {
-        color: #34d399 !important;
-        text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        color: #10b981 !important;
+        background-color: rgba(16, 185, 129, 0.18) !important;
+        text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
     }
 
     .char-node.char-wrong {
         color: #f87171 !important;
-        background-color: rgba(239, 68, 68, 0.18) !important;
-        border-bottom: 2px solid var(--cyber-red) !important;
+        background-color: rgba(239, 68, 68, 0.28) !important;
+        border-bottom: 2px solid #ef4444 !important;
     }
 
     .char-node.char-active {
-        color: #38bdf8 !important;
-        background-color: rgba(56, 189, 248, 0.15) !important;
+        background-color: rgba(56, 189, 248, 0.25) !important;
         border-bottom: 2px solid #38bdf8 !important;
         animation: activeCaret 0.8s infinite alternate;
     }
 
     .char-node.char-active.char-wrong {
         color: #f87171 !important;
-        background-color: rgba(239, 68, 68, 0.25) !important;
-        border-bottom: 2px solid var(--cyber-red) !important;
+        background-color: rgba(239, 68, 68, 0.35) !important;
+        border-bottom: 2px solid #ef4444 !important;
         animation: activeCaretError 0.8s infinite alternate;
     }
 
@@ -611,31 +630,42 @@
                         </div>
 
                         <!-- WPM ACC HUD Indicators -->
-                        <div class="row g-3 mb-4">
-                            <div class="col-6 col-md-3">
-                                <div class="hud-panel text-center">
-                                    <span class="hud-label d-block mb-1">Words Per Minute</span>
+                        <div class="row g-2 g-md-3 mb-3">
+                            <div class="col-6 col-md">
+                                <div class="hud-panel text-center p-2.5">
+                                    <span class="hud-label d-block mb-1">Words / Min</span>
                                     <span class="hud-value text-warning" id="typer-wpm">0</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="hud-panel text-center">
+                            <div class="col-6 col-md">
+                                <div class="hud-panel text-center p-2.5">
                                     <span class="hud-label d-block mb-1">Accuracy</span>
                                     <span class="hud-value text-success" id="typer-accuracy">100%</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="hud-panel text-center">
+                            <div class="col-6 col-md">
+                                <div class="hud-panel text-center p-2.5">
+                                    <span class="hud-label d-block mb-1">Combo Streak</span>
+                                    <span class="hud-value text-warning fw-bold" id="typer-combo">🔥 0x</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <div class="hud-panel text-center p-2.5">
                                     <span class="hud-label d-block mb-1">Elapsed Time</span>
                                     <span class="hud-value text-info" id="typer-time">0.0s</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="hud-panel text-center">
-                                    <span class="hud-label d-block mb-1">High Score WPM</span>
-                                    <span class="hud-value text-danger" id="typer-highscore">0</span>
+                            <div class="col-12 col-md">
+                                <div class="hud-panel text-center p-2.5">
+                                    <span class="hud-label d-block mb-1">High Score</span>
+                                    <span class="hud-value text-danger" id="typer-highscore">0 WPM</span>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Live Typing Progress Bar -->
+                        <div class="progress bg-dark mb-4 rounded-pill overflow-hidden border border-secondary border-opacity-25" style="height: 8px;">
+                            <div id="typer-progress-bar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" style="width: 0%; transition: width 0.15s ease;"></div>
                         </div>
 
                         <!-- IDE Simulator Box -->
@@ -1586,7 +1616,10 @@ let typerState = {
     startTime: null,
     timer: null,
     totalTyped: 0,
-    correctTyped: 0
+    correctTyped: 0,
+    errors: 0,
+    combo: 0,
+    maxCombo: 0
 };
 
 const typerStartBtn = document.getElementById('typer-start-btn');
@@ -1612,16 +1645,10 @@ typerHiddenInput.addEventListener('blur', () => {
 typerHiddenInput.addEventListener('focus', () => {
     if (typerState.gameRunning) {
         document.getElementById('typer-editor-container').classList.remove('unfocused-active');
-        typerState.startTime = Date.now() - (parseFloat(document.getElementById('typer-time').textContent) * 1000);
-        typerState.timer = setInterval(() => {
-            const elapsed = (Date.now() - typerState.startTime) / 1000;
-            document.getElementById('typer-time').textContent = elapsed.toFixed(1) + 's';
-            
-            if (elapsed > 0) {
-                const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
-                document.getElementById('typer-wpm').textContent = wpm;
-            }
-        }, 100);
+        const currentTime = parseFloat(document.getElementById('typer-time').textContent) || 0;
+        typerState.startTime = Date.now() - (currentTime * 1000);
+        clearInterval(typerState.timer);
+        typerState.timer = setInterval(updateTyperHUD, 100);
     }
 });
 
@@ -1632,14 +1659,122 @@ typerEditor.addEventListener('click', () => {
     typerHiddenInput.focus({ preventScroll: true });
 });
 
+// Single document focus delegate - DO NOT call handleTypingInput here to avoid duplicate triggers!
 document.addEventListener('keydown', (e) => {
     if (typerState.gameRunning && document.activeElement !== typerHiddenInput) {
-        if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT' && document.activeElement.tagName !== 'TEXTAREA') {
+        const activeTag = document.activeElement ? document.activeElement.tagName : '';
+        if (activeTag !== 'INPUT' && activeTag !== 'SELECT' && activeTag !== 'TEXTAREA') {
             typerHiddenInput.focus({ preventScroll: true });
-            handleTypingInput(e);
         }
     }
 });
+
+function updateTyperHUD() {
+    if (!typerState.gameRunning) return;
+    const elapsed = (Date.now() - typerState.startTime) / 1000;
+    document.getElementById('typer-time').textContent = elapsed.toFixed(1) + 's';
+    
+    if (elapsed > 0) {
+        const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
+        document.getElementById('typer-wpm').textContent = wpm;
+    } else {
+        document.getElementById('typer-wpm').textContent = '0';
+    }
+    
+    const totalAttempts = typerState.correctTyped + typerState.errors;
+    const accuracy = totalAttempts > 0 ? Math.round((typerState.correctTyped / totalAttempts) * 100) : 100;
+    document.getElementById('typer-accuracy').textContent = accuracy + '%';
+
+    const comboEl = document.getElementById('typer-combo');
+    if (comboEl) {
+        comboEl.textContent = `🔥 ${typerState.combo}x`;
+    }
+
+    const progress = Math.min(100, Math.round((typerState.currentIndex / Math.max(1, typerState.currentCode.length)) * 100));
+    const progressBar = document.getElementById('typer-progress-bar');
+    if (progressBar) {
+        progressBar.style.width = `${progress}%`;
+    }
+}
+
+function getSyntaxClasses(code, lang) {
+    const classes = new Array(code.length).fill('syn-punct');
+    const keywords = [
+        'def', 'class', 'public', 'private', 'protected', 'return', 'import', 'from',
+        'function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'try', 'catch',
+        'finally', 'vector', 'int', 'void', 'string', 'double', 'float', 'bool', 'boolean',
+        'SELECT', 'FROM', 'WHERE', 'INNER', 'JOIN', 'ON', 'GROUP', 'BY', 'HAVING',
+        'ORDER', 'OVER', 'PARTITION', 'CREATE', 'TABLE', 'SERIAL', 'PRIMARY', 'KEY',
+        'VARCHAR', 'DECIMAL', 'DEFAULT', 'NOT', 'NULL', 'DENSE_RANK', 'as', 'with', 'open',
+        'struct', 'include', 'namespace', 'std', 'override', 'new', 'extends'
+    ];
+    
+    // Strings
+    let inString = false;
+    let stringChar = '';
+    for (let i = 0; i < code.length; i++) {
+        const c = code[i];
+        if (!inString && (c === '"' || c === "'")) {
+            inString = true;
+            stringChar = c;
+            classes[i] = 'syn-string';
+            continue;
+        }
+        if (inString) {
+            classes[i] = 'syn-string';
+            if (c === stringChar && code[i-1] !== '\\') {
+                inString = false;
+            }
+            continue;
+        }
+    }
+    
+    // Comments
+    let inComment = false;
+    for (let i = 0; i < code.length; i++) {
+        if (classes[i] === 'syn-string') continue;
+        if (!inComment) {
+            if (code[i] === '#' || (code[i] === '/' && code[i+1] === '/')) {
+                inComment = true;
+            }
+        }
+        if (inComment) {
+            classes[i] = 'syn-comment';
+            if (code[i] === '\n') {
+                inComment = false;
+            }
+            continue;
+        }
+    }
+    
+    // Identifiers & Keywords
+    const regex = /[a-zA-Z_][a-zA-Z0-9_]*/g;
+    let match;
+    while ((match = regex.exec(code)) !== null) {
+        const word = match[0];
+        const start = match.index;
+        const end = start + word.length;
+        let type = keywords.includes(word) ? 'syn-keyword' : ((code[end] === '(' || (code[end] === ' ' && code[end+1] === '(')) ? 'syn-func' : 'syn-ident');
+        for (let i = start; i < end; i++) {
+            if (classes[i] !== 'syn-string' && classes[i] !== 'syn-comment') {
+                classes[i] = type;
+            }
+        }
+    }
+    
+    // Numbers
+    const numRegex = /\b\d+(\.\d+)?\b/g;
+    while ((match = numRegex.exec(code)) !== null) {
+        const start = match.index;
+        const end = start + match[0].length;
+        for (let i = start; i < end; i++) {
+            if (classes[i] !== 'syn-string' && classes[i] !== 'syn-comment') {
+                classes[i] = 'syn-number';
+            }
+        }
+    }
+    return classes;
+}
 
 function loadTyperLevel() {
     const levelData = SPEED_TYPER_LEVELS[typerState.level];
@@ -1650,31 +1785,35 @@ function loadTyperLevel() {
     typerState.currentIndex = 0;
     typerState.totalTyped = 0;
     typerState.correctTyped = 0;
+    typerState.errors = 0;
+    typerState.combo = 0;
+    typerState.maxCombo = 0;
     
     typerEditor.innerHTML = '';
     typerState.spans = [];
     
+    const syntaxClasses = getSyntaxClasses(levelData.code, levelData.lang);
+    
     for (let i = 0; i < levelData.code.length; i++) {
         const char = levelData.code[i];
         const span = document.createElement('span');
-        span.className = 'char-node';
-        if (char === '\n') {
-            span.innerHTML = '<br>';
-        } else if (char === ' ') {
-            span.innerHTML = '&nbsp;';
-        } else {
-            span.textContent = char;
-        }
+        const synClass = syntaxClasses[i] || 'syn-punct';
+        span.className = `char-node ${synClass}`;
+        span.textContent = char;
         typerEditor.appendChild(span);
         typerState.spans.push(span);
     }
     
     const highScore = localStorage.getItem(`typer_highscore_${typerState.level}`) || 0;
-    document.getElementById('typer-highscore').textContent = highScore;
+    document.getElementById('typer-highscore').textContent = highScore + ' WPM';
     
     document.getElementById('typer-wpm').textContent = '0';
     document.getElementById('typer-accuracy').textContent = '100%';
     document.getElementById('typer-time').textContent = '0.0s';
+    const comboEl = document.getElementById('typer-combo');
+    if (comboEl) comboEl.textContent = '🔥 0x';
+    const progressBar = document.getElementById('typer-progress-bar');
+    if (progressBar) progressBar.style.width = '0%';
 }
 
 function toggleTyperGame() {
@@ -1702,27 +1841,51 @@ function toggleTyperGame() {
     
     typerHiddenInput.focus({ preventScroll: true });
     
-    typerState.timer = setInterval(() => {
-        const elapsed = (Date.now() - typerState.startTime) / 1000;
-        document.getElementById('typer-time').textContent = elapsed.toFixed(1) + 's';
-        
-        if (elapsed > 0) {
-            const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
-            document.getElementById('typer-wpm').textContent = wpm;
-        }
-    }, 100);
+    clearInterval(typerState.timer);
+    typerState.timer = setInterval(updateTyperHUD, 100);
 }
 
 function handleTypingInput(e) {
     if (!typerState.gameRunning) return;
     
-    // Prevent default browser behavior on navigation keys to keep focus steady
+    // Prevent default browser behavior on space, tab, backspace, slash
     if (e.key === ' ' || e.key === 'Backspace' || e.key === '/' || e.key === 'Tab') {
         e.preventDefault();
     }
     
+    // Handle Backspace for error correction
+    if (e.key === 'Backspace') {
+        if (typerState.currentIndex > 0) {
+            const currentSpan = typerState.spans[typerState.currentIndex];
+            if (currentSpan) {
+                currentSpan.classList.remove('char-active', 'char-wrong');
+            }
+            typerState.currentIndex--;
+            const prevSpan = typerState.spans[typerState.currentIndex];
+            if (prevSpan) {
+                if (prevSpan.classList.contains('char-wrong')) {
+                    prevSpan.classList.remove('char-wrong');
+                    if (typerState.errors > 0) typerState.errors--;
+                }
+                if (prevSpan.classList.contains('char-correct')) {
+                    prevSpan.classList.remove('char-correct');
+                    if (typerState.correctTyped > 0) typerState.correctTyped--;
+                }
+                prevSpan.classList.add('char-active');
+            }
+            typerState.combo = 0;
+            updateTyperHUD();
+        }
+        return;
+    }
+
+    const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+    if (ignoredKeys.includes(e.key)) {
+        return;
+    }
+    
     const targetChar = typerState.currentCode[typerState.currentIndex];
-    const pressedKey = e.key === 'Enter' ? '\n' : e.key;
+    const pressedKey = (e.key === 'Enter' ? '\n' : (e.key === 'Tab' ? '  ' : e.key));
     
     if (pressedKey === targetChar) {
         const span = typerState.spans[typerState.currentIndex];
@@ -1732,13 +1895,16 @@ function handleTypingInput(e) {
         typerState.currentIndex++;
         typerState.correctTyped++;
         typerState.totalTyped++;
+        typerState.combo++;
+        if (typerState.combo > typerState.maxCombo) typerState.maxCombo = typerState.combo;
         
-        // Auto-complete indentation spaces only
+        // Auto-complete leading indentation spaces after newline or tab
         while (typerState.currentIndex < typerState.currentCode.length && 
                typerState.currentCode[typerState.currentIndex] === ' ' && 
                isIndentationSpace(typerState.currentIndex, typerState.currentCode)) {
             
             const autoSpan = typerState.spans[typerState.currentIndex];
+            autoSpan.classList.remove('char-active', 'char-wrong');
             autoSpan.classList.add('char-correct');
             typerState.currentIndex++;
             typerState.correctTyped++;
@@ -1752,25 +1918,25 @@ function handleTypingInput(e) {
             endTyperGame(true);
         }
         
-        gameAudio.playBeep(500 + Math.random() * 250, 'sine', 0.04);
+        // Play pitch-accented combo sound effect
+        const basePitch = 500 + Math.min(400, typerState.combo * 15);
+        gameAudio.playBeep(basePitch, 'sine', 0.04);
     } else {
-        const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape', 'Backspace'];
-        if (!ignoredKeys.includes(e.key)) {
-            const span = typerState.spans[typerState.currentIndex];
+        const span = typerState.spans[typerState.currentIndex];
+        if (span) {
             span.classList.add('char-wrong');
-            typerState.totalTyped++;
-            gameAudio.onFailure();
-            
-            const container = document.getElementById('typer-editor-container');
-            container.classList.add('shake-anim');
-            setTimeout(() => container.classList.remove('shake-anim'), 200);
         }
+        typerState.totalTyped++;
+        typerState.errors++;
+        typerState.combo = 0;
+        gameAudio.onFailure();
+        
+        const container = document.getElementById('typer-editor-container');
+        container.classList.add('shake-anim');
+        setTimeout(() => container.classList.remove('shake-anim'), 200);
     }
     
-    if (typerState.totalTyped > 0) {
-        const accuracy = Math.round((typerState.correctTyped / typerState.totalTyped) * 100);
-        document.getElementById('typer-accuracy').textContent = accuracy + '%';
-    }
+    updateTyperHUD();
 }
 
 typerHiddenInput.addEventListener('keydown', handleTypingInput);
@@ -1791,10 +1957,10 @@ function endTyperGame(isSuccess) {
         const oldHigh = parseInt(localStorage.getItem(`typer_highscore_${typerState.level}`)) || 0;
         if (wpm > oldHigh) {
             localStorage.setItem(`typer_highscore_${typerState.level}`, wpm);
-            document.getElementById('typer-highscore').textContent = wpm;
+            document.getElementById('typer-highscore').textContent = wpm + ' WPM';
             showArcadeModal(
-                'New Record!',
-                `Level Complete! New WPM High Score: ${wpm} WPM!`,
+                '⚡ New Speed Record!',
+                `Level Complete! New WPM High Score: ${wpm} WPM! Max Combo: ${typerState.maxCombo}x 🔥`,
                 wpm,
                 'Next Level',
                 () => {
@@ -1805,8 +1971,8 @@ function endTyperGame(isSuccess) {
             );
         } else {
             showArcadeModal(
-                'Level Complete!',
-                `Speed: ${wpm} WPM (Record: ${oldHigh} WPM).`,
+                '🎉 Level Complete!',
+                `Speed: ${wpm} WPM (Record: ${oldHigh} WPM). Max Combo: ${typerState.maxCombo}x 🔥`,
                 wpm,
                 'Try Again',
                 () => {

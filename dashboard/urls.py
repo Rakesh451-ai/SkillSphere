@@ -5,6 +5,7 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('api/tech-feed/', views.api_tech_feed, name='api_tech_feed'),
     path('games/', views.cpp_calculator, name='cpp_calculator'),
     path('cpp-calculator/', views.cpp_calculator),
     path('games/update-progress/', views.update_game_progress, name='update_game_progress'),

@@ -2016,7 +2016,7 @@ def seed_quizzes(force=False):
                 description=item["description"],
                 start_time=start_time,
                 end_time=end_time,
-                is_live=False,
+                is_live=True,
                 total_xp=250
             )
             created_quizzes_count += 1
