@@ -183,3 +183,53 @@ class QuizSubmission(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.quiz.title}: {self.score}/{self.total_possible}"
+
+
+class StudyResourcePlaylist(models.Model):
+    SECTION_CHOICES = [
+        ('dsa', 'DSA Courses'),
+        ('coding', 'Coding Platforms'),
+        ('webdev', 'Web Development'),
+        ('aiml', 'AI / ML'),
+        ('aptitude', 'Aptitude & Quantitative'),
+        ('softskills', 'Soft Skills & Communication'),
+    ]
+
+    title = models.CharField(max_length=255)
+    instructor = models.CharField(max_length=150, help_text="Instructor or YouTube Channel")
+    url = models.URLField(help_text="Playlist URL")
+    description = models.TextField(blank=True, default='')
+    badge_text = models.CharField(max_length=50, blank=True, default='Playlist')
+    section = models.CharField(max_length=30, choices=SECTION_CHOICES, default='dsa')
+    created_at = models.DateTimeField(auto_now_add=True)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"[{self.get_section_display()}] {self.title} ({self.instructor})"
+
+
+class CustomDSAProblem(models.Model):
+    LINK_TYPE_CHOICES = [
+        ('problem', 'Coding Problem'),
+        ('resource', 'Video / Resource Link'),
+    ]
+
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    category = models.CharField(max_length=100, default='Arrays & Strings')
+    difficulty = models.CharField(max_length=20, choices=[('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard')], default='Easy')
+    url = models.URLField(help_text="Problem or resource URL e.g. LeetCode, YouTube, Docs")
+    link_type = models.CharField(max_length=20, choices=LINK_TYPE_CHOICES, default='problem')
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"[{self.category}] {self.title} ({self.difficulty})"
+
+

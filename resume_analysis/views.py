@@ -27,7 +27,7 @@ def resume_upload(request):
             file = request.FILES['resume_file']
             if not file.name.lower().endswith('.pdf'):
                 messages.error(request, 'Please upload a PDF file.')
-                return render(request, 'resumeanalyzer/upload.html', {
+                return render(request, 'resume_analysis/upload.html', {
                     'form': form,
                     'analyses': analyses,
                     'recommendations': recommendations
@@ -46,10 +46,10 @@ def resume_upload(request):
                 missing_sections=result['missing_sections'],
             )
             messages.success(request, f'Resume analyzed! Score: {analysis.score}/100')
-            return redirect('resumeanalyzer:result', pk=analysis.pk)
+            return redirect('resume_analysis:result', pk=analysis.pk)
     else:
         form = ResumeUploadForm()
-    return render(request, 'resumeanalyzer/upload.html', {
+    return render(request, 'resume_analysis/upload.html', {
         'form': form,
         'analyses': analyses,
         'recommendations': recommendations
@@ -59,4 +59,4 @@ def resume_upload(request):
 @login_required
 def resume_result(request, pk):
     analysis = get_object_or_404(ResumeAnalysis, pk=pk, user=request.user)
-    return render(request, 'resumeanalyzer/result.html', {'analysis': analysis})
+    return render(request, 'resume_analysis/result.html', {'analysis': analysis})

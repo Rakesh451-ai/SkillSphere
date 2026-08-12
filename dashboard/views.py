@@ -1,4 +1,6 @@
 import json
+import re
+import uuid
 from datetime import timedelta
 from decimal import Decimal
 
@@ -252,7 +254,7 @@ def calculate_placement_readiness(user):
     score += min(int(total_game_level * 1.5), 20)
 
     # Resume quality (20 points)
-    from resumeanalyzer.models import ResumeAnalysis
+    from resume_analysis.models import ResumeAnalysis
     latest_resume = ResumeAnalysis.objects.filter(user=user).first()
     if latest_resume:
         score += int(latest_resume.score * 0.20)
@@ -452,6 +454,8 @@ DSA_SHEET = {
 }
 
 
+import re
+
 @login_required
 def study_materials(request):
     logged_in_user = request.user
@@ -467,6 +471,93 @@ def study_materials(request):
             is_own_sheet = False
         except User.DoesNotExist:
             user = logged_in_user
+
+    if request.method == 'POST' and 'save_leetcode_username' in request.POST:
+        if is_own_sheet:
+            new_lc_user = request.POST.get('leetcode_username', '').strip()
+            if new_lc_user:
+                user.leetcode_username = new_lc_user
+                user.save()
+                from accounts.leetcode import sync_leetcode_stats
+                success = sync_leetcode_stats(user)
+                if success:
+                    messages.success(request, f"LeetCode username set to '@{new_lc_user}' and stats synced successfully!")
+                else:
+                    messages.warning(request, f"Saved LeetCode username '@{new_lc_user}', but could not fetch public stats. Please verify the profile is public.")
+            else:
+                user.leetcode_username = ''
+                user.save()
+                messages.info(request, "LeetCode username removed.")
+            return redirect('dashboard:study_materials')
+        else:
+            messages.error(request, "You cannot modify another user's profile.")
+            return redirect(f"{reverse('dashboard:study_materials')}?username={user.username}")
+
+    if request.method == 'POST' and 'add_custom_question' in request.POST:
+        title = request.POST.get('title', '').strip()
+        category = request.POST.get('category', 'Arrays & Strings').strip() or 'Arrays & Strings'
+        difficulty = request.POST.get('difficulty', 'Easy').strip()
+        url = request.POST.get('url', '').strip()
+        user_link_type = request.POST.get('link_type', 'problem')
+
+        if not title or not url:
+            messages.error(request, "Title and URL link are required.")
+            return redirect('dashboard:study_materials')
+
+        is_yt = 'youtube.com' in url.lower() or 'youtu.be' in url.lower() or user_link_type == 'resource'
+        final_link_type = 'resource' if is_yt else 'problem'
+
+        lc_match = re.search(r'leetcode\.[a-z]+/problems/([a-z0-9\-]+)', url.lower())
+        if lc_match:
+            slug = lc_match.group(1)
+        else:
+            base_slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+            slug = base_slug or f"custom-{uuid.uuid4().hex[:8]}"
+
+        from .models import CustomDSAProblem
+        if not lc_match and CustomDSAProblem.objects.filter(slug=slug).exists():
+            slug = f"{slug}-{uuid.uuid4().hex[:4]}"
+
+        CustomDSAProblem.objects.create(
+            title=title,
+            slug=slug,
+            category=category,
+            difficulty=difficulty,
+            url=url,
+            link_type=final_link_type,
+            added_by=logged_in_user if logged_in_user.is_authenticated else None
+        )
+        messages.success(request, f"'{title}' added successfully to '{category}'!")
+        return redirect('dashboard:study_materials')
+
+    if request.method == 'POST' and 'edit_custom_question' in request.POST:
+        problem_id = request.POST.get('problem_id')
+        title = request.POST.get('title', '').strip()
+        category = request.POST.get('category', 'Arrays & Strings').strip() or 'Arrays & Strings'
+        difficulty = request.POST.get('difficulty', 'Easy').strip()
+        url = request.POST.get('url', '').strip()
+        user_link_type = request.POST.get('link_type', 'problem')
+
+        from .models import CustomDSAProblem
+        try:
+            problem = CustomDSAProblem.objects.get(id=problem_id)
+            if problem.added_by == logged_in_user or (logged_in_user and logged_in_user.is_staff):
+                if title and url:
+                    is_yt = 'youtube.com' in url.lower() or 'youtu.be' in url.lower() or user_link_type == 'resource'
+                    problem.title = title
+                    problem.category = category
+                    problem.difficulty = difficulty
+                    problem.url = url
+                    problem.link_type = 'resource' if is_yt else 'problem'
+                    problem.save()
+                    messages.success(request, f"'{title}' updated successfully!")
+                else:
+                    messages.error(request, "Title and URL link are required.")
+            else:
+                messages.error(request, "You do not have permission to edit this item.")
+        except CustomDSAProblem.DoesNotExist:
+            messages.error(request, "Item not found.")
+        return redirect('dashboard:study_materials')
 
     if request.GET.get('sync') == '1':
         if is_own_sheet:
@@ -485,36 +576,113 @@ def study_materials(request):
             return redirect('dashboard:study_materials')
         else:
             messages.error(request, "You cannot sync another user's LeetCode statistics.")
-            return redirect(f'/dashboard/study/?username={user.username}')
+            return redirect(f"{reverse('dashboard:study_materials')}?username={user.username}")
 
     completed_problems = user.completed_dsa_problems
     if not isinstance(completed_problems, list):
         completed_problems = []
+
+    from .models import CustomDSAProblem
+    custom_problems_qs = CustomDSAProblem.objects.select_related('added_by').all()
+    custom_by_cat = {}
+    for cp in custom_problems_qs:
+        c_name = cp.category.strip()
+        if c_name not in custom_by_cat:
+            custom_by_cat[c_name] = []
+        added_by_str = cp.added_by.display_name if cp.added_by else 'Community'
+        can_edit = (cp.added_by == logged_in_user) if (logged_in_user and logged_in_user.is_authenticated) else False
+        if logged_in_user and logged_in_user.is_staff:
+            can_edit = True
+
+        is_yt = 'youtube.com' in cp.url.lower() or 'youtu.be' in cp.url.lower() or cp.link_type == 'resource'
+        is_lc = 'leetcode.com' in cp.url.lower() or 'leetcode.cn' in cp.url.lower()
+
+        if is_yt:
+            v_type = 'resource'
+        elif is_lc:
+            v_type = 'leetcode'
+        else:
+            v_type = 'manual'
+
+        custom_by_cat[c_name].append({
+            'id': cp.id,
+            'title': cp.title,
+            'slug': cp.slug,
+            'category': cp.category,
+            'difficulty': cp.difficulty,
+            'url': cp.url,
+            'is_custom': True,
+            'link_type': 'resource' if is_yt else 'problem',
+            'verification_type': v_type,
+            'added_by_name': added_by_str,
+            'can_edit': can_edit,
+            'completed': cp.slug in completed_problems
+        })
 
     dsa_categories = []
     total_problems = 0
     completed_problems_count = 0
 
     for category, problems in DSA_SHEET.items():
-        cat_total = len(problems)
+        cat_total = 0
         cat_completed = 0
         cat_problems = []
+
         for p in problems:
             is_done = p['slug'] in completed_problems
             cat_problems.append({
                 'title': p['title'],
                 'slug': p['slug'],
                 'difficulty': p['difficulty'],
+                'url': f"https://leetcode.com/problems/{p['slug']}/",
+                'is_custom': False,
+                'verification_type': 'leetcode',
                 'completed': is_done
             })
+            cat_total += 1
             if is_done:
                 cat_completed += 1
                 completed_problems_count += 1
             total_problems += 1
-            
+
+        # Check for custom problems matching this category
+        matched_cat_keys = [k for k in custom_by_cat.keys() if k.lower() == category.lower()]
+        for mk in matched_cat_keys:
+            for cp in custom_by_cat[mk]:
+                cat_problems.append(cp)
+                cat_total += 1
+                if cp['completed']:
+                    cat_completed += 1
+                    completed_problems_count += 1
+                total_problems += 1
+            del custom_by_cat[mk]
+
+        cat_slug = re.sub(r'[^a-z0-9]+', '-', category.lower().replace('&', 'and')).strip('-')
         dsa_categories.append({
             'name': category,
-            'slug': category.lower().replace(' ', '-').replace('&', 'and').replace('/', '-'),
+            'slug': cat_slug,
+            'problems': cat_problems,
+            'total': cat_total,
+            'completed': cat_completed,
+            'percentage': int((cat_completed / cat_total) * 100) if cat_total > 0 else 0
+        })
+
+    # Append any remaining custom categories not in default DSA_SHEET
+    for c_name, c_probs in custom_by_cat.items():
+        cat_total = len(c_probs)
+        cat_completed = 0
+        cat_problems = []
+        for cp in c_probs:
+            cat_problems.append(cp)
+            if cp['completed']:
+                cat_completed += 1
+                completed_problems_count += 1
+            total_problems += 1
+
+        cat_slug = re.sub(r'[^a-z0-9]+', '-', c_name.lower().replace('&', 'and')).strip('-')
+        dsa_categories.append({
+            'name': c_name,
+            'slug': cat_slug,
             'problems': cat_problems,
             'total': cat_total,
             'completed': cat_completed,
@@ -546,19 +714,17 @@ def toggle_dsa_problem(request):
                 return JsonResponse({'status': 'error', 'message': 'No problem slug provided'}, status=400)
             
             user = request.user
-            completed = user.completed_dsa_problems
-            if not isinstance(completed, list):
-                completed = []
+            completed = list(user.completed_dsa_problems or [])
                 
             if problem_slug in completed:
-                completed.remove(problem_slug)
+                completed = [p for p in completed if p != problem_slug]
                 status = 'removed'
             else:
                 completed.append(problem_slug)
                 status = 'added'
                 
             user.completed_dsa_problems = completed
-            user.save()
+            user.save(update_fields=['completed_dsa_problems'])
             return JsonResponse({'status': 'success', 'action': status})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
@@ -580,8 +746,36 @@ def staff_required(view_func):
     return user_passes_test(check_user, login_url='landing')(view_func)
 
 
+def notify_all_staff_members(title, message, notification_type='system'):
+    try:
+        from notifications.models import Notification
+        from accounts.models import User
+        from django.db.models import Q
+        staff_users = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True), is_active=True)
+        notifications = [
+            Notification(
+                user=staff,
+                title=title,
+                message=message,
+                notification_type=notification_type
+            )
+            for staff in staff_users
+        ]
+        if notifications:
+            Notification.objects.bulk_create(notifications)
+    except Exception as e:
+        pass
+
+
 @staff_required
 def admin_user_dashboard(request):
+    from django.utils import timezone
+    User.objects.filter(
+        is_active=False,
+        suspended_until__isnull=False,
+        suspended_until__lte=timezone.now()
+    ).update(is_active=True, suspended_until=None, suspension_reason='')
+
     q = request.GET.get('q', '').strip()
     role_filter = request.GET.get('role', 'all')
     status_filter = request.GET.get('status', 'all')
@@ -620,6 +814,7 @@ def admin_user_dashboard(request):
 
     from notifications.models import Notification
     recent_notifications = Notification.objects.select_related('user').order_by('-created_at')[:10]
+    recent_staff_alerts = Notification.objects.filter(title__icontains='Staff Alert:').select_related('user').order_by('-created_at')[:15]
     total_notifications_sent = Notification.objects.count()
 
     context = {
@@ -634,6 +829,7 @@ def admin_user_dashboard(request):
         'total_xp_sum': total_xp_sum,
         'year_choices': User.YEAR_CHOICES,
         'recent_notifications': recent_notifications,
+        'recent_staff_alerts': recent_staff_alerts,
         'total_notifications_sent': total_notifications_sent,
         'notification_type_choices': Notification.TYPE_CHOICES,
     }
@@ -688,6 +884,11 @@ def admin_send_broadcast_notification(request):
         else:
             messages.success(request, f'Notification sent to {user_count} user(s).')
 
+        notify_all_staff_members(
+            title='📢 Staff Alert: Broadcast Sent',
+            message=f'Staff member @{request.user.username} sent a notification broadcast to {target_group} ("{title}").'
+        )
+
     return redirect('dashboard:admin_user_dashboard')
 
 
@@ -730,6 +931,11 @@ def admin_user_create(request):
                 user.xp_points = int(xp_points)
                 user.save()
             messages.success(request, f'User "{username}" created successfully!')
+
+            notify_all_staff_members(
+                title='👤 Staff Alert: New Account Created',
+                message=f'Staff member @{request.user.username} created new user account @{username} (Role: {"Staff" if is_staff else "Student"}).'
+            )
         except Exception as e:
             messages.error(request, f'Error creating user: {str(e)}')
 
@@ -739,42 +945,17 @@ def admin_user_create(request):
 @staff_required
 def admin_user_edit(request, user_id):
     target_user = get_object_or_404(User, id=user_id)
-    if request.method == 'POST':
-        email = request.POST.get('email', '').strip()
-        first_name = request.POST.get('first_name', '').strip()
-        last_name = request.POST.get('last_name', '').strip()
-        college = request.POST.get('college', '').strip()
-        branch = request.POST.get('branch', '').strip()
-        year = request.POST.get('year', '')
-        xp_points = request.POST.get('xp_points', target_user.xp_points)
-        is_staff = request.POST.get('is_staff') == 'on'
-        is_active = request.POST.get('is_active') == 'on'
 
-        if target_user == request.user and not is_active:
-            messages.warning(request, "You cannot set your own account to inactive.")
-            is_active = True
-
-        target_user.email = email
-        target_user.first_name = first_name
-        target_user.last_name = last_name
-        target_user.college = college
-        target_user.branch = branch
-        target_user.year = year
-        target_user.is_staff = is_staff
-        target_user.is_active = is_active
-        try:
-            target_user.xp_points = int(xp_points)
-        except ValueError:
-            pass
-
-        target_user.save()
-        messages.success(request, f'User details for "{target_user.username}" updated successfully!')
-
+    # Strict Privacy Rule: Admins cannot edit user personal profile details (name, email, college, branch, etc.)
+    messages.error(request, f'Strict Privacy Policy: Admins are not permitted to edit personal profile details (name, email, college, branch) of user "@{target_user.username}". Users must manage their own profiles.')
     return redirect('dashboard:admin_user_dashboard')
 
 
 @staff_required
 def admin_user_toggle_status(request, user_id):
+    from datetime import timedelta
+    from django.utils import timezone
+
     target_user = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -782,16 +963,70 @@ def admin_user_toggle_status(request, user_id):
             messages.warning(request, "You cannot modify your own administrative or active status.")
             return redirect('dashboard:admin_user_dashboard')
 
-        if action == 'toggle_active':
-            target_user.is_active = not target_user.is_active
+        # Security Rule: Staff members cannot suspend or alter roles of another staff member
+        if (target_user.is_staff or target_user.is_superuser) and not request.user.is_superuser:
+            messages.error(request, f'Security Protection: Staff member "@{request.user.username}" cannot modify or suspend staff member "@{target_user.username}". Only Superusers can manage staff accounts.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        if action == 'suspend':
+            days_raw = request.POST.get('suspension_days', '0')
+            reason = request.POST.get('suspension_reason', '').strip()
+            try:
+                days = int(days_raw)
+            except ValueError:
+                days = 0
+
+            target_user.is_active = False
+            if days > 0:
+                target_user.suspended_until = timezone.now() + timedelta(days=days)
+                duration_str = f"for {days} day(s) until {target_user.suspended_until.strftime('%b %d, %Y %I:%M %p')}"
+            else:
+                target_user.suspended_until = None
+                duration_str = "indefinitely"
+
+            target_user.suspension_reason = reason
             target_user.save()
-            status_str = "activated" if target_user.is_active else "deactivated (suspended)"
-            messages.success(request, f'User "{target_user.username}" was successfully {status_str}.')
+            messages.success(request, f'User "@{target_user.username}" was suspended {duration_str}.')
+
+            notify_all_staff_members(
+                title='⚠️ Staff Alert: Account Suspended',
+                message=f'Staff member @{request.user.username} suspended user account @{target_user.username} {duration_str}. Reason: {reason or "None specified"}.'
+            )
+
+        elif action == 'unsuspend' or action == 'toggle_active':
+            if target_user.is_active and action == 'toggle_active':
+                target_user.is_active = False
+                target_user.suspended_until = None
+                target_user.suspension_reason = ''
+                target_user.save()
+                messages.success(request, f'User "@{target_user.username}" was suspended.')
+
+                notify_all_staff_members(
+                    title='⚠️ Staff Alert: Account Suspended',
+                    message=f'Staff member @{request.user.username} suspended user account @{target_user.username}.'
+                )
+            else:
+                target_user.is_active = True
+                target_user.suspended_until = None
+                target_user.suspension_reason = ''
+                target_user.save()
+                messages.success(request, f'User "@{target_user.username}" was reactivated successfully.')
+
+                notify_all_staff_members(
+                    title='✅ Staff Alert: Account Reactivated',
+                    message=f'Staff member @{request.user.username} reactivated user account @{target_user.username}.'
+                )
+
         elif action == 'toggle_staff':
             target_user.is_staff = not target_user.is_staff
             target_user.save()
             role_str = "promoted to Staff" if target_user.is_staff else "demoted from Staff"
             messages.success(request, f'User "{target_user.username}" was {role_str}.')
+
+            notify_all_staff_members(
+                title='🛡️ Staff Alert: Role Updated',
+                message=f'Staff member @{request.user.username} {role_str} for user account @{target_user.username}.'
+            )
 
     return redirect('dashboard:admin_user_dashboard')
 
@@ -803,25 +1038,41 @@ def admin_user_delete(request, user_id):
         messages.error(request, "You cannot delete your own account from the admin panel.")
         return redirect('dashboard:admin_user_dashboard')
 
-    username = target_user.username
-    try:
-        from .models import GameHistory
-        from leaderboard.models import UserBadge, Achievement
-        from notifications.models import Notification
-        from recommendations.models import Recommendation
-        from resumeanalyzer.models import ResumeAnalysis
+    # Security Rule: Staff members cannot delete another staff member or superuser account
+    if (target_user.is_staff or target_user.is_superuser) and not request.user.is_superuser:
+        messages.error(request, f'Security Protection: Staff member "@{request.user.username}" cannot delete staff member "@{target_user.username}". Only Superusers can delete staff accounts.')
+        return redirect('dashboard:admin_user_dashboard')
 
-        GameHistory.objects.filter(user=target_user).delete()
-        UserBadge.objects.filter(user=target_user).delete()
-        Achievement.objects.filter(user=target_user).delete()
-        Notification.objects.filter(user=target_user).delete()
-        Recommendation.objects.filter(user=target_user).delete()
-        ResumeAnalysis.objects.filter(user=target_user).delete()
+    if request.method == 'POST':
+        confirm_username = request.POST.get('confirm_username', '').strip()
+        if confirm_username != target_user.username:
+            messages.error(request, f'Deletion aborted: Confirmation username "{confirm_username}" did not match "@{target_user.username}".')
+            return redirect('dashboard:admin_user_dashboard')
 
-        target_user.delete()
-        messages.success(request, f'User account "@{username}" has been deleted successfully.')
-    except Exception as e:
-        messages.error(request, f'Error deleting user account "@{username}": {str(e)}')
+        username = target_user.username
+        try:
+            from .models import GameHistory
+            from leaderboard.models import UserBadge, Achievement
+            from notifications.models import Notification
+            from recommendations.models import Recommendation
+            from resume_analysis.models import ResumeAnalysis
+
+            GameHistory.objects.filter(user=target_user).delete()
+            UserBadge.objects.filter(user=target_user).delete()
+            Achievement.objects.filter(user=target_user).delete()
+            Notification.objects.filter(user=target_user).delete()
+            Recommendation.objects.filter(user=target_user).delete()
+            ResumeAnalysis.objects.filter(user=target_user).delete()
+
+            target_user.delete()
+            messages.success(request, f'User account "@{username}" has been deleted successfully.')
+
+            notify_all_staff_members(
+                title='🚨 Staff Alert: Account Deleted',
+                message=f'Staff member @{request.user.username} permanently deleted user account @{username}.'
+            )
+        except Exception as e:
+            messages.error(request, f'Error deleting user account "@{username}": {str(e)}')
 
     return redirect('dashboard:admin_user_dashboard')
 

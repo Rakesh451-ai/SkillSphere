@@ -86,7 +86,7 @@ skillsphere/
 ├── studylogs/         # Daily study logger
 ├── goals/             # Goal management
 ├── recommendations/   # AI recommendation engine
-├── resumeanalyzer/    # Resume PDF analyzer
+├── resume_analysis/   # Resume PDF analyzer
 ├── leaderboard/       # Rankings & gamification
 ├── notifications/     # Notification system
 ├── templates/         # HTML templates

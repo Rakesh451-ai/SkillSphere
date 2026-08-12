@@ -122,11 +122,11 @@
 
 <!-- Search & Filters -->
 <div class="admin-card p-4 mb-4">
-    <form method="GET" class="row g-3 align-items-center">
+    <form method="GET" class="row g-3 align-items-center mb-3">
         <div class="col-lg-5">
             <div class="input-group search-input-group">
                 <span class="input-group-text bg-body-tertiary border-secondary border-opacity-25 text-muted"><i class="bi bi-search"></i></span>
-                <input type="text" name="q" class="form-control bg-body-tertiary border-secondary border-opacity-25" placeholder="Search users..." value="{{ q }}">
+                <input type="text" id="adminUserSearchInput" name="q" class="form-control bg-body-tertiary border-secondary border-opacity-25" placeholder="Search users by name, email, college..." value="{{ q }}">
             </div>
         </div>
         <div class="col-md-3 col-lg-2">
@@ -144,10 +144,30 @@
             </select>
         </div>
         <div class="col-md-3 col-lg-3 d-flex gap-2">
-            <button type="submit" class="btn btn-primary w-100 fw-bold">Filter</button>
+            <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="bi bi-funnel-fill me-1"></i>Filter</button>
             <a href="{% url 'dashboard:admin_user_dashboard' %}" class="btn btn-outline-secondary w-100">Reset</a>
         </div>
     </form>
+
+    <!-- Interactive Quick Filter Pills -->
+    <div class="d-flex flex-wrap align-items-center gap-2 pt-3 border-top border-secondary border-opacity-25 extra-small">
+        <span class="text-muted font-mono fw-bold me-2"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Quick Filters:</span>
+        <a href="?role=all&status=all" class="btn btn-sm {% if role_filter == 'all' and status_filter == 'all' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 font-mono">
+            All ({{ total_users_count }})
+        </a>
+        <a href="?role=admin&status=all" class="btn btn-sm {% if role_filter == 'admin' %}btn-warning text-dark fw-bold{% else %}btn-outline-warning{% endif %} rounded-pill px-3 py-1 font-mono">
+            🛡 Staff ({{ staff_users_count }})
+        </a>
+        <a href="?role=student&status=all" class="btn btn-sm {% if role_filter == 'student' %}btn-info text-dark fw-bold{% else %}btn-outline-info{% endif %} rounded-pill px-3 py-1 font-mono">
+            🎓 Students
+        </a>
+        <a href="?role=all&status=active" class="btn btn-sm {% if status_filter == 'active' %}btn-success fw-bold{% else %}btn-outline-success{% endif %} rounded-pill px-3 py-1 font-mono">
+            ⚡ Active ({{ active_users_count }})
+        </a>
+        <a href="?role=all&status=inactive" class="btn btn-sm {% if status_filter == 'inactive' %}btn-danger fw-bold{% else %}btn-outline-danger{% endif %} rounded-pill px-3 py-1 font-mono">
+            🚫 Suspended ({{ inactive_users_count }})
+        </a>
+    </div>
 </div>
 
 <!-- Users Table -->
@@ -201,15 +221,23 @@
                             <td>
                                 {% if u.is_superuser or u.is_staff %}
                                     <span class="badge badge-role-admin px-3 py-2 rounded-pill fw-bold">Staff</span>
+                                    {% if not request.user.is_superuser and u != request.user %}
+                                        <span class="badge bg-warning bg-opacity-15 text-warning border border-warning border-opacity-30 rounded-pill px-2 py-1 extra-small ms-1" title="Protected: Only Superusers can modify staff accounts"><i class="bi bi-shield-lock-fill me-1"></i>Protected</span>
+                                    {% endif %}
                                 {% else %}
                                     <span class="badge badge-role-student px-3 py-2 rounded-pill">Student</span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if u.is_active %}
-                                    <span class="badge badge-status-active px-3 py-2 rounded-pill">Active</span>
+                                    <span class="badge badge-status-active px-3 py-2 rounded-pill"><i class="bi bi-check-circle-fill me-1"></i>Active</span>
                                 {% else %}
-                                    <span class="badge badge-status-inactive px-3 py-2 rounded-pill">Suspended</span>
+                                    <span class="badge badge-status-inactive px-3 py-2 rounded-pill" title="{{ u.suspension_reason|default:'Suspended' }}">
+                                        <i class="bi bi-slash-circle-fill me-1"></i>Suspended
+                                        {% if u.suspended_until %}
+                                            <span class="ms-1 font-mono extra-small">({{ u.remaining_suspension_days }}d left)</span>
+                                        {% endif %}
+                                    </span>
                                 {% endif %}
                             </td>
                             <td class="text-muted small">
@@ -222,8 +250,8 @@
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow">
                                         <li>
-                                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editUserModal{{ u.id }}">
-                                                <i class="bi bi-pencil-square me-2 text-info"></i>Edit
+                                            <button class="dropdown-item text-primary" data-bs-toggle="modal" data-bs-target="#viewUserModal{{ u.id }}">
+                                                <i class="bi bi-eye-fill me-2 text-primary"></i>View Details
                                             </button>
                                         </li>
                                         <li>
@@ -232,36 +260,56 @@
                                             </button>
                                         </li>
                                         <li>
-                                            <form method="POST" action="{% url 'dashboard:admin_user_toggle_status' u.id %}">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="action" value="toggle_staff">
-                                                <button type="submit" class="dropdown-item" {% if u == request.user %}disabled{% endif %}>
-                                                    {% if u.is_staff %}
-                                                        <i class="bi bi-person-dash me-2 text-warning"></i>Remove Staff
-                                                    {% else %}
-                                                        <i class="bi bi-person-up me-2 text-warning"></i>Make Staff
-                                                    {% endif %}
+                                            {% if not request.user.is_superuser and u != request.user and u.is_staff %}
+                                                <button class="dropdown-item text-muted opacity-50" disabled title="Staff Protection: Only Superusers can alter staff privileges">
+                                                    <i class="bi bi-lock-fill me-2 text-warning"></i>Staff Privileges (Protected)
                                                 </button>
-                                            </form>
+                                            {% else %}
+                                                <form method="POST" action="{% url 'dashboard:admin_user_toggle_status' u.id %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="action" value="toggle_staff">
+                                                    <button type="submit" class="dropdown-item" {% if u == request.user %}disabled{% endif %}>
+                                                        {% if u.is_staff %}
+                                                            <i class="bi bi-person-dash me-2 text-warning"></i>Remove Staff
+                                                        {% else %}
+                                                            <i class="bi bi-person-up me-2 text-warning"></i>Make Staff
+                                                        {% endif %}
+                                                    </button>
+                                                </form>
+                                            {% endif %}
                                         </li>
                                         <li>
-                                            <form method="POST" action="{% url 'dashboard:admin_user_toggle_status' u.id %}">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="action" value="toggle_active">
-                                                <button type="submit" class="dropdown-item" {% if u == request.user %}disabled{% endif %}>
-                                                    {% if u.is_active %}
-                                                        <i class="bi bi-slash-circle me-2 text-danger"></i>Suspend
-                                                    {% else %}
-                                                        <i class="bi bi-check-circle me-2 text-success"></i>Activate
-                                                    {% endif %}
+                                            {% if not request.user.is_superuser and u != request.user and u.is_staff %}
+                                                <button class="dropdown-item text-muted opacity-50" disabled title="Staff Protection: Only Superusers can suspend staff accounts">
+                                                    <i class="bi bi-lock-fill me-2 text-warning"></i>Suspend (Staff Protected)
                                                 </button>
-                                            </form>
+                                            {% else %}
+                                                {% if u.is_active %}
+                                                    <button class="dropdown-item text-warning" data-bs-toggle="modal" data-bs-target="#suspendUserModal{{ u.id }}" {% if u == request.user %}disabled{% endif %}>
+                                                        <i class="bi bi-slash-circle me-2"></i>Suspend User
+                                                    </button>
+                                                {% else %}
+                                                    <form method="POST" action="{% url 'dashboard:admin_user_toggle_status' u.id %}">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="action" value="unsuspend">
+                                                        <button type="submit" class="dropdown-item text-success" {% if u == request.user %}disabled{% endif %}>
+                                                            <i class="bi bi-check-circle me-2"></i>Unsuspend & Reactivate
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            {% endif %}
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
-                                            <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ u.id }}" {% if u == request.user %}disabled{% endif %}>
-                                                <i class="bi bi-trash-fill me-2"></i>Delete
-                                            </button>
+                                            {% if not request.user.is_superuser and u != request.user and u.is_staff %}
+                                                <button class="dropdown-item text-muted opacity-50" disabled title="Staff Protection: Staff members cannot delete other staff accounts">
+                                                    <i class="bi bi-lock-fill me-2 text-danger"></i>Delete (Staff Protected)
+                                                </button>
+                                            {% else %}
+                                                <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ u.id }}" {% if u == request.user %}disabled{% endif %}>
+                                                    <i class="bi bi-trash-fill me-2"></i>Delete
+                                                </button>
+                                            {% endif %}
                                         </li>
                                     </ul>
                                 </div>
@@ -360,6 +408,64 @@
     </div>
 </div>
 
+<!-- Live Staff Audit Log & Activity Stream -->
+<div class="admin-card p-4 mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div>
+            <h5 class="fw-bold mb-1"><i class="bi bi-shield-check-fill text-danger me-2"></i>Staff Audit & Security Activity Stream</h5>
+            <p class="text-muted small mb-0">Automatic real-time audit notifications dispatched to all staff members when administrative actions occur.</p>
+        </div>
+        <span class="badge bg-danger bg-opacity-15 text-danger border border-danger border-opacity-30 px-3 py-2 rounded-pill font-mono extra-small">
+            <i class="bi bi-broadcast me-1"></i>Staff Auto-Broadcast Active
+        </span>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark small text-uppercase">
+                <tr>
+                    <th scope="col" class="py-2.5 ps-3">Staff Recipient</th>
+                    <th scope="col" class="py-2.5">Alert Event</th>
+                    <th scope="col" class="py-2.5">Audit Log Message</th>
+                    <th scope="col" class="py-2.5 text-end pe-3">Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if recent_staff_alerts %}
+                    {% for sa in recent_staff_alerts %}
+                    <tr>
+                        <td class="ps-3">
+                            <span class="badge bg-body-tertiary border border-secondary border-opacity-25 text-light px-2.5 py-1.5 rounded-pill font-mono small">
+                                <i class="bi bi-person-fill me-1 text-warning"></i>@{{ sa.user.username }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if 'Deleted' in sa.title %}
+                                <span class="badge bg-danger text-white px-2.5 py-1 rounded-pill small"><i class="bi bi-trash-fill me-1"></i>Delete</span>
+                            {% elif 'Suspended' in sa.title %}
+                                <span class="badge bg-warning text-dark fw-bold px-2.5 py-1 rounded-pill small"><i class="bi bi-slash-circle-fill me-1"></i>Suspend</span>
+                            {% elif 'Reactivated' in sa.title %}
+                                <span class="badge bg-success text-white px-2.5 py-1 rounded-pill small"><i class="bi bi-check-circle-fill me-1"></i>Reactivate</span>
+                            {% elif 'Role' in sa.title %}
+                                <span class="badge bg-info text-dark fw-bold px-2.5 py-1 rounded-pill small"><i class="bi bi-shield-fill me-1"></i>Role</span>
+                            {% else %}
+                                <span class="badge bg-secondary text-white px-2.5 py-1 rounded-pill small"><i class="bi bi-info-circle-fill me-1"></i>System</span>
+                            {% endif %}
+                        </td>
+                        <td class="small fw-semibold text-light">{{ sa.message }}</td>
+                        <td class="text-end pe-3 small text-muted font-mono">{{ sa.created_at|timesince }} ago</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted small">No staff audit activity logged yet. Action alerts (deletions, suspensions, creations) will automatically broadcast here.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <!-- =========================================================
      MODALS SECTION
      ========================================================= -->
@@ -435,93 +541,179 @@
 </div>
 
 {% for u in page_obj %}
-    <!-- Modal: Edit User -->
-    <div class="modal fade" id="editUserModal{{ u.id }}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content admin-card p-2">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square text-info me-2"></i>Edit @{{ u.username }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form method="POST" action="{% url 'dashboard:admin_user_edit' u.id %}">
-                    {% csrf_token %}
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label small">First Name</label>
-                                <input type="text" name="first_name" class="form-control" value="{{ u.first_name }}">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label small">Last Name</label>
-                                <input type="text" name="last_name" class="form-control" value="{{ u.last_name }}">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label small">Email</label>
-                                <input type="email" name="email" class="form-control" value="{{ u.email }}">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label small">XP Points</label>
-                                <input type="number" name="xp_points" class="form-control" value="{{ u.xp_points }}">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label small">College</label>
-                                <input type="text" name="college" class="form-control" value="{{ u.college }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label small">Branch</label>
-                                <input type="text" name="branch" class="form-control" value="{{ u.branch }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label small">Year</label>
-                                <select name="year" class="form-select">
-                                    <option value="">-- None --</option>
-                                    {% for val, label in year_choices %}
-                                        <option value="{{ val }}" {% if u.year == val %}selected{% endif %}>{{ label }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-6 pt-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="is_staff" id="editStaffCheck{{ u.id }}" {% if u.is_staff %}checked{% endif %}>
-                                    <label class="form-check-label" for="editStaffCheck{{ u.id }}">Staff Privileges</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 pt-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="is_active" id="editActiveCheck{{ u.id }}" {% if u.is_active %}checked{% endif %}>
-                                    <label class="form-check-label" for="editActiveCheck{{ u.id }}">Account Active</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary rounded-3 fw-bold">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal: Delete User -->
     <div class="modal fade" id="deleteUserModal{{ u.id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content admin-card p-2">
                 <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Delete User</h5>
+                    <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Delete User Account</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form method="POST" action="{% url 'dashboard:admin_user_delete' u.id %}">
                     {% csrf_token %}
                     <div class="modal-body">
-                        <p class="mb-1">Delete account for <strong>@{{ u.username }}</strong>?</p>
-                        <p class="small text-danger mb-0">This action cannot be undone.</p>
+                        <!-- Critical Danger Alert -->
+                        <div class="alert alert-danger border-0 mb-3">
+                            <div class="fw-bold mb-1"><i class="bi bi-shield-slash-fill me-2"></i>CRITICAL WARNING: Permanent Deletion</div>
+                            <div class="extra-small opacity-90">This action will permanently purge user <strong>@{{ u.username }}</strong> along with all associated XP points, quiz histories, achievements, and data. <strong>THIS CANNOT BE UNDONE!</strong></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small font-semibold text-danger mb-1">To confirm deletion, type username <code class="text-danger fw-bold">{{ u.username }}</code> below:</label>
+                            <input type="text" name="confirm_username" class="form-control font-mono" required placeholder="{{ u.username }}" autocomplete="off">
+                        </div>
                     </div>
                     <div class="modal-footer border-0">
                         <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger rounded-3 fw-bold">Delete</button>
+                        <button type="submit" class="btn btn-danger rounded-3 fw-bold">Permanently Delete</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Suspend User -->
+    <div class="modal fade" id="suspendUserModal{{ u.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content admin-card p-2">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-warning"><i class="bi bi-slash-circle-fill me-2"></i>Suspend User @{{ u.username }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="{% url 'dashboard:admin_user_toggle_status' u.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="suspend">
+                    <div class="modal-body">
+                        <div class="alert alert-warning border-0 extra-small mb-3">
+                            <i class="bi bi-clock-history me-1"></i> <strong>Dynamic Suspension:</strong> Specify how many days to suspend <strong>@{{ u.username }}</strong>. The account will automatically reactivate after the suspension period passes.
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label small font-semibold">Suspension Duration (Days) *</label>
+                            <select name="suspension_days" class="form-select font-mono fw-bold">
+                                <option value="1">1 Day (24 Hours)</option>
+                                <option value="3" selected>3 Days</option>
+                                <option value="7">7 Days (1 Week)</option>
+                                <option value="14">14 Days (2 Weeks)</option>
+                                <option value="30">30 Days (1 Month)</option>
+                                <option value="60">60 Days (2 Months)</option>
+                                <option value="90">90 Days (3 Months)</option>
+                                <option value="0">Indefinite (Until manually reactivated)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small font-semibold">Reason for Suspension (Optional)</label>
+                            <textarea name="suspension_reason" class="form-control" rows="2" placeholder="e.g. Violation of Terms of Service..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning rounded-3 fw-bold text-dark px-4">
+                            <i class="bi bi-slash-circle me-1"></i>Confirm Suspension
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: View User Details -->
+    <div class="modal fade" id="viewUserModal{{ u.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content admin-card p-3">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-person-badge-fill text-primary me-2"></i>User Profile & Stats</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-3">
+                    <!-- User Info Banner -->
+                    <div class="p-3 mb-3 rounded-4 bg-body-tertiary border border-secondary border-opacity-25 d-flex flex-wrap align-items-center gap-3 justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            {% if u.profile_image %}
+                                <img src="{{ u.profile_image.url }}" alt="{{ u.username }}" class="avatar-circle" style="width: 56px; height: 56px; font-size: 1.4rem;">
+                            {% else %}
+                                <div class="avatar-circle" style="width: 56px; height: 56px; font-size: 1.4rem;">{{ u.username|slice:":1"|upper }}</div>
+                            {% endif %}
+                            <div>
+                                <h5 class="fw-bold mb-0">
+                                    {{ u.display_name }}
+                                    {% if u == request.user %}
+                                        <span class="badge bg-info text-dark rounded-pill ms-1 extra-small">You</span>
+                                    {% endif %}
+                                </h5>
+                                <div class="text-muted small">@{{ u.username }} &bull; {{ u.email|default:"No email recorded" }}</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if u.is_superuser or u.is_staff %}
+                                <span class="badge badge-role-admin px-3 py-2 rounded-pill fw-bold">Staff Member</span>
+                            {% else %}
+                                <span class="badge badge-role-student px-3 py-2 rounded-pill">Student</span>
+                            {% endif %}
+
+                            {% if u.is_active %}
+                                <span class="badge badge-status-active px-3 py-2 rounded-pill"><i class="bi bi-check-circle-fill me-1"></i>Active Account</span>
+                            {% else %}
+                                <span class="badge badge-status-inactive px-3 py-2 rounded-pill"><i class="bi bi-slash-circle-fill me-1"></i>Suspended Account</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if not u.is_active and u.suspended_until %}
+                        <div class="alert alert-danger border-0 small mb-3">
+                            <i class="bi bi-clock-history me-1"></i> <strong>Suspension Active:</strong> Account is suspended for <strong>{{ u.remaining_suspension_days }} more day(s)</strong> until {{ u.suspended_until|date:"b d, Y h:i A" }}.
+                            {% if u.suspension_reason %}
+                                <div class="mt-1"><strong>Reason:</strong> {{ u.suspension_reason }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Grid Stats -->
+                    <div class="row g-3">
+                        <!-- Left Column: Academic & Joined -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 bg-body-tertiary border border-secondary border-opacity-25 h-100">
+                                <h6 class="fw-bold text-uppercase font-mono text-muted extra-small mb-2"><i class="bi bi-mortarboard-fill me-1 text-info"></i>Academic Profile</h6>
+                                <div class="small mb-1"><span class="text-muted">College:</span> <strong class="text-light">{{ u.college|default:"Not specified" }}</strong></div>
+                                <div class="small mb-1"><span class="text-muted">Branch:</span> <strong class="text-light">{{ u.branch|default:"Not specified" }}</strong></div>
+                                <div class="small mb-1"><span class="text-muted">Academic Year:</span> <strong class="text-light">{{ u.get_year_display|default:"Not specified" }}</strong></div>
+                                <div class="small"><span class="text-muted">Member Since:</span> <strong class="text-light">{{ u.date_joined|date:"F d, Y" }}</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: XP & Platform Activity -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 bg-body-tertiary border border-secondary border-opacity-25 h-100">
+                                <h6 class="fw-bold text-uppercase font-mono text-muted extra-small mb-2"><i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Platform Activity</h6>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small text-muted">Total XP Points:</span>
+                                    <span class="fw-bold text-warning font-mono"><i class="bi bi-lightning-charge-fill me-1"></i>{{ u.xp_points }} XP</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small text-muted">Current Streak:</span>
+                                    <span class="fw-bold text-danger font-mono"><i class="bi bi-fire me-1"></i>{{ u.current_streak }} Days</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small text-muted">Longest Streak:</span>
+                                    <span class="fw-bold text-info font-mono"><i class="bi bi-trophy-fill me-1"></i>{{ u.longest_streak }} Days</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="small text-muted">LeetCode Solved:</span>
+                                    <span class="fw-bold text-success font-mono">{{ u.leetcode_total_solved }} Qs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-warning text-dark rounded-3 fw-bold" data-bs-toggle="modal" data-bs-target="#sendSingleNotificationModal{{ u.id }}" data-bs-dismiss="modal">
+                        <i class="bi bi-send-fill me-1"></i>Send Notification
+                    </button>
+                </div>
             </div>
         </div>
     </div>

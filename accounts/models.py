@@ -35,6 +35,8 @@ class User(AbstractUser):
     leetcode_last_sync = models.DateTimeField(null=True, blank=True)
     leetcode_last_penalty_date = models.DateField(null=True, blank=True)
     completed_dsa_problems = models.JSONField(default=list)
+    suspended_until = models.DateTimeField(null=True, blank=True, help_text='Date and time until which user is suspended')
+    suspension_reason = models.CharField(max_length=255, blank=True, help_text='Reason for suspension')
 
     def __str__(self):
         return self.username
@@ -42,6 +44,29 @@ class User(AbstractUser):
     @property
     def display_name(self):
         return self.get_full_name() or self.username
+
+    @property
+    def is_currently_suspended(self):
+        if self.suspended_until:
+            from django.utils import timezone
+            if timezone.now() >= self.suspended_until:
+                self.is_active = True
+                self.suspended_until = None
+                self.suspension_reason = ''
+                self.save(update_fields=['is_active', 'suspended_until', 'suspension_reason'])
+                return False
+            return True
+        return not self.is_active
+
+    @property
+    def remaining_suspension_days(self):
+        if self.suspended_until:
+            from django.utils import timezone
+            delta = self.suspended_until - timezone.now()
+            if delta.total_seconds() > 0:
+                import math
+                return max(1, math.ceil(delta.total_seconds() / 86400))
+        return 0
 
     @property
     def leetcode_total_solved(self):

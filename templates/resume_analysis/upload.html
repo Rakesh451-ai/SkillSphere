@@ -16,7 +16,7 @@
             </p>
         </div>
         <div>
-            <a href="{% url 'resumeanalyzer:upload' %}?refresh_recs=1" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 text-decoration-none transition-all">
+            <a href="{% url 'resume_analysis:upload' %}?refresh_recs=1" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 text-decoration-none transition-all">
                 <i class="fa-solid fa-arrows-rotate"></i>
                 <span>Refresh Insights</span>
             </a>
@@ -88,7 +88,7 @@
 
                         <div class="space-y-3">
                             {% for analysis in analyses %}
-                            <a href="{% url 'resumeanalyzer:result' analysis.pk %}" class="flex items-center justify-between p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/50 text-decoration-none transition-all group">
+                            <a href="{% url 'resume_analysis:result' analysis.pk %}" class="flex items-center justify-between p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/50 text-decoration-none transition-all group">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-indigo-400 group-hover:border-indigo-500 transition-colors">
                                         <i class="fa-solid fa-file-circle-check text-base"></i>

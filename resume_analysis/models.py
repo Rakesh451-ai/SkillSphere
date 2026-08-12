@@ -13,6 +13,7 @@ class ResumeAnalysis(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = 'resume_analysis_resumeanalysis'
         ordering = ['-created_at']
         verbose_name_plural = 'Resume Analyses'
 

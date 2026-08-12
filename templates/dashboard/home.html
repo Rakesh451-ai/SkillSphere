@@ -22,17 +22,7 @@
                 <h1 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight" id="hero-greeting-text" data-user-name="{{ user.display_name }}">
                     Welcome back, {{ user.display_name }}! 👋
                 </h1>
-                <p class="text-sm text-slate-400 max-w-xl">
-                    Track your placement readiness, level up your DSA problem-solving skills, and follow personalized career recommendations.
-                </p>
 
-                <!-- Profile Completion Quick Bar -->
-                <div class="pt-2 flex items-center gap-3">
-                    <div class="w-48 bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
-                        <div class="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full rounded-full transition-all duration-500" style="width: {{ placement_score }}%;"></div>
-                    </div>
-                    <span class="text-xs font-mono font-bold text-indigo-400">{{ placement_score }}% Career Ready</span>
-                </div>
             </div>
 
             <!-- Live Clock Card -->
@@ -332,7 +322,7 @@
                     </h2>
                     <p class="text-xs text-slate-400 mb-0">Personalized study plan & skill gap recommendations based on your performance</p>
                 </div>
-                <a href="{% url 'resumeanalyzer:upload' %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 text-decoration-none transition-all">
+                <a href="{% url 'resume_analysis:upload' %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 text-decoration-none transition-all">
                     <i class="fa-solid fa-file-upload"></i>
                     <span>Run Resume Diagnostic</span>
                 </a>

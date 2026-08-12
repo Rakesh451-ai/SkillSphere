@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from resumeanalyzer.models import ResumeAnalysis
+from resume_analysis.models import ResumeAnalysis
 from recommendations.models import Recommendation
 from recommendations.engine import generate_recommendations
 

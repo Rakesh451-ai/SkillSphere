@@ -119,6 +119,16 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* Fix Tailwind CSS vs Bootstrap Collapse visibility collision */
+        .collapse.show,
+        .collapsing {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .collapse:not(.show) {
+            display: none !important;
+        }
+
         h1, h2, h3, h4, h5, h6, .font-heading {
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: var(--heading-color);
@@ -295,7 +305,7 @@
                 </a>
 
                 <!-- Resume Analysis below Leaderboard -->
-                <a class="sidebar-nav-item {% if request.resolver_match.app_name == 'resumeanalyzer' or request.resolver_match.app_name == 'recommendations' %}active{% endif %}" href="{% url 'resumeanalyzer:upload' %}">
+                <a class="sidebar-nav-item {% if request.resolver_match.app_name == 'resume_analysis' or request.resolver_match.app_name == 'recommendations' %}active{% endif %}" href="{% url 'resume_analysis:upload' %}">
                     <i class="fa-solid fa-file-lines w-5 text-center text-indigo-400"></i>
                     <span>Resume Analysis</span>
                 </a>

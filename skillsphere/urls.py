@@ -18,7 +18,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('recommendations/', include('recommendations.urls')),
-    path('resume/', include('resumeanalyzer.urls')),
+    path('resume/', include('resume_analysis.urls')),
     path('leaderboard/', include('leaderboard.urls')),
     path('notifications/', include('notifications.urls')),
     path('api/', include('skillsphere.api_urls')),

@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     "accounts",
     "dashboard",
     "recommendations",
-    "resumeanalyzer",
+    "resume_analysis",
     "leaderboard",
     "notifications",
 ]

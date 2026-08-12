@@ -7,7 +7,7 @@ from django.urls import reverse
 
 def generate_recommendations(user):
     """Analyze user activity across placement score, DSA sheet, LeetCode, games, quizzes, and resume to generate targeted AI recommendations."""
-    from resumeanalyzer.models import ResumeAnalysis
+    from resume_analysis.models import ResumeAnalysis
     from dashboard.models import Quiz, QuizSubmission, DiscussionPost, DiscussionReply
     from dashboard.views import DSA_SHEET, calculate_placement_readiness
     from .models import Recommendation
@@ -19,7 +19,7 @@ def generate_recommendations(user):
     study_url = reverse('dashboard:study_materials')
     quiz_url = reverse('dashboard:quiz_list')
     leaderboard_url = reverse('leaderboard:leaderboard')
-    resume_url = reverse('resumeanalyzer:upload')
+    resume_url = reverse('resume_analysis:upload')
     discussions_url = reverse('dashboard:discussions')
     home_url = reverse('dashboard:home')
 

@@ -4,25 +4,11 @@
 
 {% block content %}
 <div class="space-y-8">
-    <!-- Top Filter Controls & Badges Button -->
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-        <div class="inline-flex p-1.5 rounded-2xl bg-slate-900 border border-slate-800 shadow-inner flex-wrap gap-1">
-            <a href="?sort=xp" class="px-4 py-2 rounded-xl text-xs font-bold text-decoration-none transition-all flex items-center gap-2 {% if sort_by == 'xp' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}text-slate-400 hover:text-white hover:bg-slate-800/60{% endif %}">
-                <i class="fa-solid fa-bolt text-amber-400"></i>
-                <span>XP Points</span>
-            </a>
-            <a href="?sort=hours" class="px-4 py-2 rounded-xl text-xs font-bold text-decoration-none transition-all flex items-center gap-2 {% if sort_by == 'hours' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}text-slate-400 hover:text-white hover:bg-slate-800/60{% endif %}">
-                <i class="fa-solid fa-clock text-cyan-400"></i>
-                <span>Study Hours</span>
-            </a>
-            <a href="?sort=leetcode" class="px-4 py-2 rounded-xl text-xs font-bold text-decoration-none transition-all flex items-center gap-2 {% if sort_by == 'leetcode' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}text-slate-400 hover:text-white hover:bg-slate-800/60{% endif %}">
-                <i class="fa-solid fa-code text-emerald-400"></i>
-                <span>LeetCode Solved</span>
-            </a>
-            <a href="?sort=streak" class="px-4 py-2 rounded-xl text-xs font-bold text-decoration-none transition-all flex items-center gap-2 {% if sort_by == 'streak' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}text-slate-400 hover:text-white hover:bg-slate-800/60{% endif %}">
-                <i class="fa-solid fa-fire text-amber-500"></i>
-                <span>LeetCode Streak</span>
-            </a>
+    <!-- Action Bar -->
+    <div class="flex items-center justify-between gap-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-slate-300">
+            <i class="fa-solid fa-code text-emerald-400"></i>
+            <span>LeetCode Rankings</span>
         </div>
 
         <a href="{% url 'leaderboard:badges' %}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-amber-500/50 text-amber-400 text-xs font-bold text-decoration-none shadow-md transition-all hover:scale-105">
@@ -49,8 +35,8 @@
             </div>
             <h3 class="font-bold text-white text-base mb-0 truncate">{{ entry.user.display_name }}</h3>
             <p class="text-xs text-slate-400 font-mono mb-2">@{{ entry.user.username }}</p>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                <i class="fa-solid fa-bolt text-amber-400"></i> {{ entry.user.xp_points }} XP
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <i class="fa-solid fa-code text-emerald-400"></i> {{ entry.user.leetcode_total_solved }} Solved
             </span>
         </div>
         {% endwith %}
@@ -74,7 +60,7 @@
             <h3 class="font-extrabold text-white text-lg mb-0 truncate">{{ entry.user.display_name }}</h3>
             <p class="text-xs text-amber-400 font-mono mb-3">@{{ entry.user.username }}</p>
             <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/30">
-                <i class="fa-solid fa-bolt"></i> {{ entry.user.xp_points }} XP
+                <i class="fa-solid fa-code"></i> {{ entry.user.leetcode_total_solved }} Solved
             </span>
         </div>
         {% endwith %}
@@ -94,8 +80,8 @@
             </div>
             <h3 class="font-bold text-white text-base mb-0 truncate">{{ entry.user.display_name }}</h3>
             <p class="text-xs text-slate-400 font-mono mb-2">@{{ entry.user.username }}</p>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                <i class="fa-solid fa-bolt text-amber-400"></i> {{ entry.user.xp_points }} XP
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <i class="fa-solid fa-code text-emerald-400"></i> {{ entry.user.leetcode_total_solved }} Solved
             </span>
         </div>
         {% endwith %}
@@ -118,11 +104,7 @@
                     <tr class="bg-slate-900/80 border-b border-slate-800 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
                         <th class="py-3.5 px-6">Rank</th>
                         <th class="py-3.5 px-6">Student</th>
-                        <th class="py-3.5 px-6">XP Points</th>
-                        <th class="py-3.5 px-6">Study Hours</th>
-                        <th class="py-3.5 px-6">LeetCode (E/M/H)</th>
-                        <th class="py-3.5 px-6">Goals Done</th>
-                        <th class="py-3.5 px-6">Streak</th>
+                        <th class="py-3.5 px-6">LeetCode Solved (Easy / Medium / Hard)</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-800/60 text-sm">
@@ -160,32 +142,20 @@
                                 </a>
                             </div>
                         </td>
-                        <td class="py-4 px-6 font-bold text-indigo-400">
-                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-xs font-bold text-indigo-300">
-                                <i class="fa-solid fa-bolt text-amber-400"></i> {{ entry.user.xp_points }}
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 text-slate-300 font-mono">{{ entry.total_hours }}h</td>
                         <td class="py-4 px-6 font-mono text-xs">
                             {% if entry.user.leetcode_username %}
-                            <span class="text-emerald-400 font-bold">{{ entry.user.leetcode_easy_solved }}</span> / 
-                            <span class="text-amber-400 font-bold">{{ entry.user.leetcode_medium_solved }}</span> / 
-                            <span class="text-rose-400 font-bold">{{ entry.user.leetcode_hard_solved }}</span>
+                            <span class="text-emerald-400 font-bold">{{ entry.user.leetcode_easy_solved }} Easy</span> / 
+                            <span class="text-amber-400 font-bold">{{ entry.user.leetcode_medium_solved }} Med</span> / 
+                            <span class="text-rose-400 font-bold">{{ entry.user.leetcode_hard_solved }} Hard</span>
+                            <span class="text-slate-400 ml-1.5">({{ entry.user.leetcode_total_solved }} total)</span>
                             {% else %}
                             <span class="text-slate-500">Not Linked</span>
                             {% endif %}
                         </td>
-                        <td class="py-4 px-6 text-slate-300 font-mono">{{ entry.completed_goals }}</td>
-                        <td class="py-4 px-6 font-bold text-amber-400">
-                            <div class="flex items-center gap-1">
-                                <i class="fa-solid fa-fire text-amber-500"></i>
-                                <span>{{ entry.user.current_streak }}d</span>
-                            </div>
-                        </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="py-12 text-center text-slate-500 text-sm">
+                        <td colspan="3" class="py-12 text-center text-slate-500 text-sm">
                             <i class="fa-solid fa-trophy text-3xl mb-2 text-slate-600"></i>
                             <p class="mb-0">No students registered yet.</p>
                         </td>

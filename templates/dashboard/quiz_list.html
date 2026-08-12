@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}DSA Algorithm Quizzes - SkillSphere{% endblock %}
-{% block page_title %}DSA Algorithm Quizzes (15 Topics • 25 Questions Each){% endblock %}
+{% block page_title %}Live Quizzes{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -76,71 +76,7 @@
 {% endblock %}
 
 {% block content %}
-<!-- Overview Banner -->
-<div class="row g-4 mb-4">
-    <div class="col-12">
-        <div class="quiz-card p-4">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                <div>
-                    <h3 class="fw-bold mb-0"><i class="bi bi-patch-question-fill text-warning me-2"></i>Structured DSA Topic Quiz Portal</h3>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-warning bg-opacity-20 text-warning border border-warning border-opacity-30 px-3 py-2 rounded-pill fw-bold fs-6 shadow-sm">
-                        <i class="bi bi-award-fill me-1"></i> 375 Total Questions
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Stats Bar -->
-<div class="row g-3 mb-4">
-    <div class="col-md-3 col-6">
-        <div class="stat-pill-card d-flex align-items-center gap-3">
-            <div class="p-3 bg-primary bg-opacity-15 rounded-3 text-primary">
-                <i class="bi bi-journal-check fs-4"></i>
-            </div>
-            <div>
-                <small class="text-muted d-block extra-small text-uppercase fw-bold">Topics Available</small>
-                <h5 class="fw-bold mb-0">15 Topics</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-6">
-        <div class="stat-pill-card d-flex align-items-center gap-3">
-            <div class="p-3 bg-success bg-opacity-15 rounded-3 text-success">
-                <i class="bi bi-question-square-fill fs-4"></i>
-            </div>
-            <div>
-                <small class="text-muted d-block extra-small text-uppercase fw-bold">Questions / Topic</small>
-                <h5 class="fw-bold mb-0">25 Questions</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-6">
-        <div class="stat-pill-card d-flex align-items-center gap-3">
-            <div class="p-3 bg-warning bg-opacity-15 rounded-3 text-warning">
-                <i class="bi bi-lightning-charge-fill fs-4"></i>
-            </div>
-            <div>
-                <small class="text-muted d-block extra-small text-uppercase fw-bold">XP Per Quiz</small>
-                <h5 class="fw-bold mb-0">250 XP</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-6">
-        <div class="stat-pill-card d-flex align-items-center gap-3">
-            <div class="p-3 bg-info bg-opacity-15 rounded-3 text-info">
-                <i class="bi bi-trophy-fill fs-4"></i>
-            </div>
-            <div>
-                <small class="text-muted d-block extra-small text-uppercase fw-bold">User XP Earned</small>
-                <h5 class="fw-bold mb-0 text-info">{{ request.user.xp_points }} XP</h5>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Category Filters & Search -->
 <div class="card-custom p-3 mb-4">

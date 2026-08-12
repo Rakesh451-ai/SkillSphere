@@ -7425,7 +7425,7 @@
   }
 },
 {
-  "model": "resumeanalyzer.resumeanalysis",
+  "model": "resume_analysis.resumeanalysis",
   "pk": 1,
   "fields": {
     "user": [
@@ -7467,7 +7467,7 @@
   }
 },
 {
-  "model": "resumeanalyzer.resumeanalysis",
+  "model": "resume_analysis.resumeanalysis",
   "pk": 2,
   "fields": {
     "user": [

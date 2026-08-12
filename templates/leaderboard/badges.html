@@ -1,38 +1,329 @@
 {% extends "base.html" %}
-{% block title %}Badges - SkillSphere{% endblock %}
+{% block title %}Badges & Achievements - SkillSphere{% endblock %}
 {% block page_title %}Badges & Achievements{% endblock %}
-{% block content %}
-<div class="mb-4">
-    <a href="{% url 'leaderboard:leaderboard' %}" class="btn btn-outline-primary"><i class="bi bi-arrow-left"></i> Back to Leaderboard</a>
-</div>
 
-{% if badges_data %}
-<div class="row g-4">
-    {% for item in badges_data %}
-    <div class="col-md-4 col-lg-3">
-        <div class="card-custom p-4 text-center {% if not item.earned %}opacity-50{% endif %}">
-            <div class="fs-1 mb-2">
-                {% if item.badge.icon == 'trophy' %}<i class="bi bi-trophy-fill text-warning"></i>
-                {% elif item.badge.icon == 'star' %}<i class="bi bi-star-fill text-warning"></i>
-                {% elif item.badge.icon == 'fire' %}<i class="bi bi-fire text-danger"></i>
-                {% elif item.badge.icon == 'book' %}<i class="bi bi-book-fill text-primary"></i>
-                {% else %}<i class="bi bi-award-fill text-primary"></i>
+{% block extra_css %}
+<style>
+    .badge-milestone-card {
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 24px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .badge-milestone-card:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+    }
+    .badge-milestone-card.unlocked {
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+    }
+
+    /* Tier Theme Borders & Glows */
+    .tier-bronze.unlocked {
+        border-color: rgba(205, 127, 50, 0.6) !important;
+        box-shadow: 0 0 20px rgba(205, 127, 50, 0.2);
+    }
+    .tier-silver.unlocked {
+        border-color: rgba(192, 192, 192, 0.6) !important;
+        box-shadow: 0 0 20px rgba(192, 192, 192, 0.2);
+    }
+    .tier-gold.unlocked {
+        border-color: rgba(255, 215, 0, 0.6) !important;
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.25);
+    }
+    .tier-platinum.unlocked {
+        border-color: rgba(6, 182, 212, 0.6) !important;
+        box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+    }
+    .tier-diamond.unlocked {
+        border-color: rgba(99, 102, 241, 0.7) !important;
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+    }
+    .tier-master.unlocked {
+        border-color: rgba(239, 68, 68, 0.8) !important;
+        box-shadow: 0 0 35px rgba(239, 68, 68, 0.35);
+    }
+
+    .badge-icon-box {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 0 auto 16px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        transition: transform 0.3s ease;
+    }
+    .badge-milestone-card:hover .badge-icon-box {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .icon-bronze { background: rgba(205, 127, 50, 0.2); color: #cd7f32; border: 2px solid #cd7f32; }
+    .icon-silver { background: rgba(192, 192, 192, 0.2); color: #e2e8f0; border: 2px solid #cbd5e1; }
+    .icon-gold { background: rgba(255, 215, 0, 0.2); color: #ffd700; border: 2px solid #ffd700; }
+    .icon-platinum { background: rgba(6, 182, 212, 0.2); color: #38bdf8; border: 2px solid #38bdf8; }
+    .icon-diamond { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 2px solid #818cf8; }
+    .icon-master { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 2px solid #ef4444; }
+
+    .badge-locked-overlay {
+        opacity: 0.55;
+        filter: grayscale(80%);
+    }
+
+    .progress-bar-badge {
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+    }
+
+    .filter-tab-btn {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #94a3b8;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .filter-tab-btn:hover, .filter-tab-btn.active {
+        background: #6366f1 !important;
+        border-color: #6366f1 !important;
+        color: #fff !important;
+        box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header Controls -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <a href="{% url 'leaderboard:leaderboard' %}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white text-xs font-bold text-decoration-none transition-all mb-2">
+                <i class="bi bi-arrow-left"></i> Back to Leaderboard
+            </a>
+            <h4 class="fw-bold text-white mb-1"><i class="fa-solid fa-award text-warning me-2"></i>Milestone Badges</h4>
+            <p class="text-muted small mb-0">Solve questions to unlock milestone badges (50 → 100 → 150 → 250 → 500 → 1000).</p>
+        </div>
+        <a href="{% url 'dashboard:study_materials' %}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold text-decoration-none shadow-lg shadow-indigo-600/30 transition-all hover:scale-105">
+            <i class="fa-solid fa-code"></i> Solve Questions
+        </a>
+    </div>
+
+    <!-- User Milestone Dashboard Card -->
+    <div class="card-custom p-6 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/30">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-4 text-center text-lg-start">
+                <small class="text-slate-400 font-semibold text-uppercase tracking-wider extra-small d-block mb-1">Your Total Solved</small>
+                <div class="d-flex align-items-baseline justify-content-center justify-content-lg-start gap-2">
+                    <h2 class="display-6 fw-extrabold text-white mb-0">{{ total_solved }}</h2>
+                    <span class="text-warning fw-bold small">Questions</span>
+                </div>
+                <div class="mt-2">
+                    <span class="badge bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-pill extra-small fw-bold">
+                        <i class="fa-solid fa-trophy text-amber-400 me-1"></i> {{ unlocked_count }} of {{ total_badges }} Badges Unlocked
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                {% if next_badge %}
+                <div class="p-4 rounded-3 bg-slate-950/70 border border-slate-800">
+                    <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                        <span class="text-slate-200 fw-bold small">
+                            <i class="fa-solid fa-crosshairs text-cyan-400 me-1.5"></i>Next Goal: <span class="text-warning">{{ next_badge.name }}</span> ({{ next_badge.questions_required }} Qs)
+                        </span>
+                        <span class="text-amber-400 fw-bold extra-small">
+                            {{ next_badge_remaining }} more question{% if next_badge_remaining != 1 %}s{% endif %} needed
+                        </span>
+                    </div>
+                    <div class="progress-bar-badge mb-2">
+                        <div class="bg-gradient-to-r from-indigo-500 via-cyan-400 to-emerald-400 h-100" style="width: {{ next_badge_pct }}%;"></div>
+                    </div>
+                    <div class="d-flex justify-content-between text-muted extra-small font-mono">
+                        <span>Current: {{ total_solved }} Solved</span>
+                        <span>Target: {{ next_badge.questions_required }} Solved ({{ next_badge_pct }}%)</span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="p-4 rounded-3 bg-emerald-950/40 border border-emerald-500/30 text-center">
+                    <h6 class="fw-bold text-emerald-400 mb-1"><i class="fa-solid fa-crown me-2"></i>Ultimate Titan Master!</h6>
+                    <p class="text-slate-300 small mb-0">You have unlocked all milestone badges! You are an absolute algorithm grandmaster.</p>
+                </div>
                 {% endif %}
             </div>
-            <h6 class="fw-bold">{{ item.badge.name }}</h6>
-            <p class="text-muted small mb-2">{{ item.badge.description }}</p>
-            <span class="badge {% if item.earned %}bg-success{% else %}bg-secondary{% endif %}">
-                {% if item.earned %}Earned{% else %}{{ item.badge.xp_required }} XP needed{% endif %}
-            </span>
         </div>
     </div>
-    {% endfor %}
+
+    <!-- Filter Tabs -->
+    <div class="d-flex gap-2 border-bottom border-slate-800 pb-3">
+        <button class="filter-tab-btn active" onclick="filterBadges('all', this)">All Badges ({{ total_badges }})</button>
+        <button class="filter-tab-btn" onclick="filterBadges('unlocked', this)">Unlocked ({{ unlocked_count }})</button>
+        <button class="filter-tab-btn" onclick="filterBadges('locked', this)">In Progress ({{ total_badges|add:"-"|add:unlocked_count }})</button>
+    </div>
+
+    <!-- Badges Grid (Sorted 50 -> 100 -> 150 -> 250 -> 500 -> 1000) -->
+    <div class="row g-4" id="badgesGrid">
+        {% for item in badges_data %}
+        <div class="col-md-6 col-lg-4 badge-item-col" data-status="{% if item.earned %}unlocked{% else %}locked{% endif %}">
+            <div class="badge-milestone-card tier-{{ item.badge.tier|lower }} {% if item.earned %}unlocked{% else %}badge-locked-overlay{% endif %}"
+                 onclick="openBadgeModal('{{ item.badge.name|escapejs }}', '{{ item.badge.description|escapejs }}', '{{ item.badge.tier }}', {{ item.badge.questions_required }}, {{ item.earned|yesno:'true,false' }}, {{ item.remaining_qs }}, {{ item.progress_pct }}, '{{ item.badge.icon }}')">
+                
+                <!-- Top Ribbon / Tier Tag -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-slate-900 border border-slate-700 text-slate-300 rounded-pill px-2.5 py-1 extra-small fw-bold uppercase">
+                        {{ item.badge.tier }} Tier
+                    </span>
+                    {% if item.earned %}
+                    <span class="badge bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-pill px-2.5 py-1 extra-small fw-bold">
+                        <i class="fa-solid fa-circle-check me-1"></i> Unlocked
+                    </span>
+                    {% else %}
+                    <span class="badge bg-amber-500/20 text-amber-400 border border-amber-500/40 rounded-pill px-2.5 py-1 extra-small fw-bold">
+                        <i class="fa-solid fa-lock me-1"></i> Locked
+                    </span>
+                    {% endif %}
+                </div>
+
+                <!-- Center Icon Shield -->
+                <div class="badge-icon-box icon-{{ item.badge.tier|lower }}">
+                    <i class="fa-solid {{ item.badge.icon }}"></i>
+                </div>
+
+                <!-- Title & Milestone -->
+                <div class="text-center mb-3">
+                    <h5 class="fw-bold text-white mb-1">{{ item.badge.name }}</h5>
+                    <span class="badge bg-slate-800 text-indigo-300 rounded-pill px-3 py-1 extra-small fw-bold font-mono">
+                        {{ item.badge.questions_required }} Questions Solved
+                    </span>
+                </div>
+
+                <!-- Description -->
+                <p class="text-slate-300 small text-center mb-3 line-clamp-2" style="min-height: 40px;">
+                    {{ item.badge.description }}
+                </p>
+
+                <!-- Progress / Status Footer -->
+                {% if item.earned %}
+                <div class="pt-3 border-top border-slate-800/80 text-center">
+                    <small class="text-emerald-400 fw-bold extra-small">
+                        <i class="fa-solid fa-sparkles me-1"></i> Milestone Accomplished!
+                    </small>
+                </div>
+                {% else %}
+                <div class="pt-3 border-top border-slate-800/80">
+                    <div class="d-flex justify-content-between align-items-center mb-1 text-slate-400 extra-small">
+                        <span>Progress</span>
+                        <span class="fw-bold text-amber-400">{{ item.remaining_qs }} left ({{ item.progress_pct }}%)</span>
+                    </div>
+                    <div class="progress-bar-badge">
+                        <div class="bg-indigo-500 h-100" style="width: {{ item.progress_pct }}%;"></div>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Motivational Callout Card -->
+    <div class="card-custom p-5 text-center bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/60 border border-indigo-500/20">
+        <i class="fa-solid fa-fire text-amber-400 display-5 mb-3 animate-pulse"></i>
+        <h5 class="fw-bold text-white mb-2">Consistency Wins Technical Interviews</h5>
+        <p class="text-slate-300 max-w-xl mx-auto small mb-4">
+            Solving questions daily builds long-term algorithmic intuition. Hit the 50, 100, 150, 250, 500, and 1000 problem milestones to unlock all achievement tiers!
+        </p>
+        <a href="{% url 'dashboard:study_materials' %}" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-lg shadow-amber-500/20">
+            <i class="fa-solid fa-rocket me-1.5"></i> Solve Questions Now
+        </a>
+    </div>
 </div>
-{% else %}
-<div class="card-custom p-5 text-center">
-    <i class="bi bi-award fs-1 text-muted"></i>
-    <h5 class="mt-3">No badges available yet</h5>
-    <p class="text-muted">Badges will be added by the admin.</p>
+
+<!-- Badge Detail Modal -->
+<div class="modal fade" id="badgeDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-slate-900 border border-slate-700 text-white rounded-4 shadow-2xl">
+            <div class="modal-header border-slate-800">
+                <h5 class="modal-title fw-bold text-warning" id="modalBadgeTitle">Badge Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <div class="badge-icon-box mx-auto mb-3" id="modalBadgeIconBox">
+                    <i class="fa-solid fa-award" id="modalBadgeIcon"></i>
+                </div>
+                <span class="badge bg-slate-800 text-indigo-300 rounded-pill px-3 py-1 extra-small fw-bold mb-2 d-inline-block" id="modalBadgeTier">Bronze Tier</span>
+                <h4 class="fw-bold text-white mb-2" id="modalBadgeName">Badge Name</h4>
+                <p class="text-slate-300 small mb-4" id="modalBadgeDesc">Badge Description...</p>
+
+                <div class="p-3 rounded-3 bg-slate-950 border border-slate-800 text-start" id="modalBadgeStatusBox">
+                    <!-- Status dynamic details -->
+                </div>
+            </div>
+            <div class="modal-footer border-slate-800 justify-content-center">
+                <button type="button" class="btn btn-secondary rounded-pill px-4 btn-sm fw-bold" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'dashboard:study_materials' %}" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold">Solve Questions</a>
+            </div>
+        </div>
+    </div>
 </div>
-{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function filterBadges(status, element) {
+        document.querySelectorAll('.filter-tab-btn').forEach(btn => btn.classList.remove('active'));
+        if (element) element.classList.add('active');
+
+        const cols = document.querySelectorAll('.badge-item-col');
+        cols.forEach(col => {
+            if (status === 'all' || col.getAttribute('data-status') === status) {
+                col.style.display = 'block';
+            } else {
+                col.style.display = 'none';
+            }
+        });
+    }
+
+    function openBadgeModal(name, desc, tier, reqQs, isEarned, remainingQs, progressPct, iconClass) {
+        document.getElementById('modalBadgeName').textContent = name;
+        document.getElementById('modalBadgeDesc').textContent = desc;
+        document.getElementById('modalBadgeTier').textContent = `${tier} Tier • ${reqQs} Questions Target`;
+
+        const iconBox = document.getElementById('modalBadgeIconBox');
+        iconBox.className = `badge-icon-box mx-auto mb-3 icon-${tier.toLowerCase()}`;
+        document.getElementById('modalBadgeIcon').className = `fa-solid ${iconClass}`;
+
+        const statusBox = document.getElementById('modalBadgeStatusBox');
+        if (isEarned) {
+            statusBox.innerHTML = `
+                <div class="d-flex align-items-center gap-2 text-success fw-bold small mb-1">
+                    <i class="fa-solid fa-circle-check fs-5"></i> Badge Unlocked & Awarded!
+                </div>
+                <small class="text-slate-400">Great job! You have solved over ${reqQs} questions to earn this badge.</small>
+            `;
+        } else {
+            statusBox.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-1 small fw-bold">
+                    <span class="text-warning"><i class="fa-solid fa-lock me-1"></i>Locked</span>
+                    <span class="text-slate-300">${remainingQs} more questions needed</span>
+                </div>
+                <div class="progress-bar-badge mt-2">
+                    <div class="bg-indigo-500 h-100" style="width: ${progressPct}%;"></div>
+                </div>
+            `;
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('badgeDetailModal'));
+        modal.show();
+    }
+</script>
 {% endblock %}

@@ -7,9 +7,14 @@ class Badge(models.Model):
     description = models.TextField()
     icon = models.CharField(max_length=50, default='trophy')
     xp_required = models.PositiveIntegerField(default=0)
+    questions_required = models.PositiveIntegerField(default=0)
+    tier = models.CharField(max_length=20, default='Bronze')
+
+    class Meta:
+        ordering = ['questions_required', 'xp_required']
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.questions_required} Qs)"
 
 
 class UserBadge(models.Model):
