@@ -1,10 +1,21 @@
 #!/usr/bin/env bash
-# exit on error
+# Exit on error
 set -o errexit
 
+echo "=================================================="
+echo "📦 SkillSphere Build Process"
+echo "=================================================="
+
+echo "⬇️ Upgrading pip and installing dependencies..."
+pip install --upgrade pip
 pip install -r requirements.txt
 
+echo "🎨 Collecting static files..."
 python manage.py collectstatic --noinput
-python manage.py migrate --noinput
-python manage.py loaddata seed_data.json || python manage.py seed_db
-python create_superuser.py
+
+if [ -n "$DATABASE_URL" ]; then
+    echo "🔄 DATABASE_URL found. Applying database migrations..."
+    python manage.py migrate --noinput || echo "⚠️ Build-time migration skipped (will run on startup)."
+fi
+
+echo "✨ Build completed successfully!"

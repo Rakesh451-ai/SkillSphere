@@ -14,8 +14,25 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("true", "1", "yes")
 
-# ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '.onrender.com').split(',')
-ALLOWED_HOSTS = ["*"]
+allowed_hosts_env = os.environ.get("DJANGO_ALLOWED_HOSTS", "").strip()
+if allowed_hosts_env:
+    ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(",") if h.strip()]
+else:
+    ALLOWED_HOSTS = ["*"]
+
+csrf_origins_env = os.environ.get("CSRF_TRUSTED_ORIGINS", "").strip()
+if csrf_origins_env:
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_env.split(",") if origin.strip()]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        "https://*.onrender.com",
+        "https://*.koyeb.app",
+        "https://*.up.railway.app",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -69,13 +86,22 @@ import dj_database_url
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
 
 if DATABASE_URL and "://" in DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=os.environ.get("DB_SSL_REQUIRE", "False").lower() in ("true", "1", "yes"),
-        )
-    }
+    # Remote cloud databases (Neon, Supabase, Render, etc.) require SSL unless running on localhost
+    is_local_db = any(h in DATABASE_URL.lower() for h in ("localhost", "127.0.0.1", "sqlite"))
+    default_ssl = not is_local_db
+    ssl_require = os.environ.get("DB_SSL_REQUIRE", str(default_ssl)).lower() in ("true", "1", "yes")
+
+    is_pooler = "pooler" in DATABASE_URL.lower()
+    db_config = dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=0 if is_pooler else 600,
+        conn_health_checks=True,
+        ssl_require=ssl_require,
+    )
+    if is_pooler:
+        db_config["DISABLE_SERVER_SIDE_CURSORS"] = True
+
+    DATABASES = {"default": db_config}
 else:
     DATABASES = {
         "default": {
@@ -109,7 +135,15 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"

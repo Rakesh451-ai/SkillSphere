@@ -111,19 +111,72 @@ skillsphere/
 | `/api/recommendations/` | GET | List recommendations |
 | `/api/profile/` | GET, PUT | View/update profile |
 
-## Deployment
+## 🚀 Free Production Deployment Guide (Render + Neon PostgreSQL)
 
-### Environment Variables
+This project is fully pre-configured for **100% FREE** production hosting with **no credit card required**:
+- **Web App**: [Render](https://render.com) (Free Web Service tier, 750 free instance hours/month)
+- **Database**: [Neon](https://neon.tech) (Free Serverless PostgreSQL, 500 MB storage, permanent free tier)
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DJANGO_SECRET_KEY` | Secret key for Django | Auto-generated |
-| `DJANGO_DEBUG` | Debug mode | `True` |
-| `DJANGO_ALLOWED_HOSTS` | Comma-separated hosts | `*` |
+---
 
-### Production (Render/Railway)
+### Step 1: Create a Free PostgreSQL Database on Neon (2 minutes)
 
-1. Set environment variables
-2. Use PostgreSQL database
-3. Run `python manage.py collectstatic`
-4. Use Gunicorn: `gunicorn skillsphere.wsgi`
+1. Sign up for free at [neon.tech](https://neon.tech) (using GitHub or Google).
+2. Click **Create Project**, name it `skillsphere-db`, and choose your nearest region.
+3. On the Neon dashboard, copy your **Connection String**. It looks like:
+   ```text
+   postgresql://neondb_owner:npg_xxxx@ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require
+   ```
+4. Keep this connection string ready—you will use it as your `DATABASE_URL`.
+
+---
+
+### Step 2: (Optional) Migrate Local Data to Neon from Your PC
+
+To transfer all quizzes, questions, and users from your local SQLite database directly to Neon:
+```bash
+python migrate_to_postgres.py "postgresql://neondb_owner:npg_xxxx@ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require"
+```
+*(If you skip this step, Render will automatically initialize and seed the database on first deploy).*
+
+---
+
+### Step 3: Deploy on Render (Free Web Service)
+
+1. Push your code to your GitHub repository.
+2. Sign up / Log in to [dashboard.render.com](https://dashboard.render.com).
+3. Click **New +** -> **Web Service**.
+4. Select **Build and deploy from a Git repository** and connect your SkillSphere repo.
+5. Fill in the following settings:
+   - **Name**: `skillsphere` (or your choice)
+   - **Language**: `Python`
+   - **Branch**: `main` (or your active branch)
+   - **Region**: Choose closest to you (e.g. Oregon or Frankfurt)
+   - **Build Command**: `./build.sh`
+   - **Start Command**: `./start.sh`
+   - **Instance Type**: Select **Free**
+6. Under **Environment Variables**, add:
+
+| Key | Value | Description |
+|-----|-------|-------------|
+| `DATABASE_URL` | `postgresql://neondb_owner:...` | Your Neon PostgreSQL connection string |
+| `DJANGO_SECRET_KEY` | *(Click 'Generate' or enter a random string)* | Secret key for production |
+| `DJANGO_DEBUG` | `False` | Run in production mode |
+| `SERVER_TYPE` | `wsgi` (or `asgi`) | Choose `wsgi` for Gunicorn (recommended) or `asgi` for Uvicorn |
+| `CSRF_TRUSTED_ORIGINS` | `https://*.onrender.com` | Prevents CSRF errors on forms/login |
+| `DB_SSL_REQUIRE` | `True` | Enforce SSL for cloud database |
+| `DJANGO_SUPERUSER_USERNAME` | `admin` | Admin username |
+| `DJANGO_SUPERUSER_PASSWORD` | `YourAdminPassword123` | Admin password |
+
+7. Click **Create Web Service**.
+
+Render will automatically run `./build.sh` (installs packages and gathers static assets), followed by `./start.sh` (runs database migrations, seeds quizzes, sets up the superuser, and boots Gunicorn WSGI or Uvicorn ASGI).
+
+Once deployed, visit your Render URL (e.g., `https://skillsphere.onrender.com`) to use the live app!
+
+---
+
+### Default Admin Credentials
+- **Username**: `admin` (or whatever set in `DJANGO_SUPERUSER_USERNAME`)
+- **Password**: `smbi@123` (or whatever set in `DJANGO_SUPERUSER_PASSWORD`)
+- **Admin Panel URL**: `/admin/`
