@@ -7,11 +7,18 @@ Essential for Render / Neon serverless databases during deployment wakeups.
 import os
 import sys
 import time
+import re
 
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 if hasattr(sys.stderr, 'reconfigure'):
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
+# Strip accidental whitespace/newlines before django setups
+raw_url = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
+cleaned_url = re.sub(r"\s+", "", raw_url)
+if cleaned_url != raw_url:
+    os.environ["DATABASE_URL"] = cleaned_url
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'skillsphere.settings')
 

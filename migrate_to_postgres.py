@@ -2,6 +2,7 @@
 import os
 import sys
 import subprocess
+import re
 
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -15,10 +16,12 @@ def migrate_data():
 
     # Allow passing database URL as a command-line argument or environment variable
     if len(sys.argv) > 1 and sys.argv[1].strip():
-        db_url = sys.argv[1].strip().strip("'\"")
+        db_url = re.sub(r"\s+", "", sys.argv[1].strip().strip("'\""))
         os.environ["DATABASE_URL"] = db_url
     else:
-        db_url = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
+        db_url = re.sub(r"\s+", "", os.environ.get("DATABASE_URL", "").strip().strip("'\""))
+        if db_url:
+            os.environ["DATABASE_URL"] = db_url
 
     if not db_url or "postgres" not in db_url.lower():
         print("\n⚠️ ERROR: PostgreSQL DATABASE_URL is missing or invalid!")

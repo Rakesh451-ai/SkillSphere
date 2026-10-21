@@ -112,8 +112,13 @@ TEMPLATES = [
 WSGI_APPLICATION = "skillsphere.wsgi.application"
 
 import dj_database_url
+import re
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
+raw_db_url = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
+# Sanitize URL by removing any accidental spaces, newlines, or line wraps from copy-pasting
+DATABASE_URL = re.sub(r"\s+", "", raw_db_url)
+if DATABASE_URL != raw_db_url:
+    os.environ["DATABASE_URL"] = DATABASE_URL
 
 if DATABASE_URL and "://" in DATABASE_URL:
     is_local_db = any(h in DATABASE_URL.lower() for h in ("localhost", "127.0.0.1", "sqlite"))
