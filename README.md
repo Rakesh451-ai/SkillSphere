@@ -1,6 +1,4 @@
 
-https://skillsphere-q0x9.onrender.com
-
 # SkillSphere – AI Powered Student Growth Tracker
 
 A complete startup-style Django platform for students to track skills, productivity, placement preparation, and growth analytics.
@@ -28,16 +26,19 @@ A complete startup-style Django platform for students to track skills, productiv
 - **AI/ML**: Rule-based recommendation engine (Pandas, NumPy, scikit-learn available)
 - **Database**: SQLite (development), PostgreSQL (production)
 
-## Quick Start
+## Quick Start (Local Development)
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd skillsphere
+git clone https://github.com/Rakesh451-ai/SkillSphere.git
+cd SkillSphere
 
 # Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# On Windows:
+venv\Scripts\activate
+# On Linux/macOS:
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -45,8 +46,11 @@ pip install -r requirements.txt
 # Run migrations
 python manage.py migrate
 
+# Seed database with initial quizzes & questions
+python manage.py seed_db
+
 # Create superuser
-python manage.py createsuperuser
+python create_superuser.py
 
 # Run development server
 python manage.py runserver
@@ -54,129 +58,101 @@ python manage.py runserver
 
 Visit `http://localhost:8000` to access the application.
 
-## PostgreSQL Local Setup (User-Space)
+## 🚀 Complete Production Deployment on Render with Working Database
 
-Since the development environment (such as Ubuntu Core) may restrict global package installation or root access, a self-contained, user-space PostgreSQL setup is configured for this project.
-
-### Starting the PostgreSQL Database Server
-Run the following command to start the database server:
-```bash
-/home/rakesh/postgresql_bin/postgresql-18.4.0-x86_64-unknown-linux-gnu/bin/pg_ctl -D /home/rakesh/postgresql_data -o "-p 5432 -k /home/rakesh/postgresql_data" -l /home/rakesh/postgresql_data/postgres.log start
-```
-
-### Stopping the PostgreSQL Database Server
-Run the following command to stop the database server:
-```bash
-/home/rakesh/postgresql_bin/postgresql-18.4.0-x86_64-unknown-linux-gnu/bin/pg_ctl -D /home/rakesh/postgresql_data stop
-```
-
-### Accessing the Database Shell (psql)
-Run the following command to connect directly to the database:
-```bash
-/home/rakesh/postgresql_bin/postgresql-18.4.0-x86_64-unknown-linux-gnu/bin/psql -h localhost -p 5432 -U rakesh -d skillsphere
-```
-
-## Project Structure
-
-```
-skillsphere/
-├── accounts/          # Authentication & user profiles
-├── dashboard/         # Analytics dashboard & charts
-├── skills/            # Skill tracking system
-├── studylogs/         # Daily study logger
-├── goals/             # Goal management
-├── recommendations/   # AI recommendation engine
-├── resume_analysis/   # Resume PDF analyzer
-├── leaderboard/       # Rankings & gamification
-├── notifications/     # Notification system
-├── templates/         # HTML templates
-├── static/            # CSS, JS, images
-├── media/             # User uploads
-├── skillsphere/       # Project configuration
-│   ├── settings.py
-│   ├── urls.py
-│   ├── api_urls.py
-│   └── api_views.py
-├── manage.py
-└── requirements.txt
-```
-
-## API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/skills/` | GET, POST | List/create skills |
-| `/api/studylogs/` | GET, POST | List/create study logs |
-| `/api/goals/` | GET, POST | List/create goals |
-| `/api/recommendations/` | GET | List recommendations |
-| `/api/profile/` | GET, PUT | View/update profile |
-
-## 🚀 Free Production Deployment Guide (Render + Neon PostgreSQL)
-
-This project is fully pre-configured for **100% FREE** production hosting with **no credit card required**:
-- **Web App**: [Render](https://render.com) (Free Web Service tier, 750 free instance hours/month)
-- **Database**: [Neon](https://neon.tech) (Free Serverless PostgreSQL, 500 MB storage, permanent free tier)
+SkillSphere is fully configured to deploy on **Render** with a **working PostgreSQL database**. You can deploy using either of two methods:
 
 ---
 
-### Step 1: Create a Free PostgreSQL Database on Neon (2 minutes)
+### Option A: 1-Click Render Blueprint (Recommended — 100% Automated)
 
-1. Sign up for free at [neon.tech](https://neon.tech) (using GitHub or Google).
-2. Click **Create Project**, name it `skillsphere-db`, and choose your nearest region.
-3. On the Neon dashboard, copy your **Connection String**. It looks like:
-   ```text
-   postgresql://neondb_owner:npg_xxxx@ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require
+Render Blueprints use [`render.yaml`](render.yaml) to automatically provision both the **Web Service** and the **PostgreSQL Database** in one go, without copying any database credentials.
+
+1. Push your latest code to your GitHub repository:
+   ```bash
+   git push origin <your-active-branch>
    ```
-4. Keep this connection string ready—you will use it as your `DATABASE_URL`.
+2. Log in to [dashboard.render.com](https://dashboard.render.com).
+3. Click **New +** (top right) -> **Blueprint**.
+4. Connect your **SkillSphere** GitHub repository.
+5. Choose your active branch (`skillsphere-complete` or `main`).
+6. Render will detect [`render.yaml`](render.yaml) and automatically create:
+   - **Database**: `skillsphere-db` (Free PostgreSQL instance)
+   - **Web Service**: `skillsphere` (Python Web Service)
+   - Auto-wires `DATABASE_URL` directly from `skillsphere-db` to the web app.
+7. Click **Apply**.
+8. Render will run `bash build.sh` followed by `bash start.sh`:
+   - Dependencies are installed.
+   - Static files are compressed & collected.
+   - `wait_for_db.py` confirms database availability.
+   - Database migrations are automatically applied.
+   - Initial platform data (15 DSA quizzes, 375 questions) is auto-seeded.
+   - The default superuser is configured.
+   - Gunicorn starts serving your app!
 
 ---
 
-### Step 2: (Optional) Migrate Local Data to Neon from Your PC
+### Option B: Manual Web Service Setup (Render PostgreSQL or Neon.tech)
 
-To transfer all quizzes, questions, and users from your local SQLite database directly to Neon:
-```bash
-python migrate_to_postgres.py "postgresql://neondb_owner:npg_xxxx@ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require"
-```
-*(If you skip this step, Render will automatically initialize and seed the database on first deploy).*
+If you prefer configuring services manually or using a permanent free external PostgreSQL database like [Neon.tech](https://neon.tech):
 
----
+#### Step 1: Create a PostgreSQL Database
+- **Option 1 (Render Native PostgreSQL)**:
+  1. In Render dashboard, click **New +** -> **PostgreSQL**.
+  2. Set Name to `skillsphere-db`, Region to **Oregon** (or your preferred region), and choose the **Free** plan.
+  3. Click **Create Database**.
+  4. Once created, copy the **Internal Database URL** (e.g. `postgres://skillsphere_db_user:...@dpg-xxxx-a:5432/skillsphere_db`).
+- **Option 2 (Neon Serverless PostgreSQL — Permanent Free Tier)**:
+  1. Sign up at [neon.tech](https://neon.tech) and create a project `skillsphere-db`.
+  2. Copy the **Connection String** with `?sslmode=require`.
 
-### Step 3: Deploy on Render (Free Web Service)
+#### Step 2: Create the Web Service on Render
+1. In Render dashboard, click **New +** -> **Web Service**.
+2. Connect your **SkillSphere** repository.
+3. Configure the following settings:
+   - **Name**: `skillsphere`
+   - **Runtime**: `Python`
+   - **Branch**: `skillsphere-complete` (or `main`)
+   - **Region**: Same region as your database
+   - **Build Command**: `bash build.sh`
+   - **Start Command**: `bash start.sh`
+   - **Plan**: `Free`
 
-1. Push your code to your GitHub repository.
-2. Sign up / Log in to [dashboard.render.com](https://dashboard.render.com).
-3. Click **New +** -> **Web Service**.
-4. Select **Build and deploy from a Git repository** and connect your SkillSphere repo.
-5. Fill in the following settings:
-   - **Name**: `skillsphere` (or your choice)
-   - **Language**: `Python`
-   - **Branch**: `main` (or your active branch)
-   - **Region**: Choose closest to you (e.g. Oregon or Frankfurt)
-   - **Build Command**: `./build.sh`
-   - **Start Command**: `./start.sh`
-   - **Instance Type**: Select **Free**
-6. Under **Environment Variables**, add:
+4. In **Environment Variables**, add:
 
-| Key | Value | Description |
-|-----|-------|-------------|
-| `DATABASE_URL` | `postgresql://neondb_owner:...` | Your Neon PostgreSQL connection string |
-| `DJANGO_SECRET_KEY` | *(Click 'Generate' or enter a random string)* | Secret key for production |
-| `DJANGO_DEBUG` | `False` | Run in production mode |
-| `SERVER_TYPE` | `wsgi` (or `asgi`) | Choose `wsgi` for Gunicorn (recommended) or `asgi` for Uvicorn |
-| `CSRF_TRUSTED_ORIGINS` | `https://*.onrender.com` | Prevents CSRF errors on forms/login |
-| `DB_SSL_REQUIRE` | `True` | Enforce SSL for cloud database |
+| Key | Value | Notes |
+|-----|-------|-------|
+| `DATABASE_URL` | *(Paste Internal DB URL from Render or Neon URL)* | Working PostgreSQL database connection string |
+| `DJANGO_SECRET_KEY` | *(Click 'Generate' or enter a random string)* | Production secret key |
+| `DJANGO_DEBUG` | `False` | Production mode |
+| `SERVER_TYPE` | `wsgi` | High-performance Gunicorn WSGI server |
+| `CSRF_TRUSTED_ORIGINS` | `https://*.onrender.com` | Prevents CSRF forbidden errors |
 | `DJANGO_SUPERUSER_USERNAME` | `admin` | Admin username |
-| `DJANGO_SUPERUSER_PASSWORD` | `YourAdminPassword123` | Admin password |
+| `DJANGO_SUPERUSER_EMAIL` | `admin@skillsphere.app` | Admin email |
+| `DJANGO_SUPERUSER_PASSWORD` | `admin12345` | Admin password |
 
-7. Click **Create Web Service**.
-
-Render will automatically run `./build.sh` (installs packages and gathers static assets), followed by `./start.sh` (runs database migrations, seeds quizzes, sets up the superuser, and boots Gunicorn WSGI or Uvicorn ASGI).
-
-Once deployed, visit your Render URL (e.g., `https://skillsphere.onrender.com`) to use the live app!
+5. Click **Create Web Service**.
 
 ---
 
-### Default Admin Credentials
-- **Username**: `admin` (or whatever set in `DJANGO_SUPERUSER_USERNAME`)
-- **Password**: `smbi@123` (or whatever set in `DJANGO_SUPERUSER_PASSWORD`)
-- **Admin Panel URL**: `/admin/`
+### Verifying the Live Deployment
+
+Once the deployment finishes:
+1. Open your live Render URL (e.g. `https://skillsphere.onrender.com`).
+2. Log in at `/accounts/login/` or access the Admin Panel at `/admin/`.
+3. Default credentials:
+   - **Username**: `admin`
+   - **Password**: `admin12345` (or whatever set in `DJANGO_SUPERUSER_PASSWORD`)
+4. Verify that:
+   - All 15 DSA Quizzes & 375 Questions are available.
+   - User registration and login work seamlessly.
+   - Data persists across server restarts in the PostgreSQL database.
+
+---
+
+### (Optional) Local to PostgreSQL Migration Tool
+
+If you ever want to push your local SQLite data directly to any PostgreSQL database from your terminal:
+```bash
+python migrate_to_postgres.py "postgresql://user:password@host/dbname?sslmode=require"
+```

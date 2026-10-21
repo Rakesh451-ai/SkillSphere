@@ -20,6 +20,10 @@ if allowed_hosts_env:
 else:
     ALLOWED_HOSTS = ["*"]
 
+render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
+if render_hostname and render_hostname not in ALLOWED_HOSTS and "*" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_hostname)
+
 csrf_origins_env = os.environ.get("CSRF_TRUSTED_ORIGINS", "").strip()
 if csrf_origins_env:
     CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_env.split(",") if origin.strip()]
@@ -32,7 +36,16 @@ else:
         "http://127.0.0.1:8000",
     ]
 
+if render_hostname:
+    exact_origin = f"https://{render_hostname}"
+    if exact_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(exact_origin)
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -86,10 +99,20 @@ import dj_database_url
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
 
 if DATABASE_URL and "://" in DATABASE_URL:
-    # Remote cloud databases (Neon, Supabase, Render, etc.) require SSL unless running on localhost
     is_local_db = any(h in DATABASE_URL.lower() for h in ("localhost", "127.0.0.1", "sqlite"))
-    default_ssl = not is_local_db
-    ssl_require = os.environ.get("DB_SSL_REQUIRE", str(default_ssl)).lower() in ("true", "1", "yes")
+    is_render_internal = "dpg-" in DATABASE_URL.lower() and ".render.com" not in DATABASE_URL.lower()
+    has_explicit_sslmode = "sslmode=" in DATABASE_URL.lower()
+
+    env_ssl = os.environ.get("DB_SSL_REQUIRE", "").strip().lower()
+    if env_ssl in ("true", "1", "yes"):
+        ssl_require = True
+    elif env_ssl in ("false", "0", "no"):
+        ssl_require = False
+    elif has_explicit_sslmode or is_local_db or is_render_internal:
+        ssl_require = False
+    else:
+        # Remote cloud databases (Neon, Supabase, external Render)
+        ssl_require = True
 
     is_pooler = "pooler" in DATABASE_URL.lower()
     db_config = dj_database_url.parse(

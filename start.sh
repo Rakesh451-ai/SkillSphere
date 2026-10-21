@@ -6,6 +6,10 @@ echo "=================================================="
 echo "🚀 SkillSphere Web Service Starting"
 echo "=================================================="
 
+# Check and wait for database connection readiness
+echo "⏳ Checking database connection readiness..."
+python wait_for_db.py
+
 # Apply database migrations
 echo "🔄 Applying database migrations..."
 python manage.py migrate --noinput

@@ -4,8 +4,8 @@ services:
     runtime: python
     plan: free
     region: oregon
-    buildCommand: "./build.sh"
-    startCommand: "./start.sh"
+    buildCommand: "bash build.sh"
+    startCommand: "bash start.sh"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
@@ -14,11 +14,11 @@ services:
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: SERVER_TYPE
-        value: "wsgi" # Change to 'asgi' if you wish to run with Uvicorn ASGI
-      - key: DB_SSL_REQUIRE
-        value: "True"
+        value: "wsgi" # Set to 'wsgi' for Gunicorn or 'asgi' for Uvicorn
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: skillsphere-db
+          property: connectionString
       - key: CSRF_TRUSTED_ORIGINS
         value: "https://*.onrender.com"
       - key: DJANGO_SUPERUSER_USERNAME
@@ -27,3 +27,10 @@ services:
         value: "admin@skillsphere.app"
       - key: DJANGO_SUPERUSER_PASSWORD
         value: "admin12345"
+
+databases:
+  - name: skillsphere-db
+    plan: free
+    region: oregon
+    databaseName: skillsphere
+    user: skillsphere

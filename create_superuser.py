@@ -1,5 +1,11 @@
 import os
+import sys
 import django
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'skillsphere.settings')
 django.setup()
@@ -8,8 +14,8 @@ from accounts.models import User
 
 # Read from environment variables or use safe defaults
 username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
-email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
-password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'smbi@123')
+email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@skillsphere.app')
+password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin12345')
 
 # 1. Create or update main default superuser
 user, created = User.objects.get_or_create(username=username, defaults={'email': email, 'is_staff': True, 'is_superuser': True})
@@ -38,4 +44,3 @@ if os.environ.get('PROMOTE_ALL_USERS', 'False').lower() in ('true', '1', 'yes'):
             user_obj.is_superuser = True
             user_obj.save()
             print(f"Auto-promoted user '{user_obj.username}' to Admin / Superuser!")
-
