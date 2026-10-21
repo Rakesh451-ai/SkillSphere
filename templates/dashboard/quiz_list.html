@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}DSA Algorithm Quizzes - SkillSphere{% endblock %}
+{% block page_title %}Live Quizzes{% endblock %}
+
+{% block extra_css %}
+<style>
+    .quiz-card {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .quiz-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(99, 102, 241, 0.45) !important;
+        box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2);
+    }
+    .badge-status-live {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: #ffffff !important;
+        font-weight: 800;
+        animation: pulseLive 2s infinite ease-in-out;
+    }
+    @keyframes pulseLive {
+        0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .topic-filter-btn {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-muted);
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .topic-filter-btn:hover, .topic-filter-btn.active {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: #ffffff;
+        border-color: #6366f1;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    }
+
+    .stat-pill-card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 16px 20px;
+    }
+
+    #quizSearchInput {
+        background-color: #0f172a !important;
+        color: #f8fafc !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        font-weight: 500;
+    }
+    #quizSearchInput::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1;
+        font-weight: 500;
+    }
+
+    .badge-topic-tag {
+        background: rgba(99, 102, 241, 0.25) !important;
+        border: 1px solid rgba(99, 102, 241, 0.5) !important;
+        color: #a5b4fc !important;
+        font-weight: 700 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Category Filters & Search -->
+<div class="card-custom p-3 mb-4">
+    <div class="row g-3 align-items-center">
+        <div class="col-md-7">
+            <div class="d-flex flex-wrap gap-2">
+                <button class="topic-filter-btn active" onclick="filterCategory('all', this)">All Live Quizzes</button>
+                <button class="topic-filter-btn" onclick="filterCategory('linear', this)">Linear DS</button>
+                <button class="topic-filter-btn" onclick="filterCategory('tree', this)">Trees & Heaps</button>
+                <button class="topic-filter-btn" onclick="filterCategory('graph', this)">Graph & DP</button>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary border-opacity-25 text-warning"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" id="quizSearchInput" placeholder="Search quiz topic (e.g. Array, LinkedList, Graph, DP)..." onkeyup="searchQuizzes()">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quizzes Grid -->
+<div class="row g-4" id="quizzesGridContainer">
+    {% for q in quizzes %}
+    <div class="col-md-6 col-lg-4 quiz-item-col" data-topic="{{ q.topic|lower }}" data-title="{{ q.title|lower }}" data-status="{{ q.status }}" data-submitted="{% if q.id in user_submissions %}true{% else %}false{% endif %}">
+        <div class="quiz-card p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge badge-topic-tag px-3 py-1 rounded-pill extra-small fw-bold">
+                        <i class="bi bi-tag-fill me-1 text-warning"></i>{{ q.topic }}
+                    </span>
+                    
+                    {% if not q.is_live %}
+                        <span class="badge bg-danger text-light px-3 py-1 rounded-pill extra-small fw-bold">
+                            <i class="bi bi-lock-fill me-1"></i>Draft (Unpublished)
+                        </span>
+                    {% elif q.status == 'live' %}
+                        <span class="badge badge-status-live px-3 py-1 rounded-pill extra-small fw-bold">
+                            <i class="bi bi-broadcast me-1"></i>Live Now
+                        </span>
+                    {% elif q.status == 'upcoming' %}
+                        <span class="badge bg-warning text-dark px-3 py-1 rounded-pill extra-small fw-bold">
+                            <i class="bi bi-clock-history me-1"></i>Upcoming
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary text-light px-3 py-1 rounded-pill extra-small fw-bold">
+                            <i class="bi bi-calendar-x me-1"></i>Ended
+                        </span>
+                    {% endif %}
+                </div>
+
+                <h5 class="fw-bold mb-2 text-body">{{ q.title }}</h5>
+                <p class="text-muted small mb-3">{{ q.description|default:"Structured 25-question DSA challenge covering basic to advanced concepts." }}</p>
+
+                <div class="p-3 bg-body-tertiary rounded-3 border border-secondary border-opacity-10 mb-3 extra-small">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted"><i class="bi bi-list-check me-1"></i>Questions & XP:</span>
+                        <span class="fw-bold text-success">25 Questions • {{ q.total_xp }} XP</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-muted"><i class="bi bi-clock me-1"></i>Schedule:</span>
+                        <span class="fw-bold text-info">{{ q.start_time|date:"M d, H:i" }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted"><i class="bi bi-check2-circle me-1"></i>Status:</span>
+                        {% if q.id in user_submissions %}
+                            <span class="fw-bold text-success"><i class="bi bi-check-all me-1"></i>Completed</span>
+                        {% elif q.status == 'live' %}
+                            <span class="fw-bold text-success"><i class="bi bi-broadcast me-1"></i>Live Now</span>
+                        {% elif q.status == 'upcoming' %}
+                            <span class="fw-bold text-warning"><i class="bi bi-clock-history me-1"></i>Starts {{ q.start_time|date:"M d, H:i" }}</span>
+                        {% else %}
+                            <span class="fw-bold text-muted"><i class="bi bi-x-circle me-1"></i>Ended</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                {% if q.id in user_submissions %}
+                    <a href="{% url 'dashboard:quiz_result' q.id %}" class="btn btn-outline-success w-100 rounded-pill fw-bold">
+                        <i class="bi bi-bar-chart-line-fill me-2"></i>View Score & Explanations
+                    </a>
+                {% elif q.status == 'live' %}
+                    <a href="{% url 'dashboard:quiz_take' q.id %}" class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow-sm">
+                        <i class="bi bi-play-circle-fill me-2"></i>Start Live Quiz Now
+                    </a>
+                {% elif q.status == 'upcoming' %}
+                    <button class="btn btn-outline-warning w-100 rounded-pill fw-bold py-2" disabled>
+                        <i class="bi bi-clock-history me-2"></i>Starts {{ q.start_time|date:"M d, H:i" }}
+                    </button>
+                {% else %}
+                    <button class="btn btn-outline-secondary w-100 rounded-pill fw-bold py-2" disabled>
+                        <i class="bi bi-x-circle me-2"></i>Quiz Ended
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="quiz-card p-5 text-center text-muted">
+            <i class="bi bi-card-checklist fs-1 d-block mb-3 text-secondary"></i>
+            <h5>No live quizzes available right now.</h5>
+            <p>Admin published live quizzes will appear here automatically.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function filterStatus(statusFilter, btn) {
+        document.querySelectorAll('.topic-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const items = document.querySelectorAll('.quiz-item-col');
+        items.forEach(item => {
+            const status = item.getAttribute('data-status') || '';
+            const isSubmitted = item.getAttribute('data-submitted') === 'true';
+
+            if (statusFilter === 'live') {
+                if (status === 'live') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            } else if (statusFilter === 'upcoming') {
+                if (status === 'upcoming') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            } else if (statusFilter === 'submitted') {
+                if (isSubmitted) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    function filterCategory(cat, btn) {
+        document.querySelectorAll('.topic-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const items = document.querySelectorAll('.quiz-item-col');
+        items.forEach(item => {
+            const topic = item.getAttribute('data-topic') || '';
+            if (cat === 'all') {
+                item.style.display = 'block';
+            } else if (cat === 'linear') {
+                if (['array', 'string', 'pointer', 'linkedlist', 'stack', 'queue', 'sliding window'].includes(topic)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            } else if (cat === 'tree') {
+                if (['tree', 'binary tree', 'binary search tree (bst)', 'avl tree', 'heap'].includes(topic)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            } else if (cat === 'graph') {
+                if (['graph', 'dynamic programming (dp)', 'recursion'].includes(topic)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    function searchQuizzes() {
+        const query = document.getElementById('quizSearchInput').value.toLowerCase();
+        const items = document.querySelectorAll('.quiz-item-col');
+
+        items.forEach(item => {
+            const topic = item.getAttribute('data-topic') || '';
+            const title = item.getAttribute('data-title') || '';
+            if (topic.includes(query) || title.includes(query)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

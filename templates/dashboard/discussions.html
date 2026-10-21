@@ -1,0 +1,558 @@
+{% extends "base.html" %}
+{% block title %}Community Discussion & Chat Hub - SkillSphere{% endblock %}
+{% block page_title %}Community Discussion & Chat Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .discussion-card {
+        background-color: var(--card-bg) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-pill-hub .nav-link {
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding: 12px 24px;
+        color: var(--text-muted);
+        transition: all 0.25s ease;
+    }
+    .nav-pill-hub .nav-link.active {
+        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+        color: #ffffff !important;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    }
+    .avatar-sm {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+    .badge-type-problem {
+        background-color: rgba(99, 102, 241, 0.15) !important;
+        color: #818cf8 !important;
+        border: 1px solid rgba(129, 140, 248, 0.3);
+    }
+    .badge-type-announcement {
+        background-color: rgba(239, 68, 68, 0.15) !important;
+        color: #f87171 !important;
+        border: 1px solid rgba(248, 113, 113, 0.3);
+    }
+    .badge-type-chat {
+        background-color: rgba(16, 185, 129, 0.15) !important;
+        color: #34d399 !important;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+    .badge-admin {
+        background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+        color: #ffffff !important;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 0.72rem;
+    }
+    .code-box {
+        background-color: #0b0f19;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 16px;
+        color: #f8fafc;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        margin-top: 12px;
+    }
+    .reply-card {
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 14px 18px;
+    }
+
+    /* Live Chat Room Panel Styling */
+    .chat-container {
+        background-color: var(--card-bg) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        height: 72vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .chat-messages-box {
+        flex: 1;
+        padding: 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .chat-bubble {
+        max-width: 75%;
+        padding: 14px 18px;
+        border-radius: 18px;
+        position: relative;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    }
+    .chat-bubble-other {
+        background-color: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--card-border);
+        border-bottom-left-radius: 4px;
+        align-self: flex-start;
+    }
+    .chat-bubble-self {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: #ffffff !important;
+        border-bottom-right-radius: 4px;
+        align-self: flex-end;
+    }
+    .chat-bubble-self * {
+        color: #ffffff !important;
+    }
+    .chat-input-bar {
+        padding: 16px 24px;
+        border-top: 1px solid var(--card-border);
+        background-color: rgba(255, 255, 255, 0.02);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Header Banner -->
+    <div class="col-12">
+        <div class="discussion-card p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <h3 class="fw-bold mb-0"><i class="bi bi-chat-quote-fill text-primary me-2"></i>Community Discussion & Chat Hub</h3>
+            </div>
+            <div>
+                <button class="btn btn-primary px-4 py-2 rounded-3 fw-bold" data-bs-toggle="modal" data-bs-target="#newPostModal">
+                    <i class="bi bi-plus-circle-fill me-2"></i>New Problem / Discussion
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Panel Tabs -->
+    <div class="col-12">
+        <div class="discussion-card p-2">
+            <ul class="nav nav-pills nav-fill nav-pill-hub gap-2" id="discussionTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="problems-tab" data-bs-toggle="tab" data-bs-target="#problems-panel" type="button" role="tab">
+                        <i class="bi bi-code-square me-2"></i>Problem & Solution Hub
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="chat-tab" data-bs-toggle="tab" data-bs-target="#chat-panel" type="button" role="tab">
+                        <i class="bi bi-chat-dots-fill me-2"></i>General Community Chat
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Tab Panels Content -->
+    <div class="col-12">
+        <div class="tab-content" id="discussionTabContent">
+            
+            <!-- PANEL 1: PROBLEM & SOLUTION HUB -->
+            <div class="tab-pane fade show active" id="problems-panel" role="tabpanel">
+                <!-- Search & Filters -->
+                <div class="discussion-card p-3 mb-4">
+                    <form method="GET" class="row g-2 align-items-center">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-body-tertiary border-secondary border-opacity-25 text-muted"><i class="bi bi-search"></i></span>
+                                <input type="text" name="q" class="form-control bg-body-tertiary border-secondary border-opacity-25" placeholder="Search problems, code, questions, or users..." value="{{ q }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <select name="type" class="form-select bg-body-tertiary border-secondary border-opacity-25">
+                                <option value="all" {% if post_type == 'all' %}selected{% endif %}>All Types</option>
+                                <option value="problem" {% if post_type == 'problem' %}selected{% endif %}>Problems & Solutions</option>
+                                <option value="question" {% if post_type == 'question' %}selected{% endif %}>Questions & Doubts</option>
+                                <option value="chat" {% if post_type == 'chat' %}selected{% endif %}>General Chat</option>
+                                <option value="announcement" {% if post_type == 'announcement' %}selected{% endif %}>Announcements</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-lg-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary w-100 fw-bold">Filter</button>
+                            <a href="{% url 'dashboard:discussions' %}" class="btn btn-outline-secondary w-100">Reset</a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Discussion Posts Feed -->
+                {% for post in posts %}
+                <div class="discussion-card p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar-sm">
+                                {{ post.user.username|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <div class="fw-bold d-flex align-items-center gap-2">
+                                    {{ post.user.display_name }}
+                                    {% if post.user.is_staff or post.user.is_superuser %}
+                                        <span class="badge-admin"><i class="bi bi-shield-fill me-1"></i>Admin</span>
+                                    {% endif %}
+                                    <span class="text-muted small">@{{ post.user.username }}</span>
+                                </div>
+                                <div class="text-muted extra-small">{{ post.created_at|timesince }} ago &bull; Category: <span class="badge bg-secondary opacity-75">{{ post.category }}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge {% if post.post_type == 'announcement' %}badge-type-announcement{% elif post.post_type == 'chat' %}badge-type-chat{% else %}badge-type-problem{% endif %} px-3 py-2 rounded-pill">
+                                {{ post.get_post_type_display }}
+                            </span>
+                            {% if post.user == request.user or request.user.is_staff or request.user.is_superuser %}
+                            <form method="POST" action="{% url 'dashboard:discussion_delete' post.id %}" onsubmit="return confirm('Delete this post?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle" title="Delete Post"><i class="bi bi-trash-fill"></i></button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Title & Body -->
+                    <h4 class="fw-bold mb-2">{{ post.title }}</h4>
+                    <p class="mb-3 text-body opacity-90" style="white-space: pre-wrap;">{{ post.content }}</p>
+
+                    <!-- Code Snippet / Solution Code (if present) -->
+                    {% if post.code_snippet %}
+                    <div class="mb-3">
+                        <div class="small fw-semibold text-warning mb-1"><i class="bi bi-code-square me-1"></i>Attached Code / Problem Snippet:</div>
+                        <pre class="code-box mb-0"><code>{{ post.code_snippet }}</code></pre>
+                    </div>
+                    {% endif %}
+
+                    <!-- Actions Bar: Upvote & Toggle Reply -->
+                    <div class="d-flex align-items-center gap-3 pt-2 border-top border-secondary border-opacity-10 mt-3">
+                        <form method="POST" action="{% url 'dashboard:discussion_upvote' post.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm {% if request.user in post.upvoted_users.all %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">
+                                <i class="bi bi-hand-thumbs-up-fill me-1"></i> Upvote ({{ post.upvotes }})
+                            </button>
+                        </form>
+
+                        <button class="btn btn-sm btn-outline-info rounded-pill px-3" type="button" data-bs-toggle="collapse" data-bs-target="#repliesCollapse{{ post.id }}">
+                            <i class="bi bi-chat-left-dots-fill me-1"></i> Solutions & Replies ({{ post.replies.count }})
+                        </button>
+                    </div>
+
+                    <!-- Collapsible Replies & Solutions Section -->
+                    <div class="collapse mt-4 {% if post.replies.count > 0 %}show{% endif %}" id="repliesCollapse{{ post.id }}">
+                        <div class="p-3 bg-body-tertiary rounded-4 border border-secondary border-opacity-10">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-reply-all-fill text-info me-2"></i>Solutions & Chat Replies</h6>
+                            
+                            {% for reply in post.replies.all %}
+                            <div class="reply-card mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="fw-bold small">{{ reply.user.display_name }}</span>
+                                        {% if reply.user.is_staff or reply.user.is_superuser %}
+                                            <span class="badge-admin">Admin</span>
+                                        {% endif %}
+                                        <span class="text-muted extra-small">@{{ reply.user.username }} &bull; {{ reply.created_at|timesince }} ago</span>
+                                    </div>
+                                    {% if reply.is_solution %}
+                                        <span class="badge bg-success rounded-pill px-3 py-1"><i class="bi bi-check-circle-fill me-1"></i>Verified Solution</span>
+                                    {% endif %}
+                                </div>
+
+                                <p class="mb-2 small text-body" style="white-space: pre-wrap;">{{ reply.content }}</p>
+
+                                {% if reply.code_solution %}
+                                <div class="mt-2">
+                                    <span class="extra-small fw-semibold text-info"><i class="bi bi-file-code-fill me-1"></i>Solution Code:</span>
+                                    <pre class="code-box p-2 mt-1 mb-0" style="font-size:0.82rem;"><code>{{ reply.code_solution }}</code></pre>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% empty %}
+                            <p class="text-muted small mb-3">No solutions or replies yet. Be the first to share a solution!</p>
+                            {% endfor %}
+
+                            <!-- Reply Form -->
+                            <form method="POST" action="{% url 'dashboard:discussion_reply' post.id %}" class="mt-3">
+                                {% csrf_token %}
+                                <div class="mb-2">
+                                    <textarea name="content" class="form-control form-control-sm bg-body border-secondary border-opacity-25" rows="2" placeholder="Write your solution, answer, or chat response..." required></textarea>
+                                </div>
+                                <div class="mb-2">
+                                    <input type="text" name="code_solution" class="form-control form-control-sm font-monospace bg-body border-secondary border-opacity-25" placeholder="Optional code snippet or solution block...">
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {% if request.user == post.user or request.user.is_staff %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="is_solution" id="isSolCheck{{ post.id }}">
+                                        <label class="form-check-label small text-success fw-semibold" for="isSolCheck{{ post.id }}">Mark as Verified Solution</label>
+                                    </div>
+                                    {% else %}
+                                    <div></div>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-sm btn-primary rounded-pill px-4 fw-bold">
+                                        <i class="bi bi-send-fill me-1"></i> Submit Reply
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="discussion-card p-5 text-center text-muted">
+                    <i class="bi bi-chat-square-text fs-1 d-block mb-3 text-secondary"></i>
+                    <h5>No problem posts found.</h5>
+                    <p>Be the first to share a coding problem or ask a question!</p>
+                    <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#newPostModal">Post First Problem</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- PANEL 2: GENERAL COMMUNITY CHAT -->
+            <div class="tab-pane fade" id="chat-panel" role="tabpanel">
+                <div class="chat-container">
+                    <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-body-tertiary">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar-sm bg-primary">
+                                <i class="bi bi-chat-dots-fill fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">General Community Chatroom</h6>
+                                <small class="text-muted"><span class="badge bg-success rounded-circle p-1 me-1"></span> Live auto-syncing chatroom for users & admins</small>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" type="button" data-bs-toggle="collapse" data-bs-target="#codeSnippetCollapse">
+                            <i class="bi bi-code-square me-1"></i> Attach Code
+                        </button>
+                    </div>
+
+                    <!-- Collapsible Code Snippet Input -->
+                    <div class="collapse p-3 border-bottom bg-body-tertiary" id="codeSnippetCollapse">
+                        <label class="form-label small fw-semibold text-warning"><i class="bi bi-file-code me-1"></i>Paste Code Snippet to Share:</label>
+                        <textarea id="chat-code-input" class="form-control font-monospace form-control-sm bg-body" rows="3" placeholder="// Paste code snippet here..."></textarea>
+                    </div>
+
+                    <!-- Chat Messages Feed Box -->
+                    <div class="chat-messages-box" id="chat-messages-container">
+                        {% for msg in chat_messages %}
+                        <div class="d-flex gap-2 {% if msg.user == request.user %}justify-content-end{% else %}justify-content-start{% endif %}" id="msg-box-{{ msg.id }}">
+                            {% if msg.user != request.user %}
+                            <div class="avatar-sm">
+                                {{ msg.user.username|slice:":1"|upper }}
+                            </div>
+                            {% endif %}
+
+                            <div class="chat-bubble {% if msg.user == request.user %}chat-bubble-self{% else %}chat-bubble-other{% endif %}">
+                                <div class="d-flex align-items-center justify-content-between gap-3 mb-1">
+                                    <div class="d-flex align-items-center gap-1">
+                                        <span class="fw-bold extra-small">
+                                            {% if msg.user == request.user %}You{% else %}{{ msg.user.display_name }}{% endif %}
+                                        </span>
+                                        {% if msg.user.is_staff or msg.user.is_superuser %}
+                                            <span class="badge-admin"><i class="bi bi-shield-fill me-1"></i>Admin</span>
+                                        {% endif %}
+                                    </div>
+                                    <small class="extra-small opacity-75">{{ msg.created_at|date:"h:i A" }}</small>
+                                </div>
+
+                                <div class="message-text" style="white-space: pre-wrap;">{{ msg.message }}</div>
+
+                                {% if msg.code_snippet %}
+                                <pre class="code-box p-2 mt-1 mb-0" style="font-size:0.82rem;"><code>{{ msg.code_snippet }}</code></pre>
+                                {% endif %}
+                            </div>
+
+                            {% if msg.user == request.user %}
+                            <div class="avatar-sm bg-secondary">
+                                {{ request.user.username|slice:":1"|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Chat Input Footer -->
+                    <div class="chat-input-bar">
+                        <form id="chat-form" onsubmit="sendChatMessage(event)" class="d-flex gap-2 align-items-center">
+                            <input type="text" id="chat-message-input" class="form-control rounded-pill px-4" placeholder="Type a message to general chat..." autocomplete="off" required>
+                            <button type="submit" class="btn btn-primary rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; flex-shrink: 0;" title="Send Message">
+                                <i class="bi bi-send-fill fs-5"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal: New Discussion / Problem -->
+<div class="modal fade" id="newPostModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content discussion-card p-2">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square text-primary me-2"></i>Post Problem, Question, or Discussion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'dashboard:discussion_create' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label small fw-semibold">Title / Problem Heading *</label>
+                            <input type="text" name="title" class="form-control" placeholder="e.g. How to optimize Dijkstra's Algorithm in C++?" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-semibold">Post Type</label>
+                            <select name="post_type" class="form-select">
+                                <option value="problem">Problem & Solution</option>
+                                <option value="question">Question / Doubt</option>
+                                <option value="chat">General Discussion</option>
+                                {% if request.user.is_staff or request.user.is_superuser %}
+                                <option value="announcement">Admin Announcement</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Category / Tag</label>
+                            <input type="text" name="category" class="form-control" placeholder="e.g. DSA, C++, Python, Web Dev, Aptitude" value="DSA">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label small fw-semibold">Description / Problem Statement *</label>
+                            <textarea name="content" class="form-control" rows="4" placeholder="Explain the problem statement, constraints, or topic in detail..." required></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label small fw-semibold">Code Snippet / Solution Code (Optional)</label>
+                            <textarea name="code_snippet" class="form-control font-monospace" rows="5" placeholder="// Paste your code snippet or solution code here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-3 fw-bold">Publish Post (+15 XP)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let lastMsgId = {{ last_chat_id|default:0 }};
+    const chatContainer = document.getElementById('chat-messages-container');
+
+    function scrollToBottom() {
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    }
+
+    scrollToBottom();
+
+    function renderMessageHTML(msg) {
+        const isSelf = msg.is_self;
+        const adminBadge = msg.is_staff ? '<span class="badge-admin"><i class="bi bi-shield-fill me-1"></i>Admin</span>' : '';
+        const codeSnippetHTML = msg.code_snippet ? `<pre class="code-box p-2 mt-1 mb-0" style="font-size:0.82rem;"><code>${msg.code_snippet}</code></pre>` : '';
+        const authorName = isSelf ? 'You' : msg.display_name;
+
+        return `
+            <div class="d-flex gap-2 ${isSelf ? 'justify-content-end' : 'justify-content-start'}" id="msg-box-${msg.id}">
+                ${!isSelf ? `<div class="avatar-sm">${msg.avatar_letter}</div>` : ''}
+                <div class="chat-bubble ${isSelf ? 'chat-bubble-self' : 'chat-bubble-other'}">
+                    <div class="d-flex align-items-center justify-content-between gap-3 mb-1">
+                        <div class="d-flex align-items-center gap-1">
+                            <span class="fw-bold extra-small">${authorName}</span>
+                            ${adminBadge}
+                        </div>
+                        <small class="extra-small opacity-75">${msg.timestamp}</small>
+                    </div>
+                    <div class="message-text" style="white-space: pre-wrap;">${msg.message}</div>
+                    ${codeSnippetHTML}
+                </div>
+                ${isSelf ? `<div class="avatar-sm bg-secondary">${msg.avatar_letter}</div>` : ''}
+            </div>
+        `;
+    }
+
+    async function sendChatMessage(e) {
+        e.preventDefault();
+        const msgInput = document.getElementById('chat-message-input');
+        const codeInput = document.getElementById('chat-code-input');
+        const messageText = msgInput.value.trim();
+        const codeText = codeInput ? codeInput.value.trim() : '';
+
+        if (!messageText) return;
+
+        try {
+            const response = await fetch('{% url "dashboard:chat_api_send" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    message: messageText,
+                    code_snippet: codeText
+                })
+            });
+
+            const data = await response.json();
+            if (data.status === 'success') {
+                msgInput.value = '';
+                if (codeInput) codeInput.value = '';
+                
+                const collapseEl = document.getElementById('codeSnippetCollapse');
+                if (collapseEl && collapseEl.classList.contains('show')) {
+                    bootstrap.Collapse.getInstance(collapseEl)?.hide();
+                }
+
+                if (data.message.id > lastMsgId) {
+                    lastMsgId = data.message.id;
+                    chatContainer.insertAdjacentHTML('beforeend', renderMessageHTML(data.message));
+                    scrollToBottom();
+                }
+            }
+        } catch (err) {
+            console.error('Chat error:', err);
+        }
+    }
+
+    async function pollNewMessages() {
+        try {
+            const response = await fetch(`{% url "dashboard:chat_api_messages" %}?last_id=${lastMsgId}`);
+            const data = await response.json();
+            if (data.status === 'success' && data.messages.length > 0) {
+                let addedAny = false;
+                data.messages.forEach(msg => {
+                    if (msg.id > lastMsgId) {
+                        lastMsgId = msg.id;
+                        chatContainer.insertAdjacentHTML('beforeend', renderMessageHTML(msg));
+                        addedAny = true;
+                    }
+                });
+                if (addedAny) scrollToBottom();
+            }
+        } catch (err) {
+            console.error('Poll error:', err);
+        }
+    }
+
+    setInterval(pollNewMessages, 3000);
+</script>
+{% endblock %}

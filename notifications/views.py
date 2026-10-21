@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Notification
 
@@ -13,7 +13,7 @@ def notification_list(request):
 
 @login_required
 def mark_read(request, pk):
-    notification = Notification.objects.get(pk=pk, user=request.user)
+    notification = get_object_or_404(Notification, pk=pk, user=request.user)
     notification.is_read = True
     notification.save()
     return redirect('notifications:list')

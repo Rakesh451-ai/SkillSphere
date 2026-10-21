@@ -1,5 +1,11 @@
 import os
+import sys
 import django
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'skillsphere.settings')
 django.setup()
@@ -8,16 +14,33 @@ from accounts.models import User
 
 # Read from environment variables or use safe defaults
 username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
-email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
-password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'smbi@123')
+email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@skillsphere.app')
+password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin12345')
 
+# 1. Create or update main default superuser
 user, created = User.objects.get_or_create(username=username, defaults={'email': email, 'is_staff': True, 'is_superuser': True})
 user.set_password(password)
 user.is_staff = True
 user.is_superuser = True
 user.save()
+print(f"Superuser '{username}' configured successfully!")
 
-if created:
-    print(f"Superuser '{username}' created successfully!")
-else:
-    print(f"Superuser '{username}' updated with specified password successfully!")
+# 2. Promote any explicitly listed admin user accounts from environment
+env_admins = [a.strip() for a in os.environ.get('ADMIN_USERNAMES', '').split(',') if a.strip()]
+
+for admin_name in set(env_admins):
+    u = User.objects.filter(username__iexact=admin_name).first()
+    if u:
+        u.is_staff = True
+        u.is_superuser = True
+        u.save()
+        print(f"User '{u.username}' promoted to Admin / Superuser successfully!")
+
+# 3. If environment flag PROMOTE_ALL_USERS=True is explicitly set, promote active users
+if os.environ.get('PROMOTE_ALL_USERS', 'False').lower() in ('true', '1', 'yes'):
+    for user_obj in User.objects.all():
+        if not user_obj.is_staff or not user_obj.is_superuser:
+            user_obj.is_staff = True
+            user_obj.is_superuser = True
+            user_obj.save()
+            print(f"Auto-promoted user '{user_obj.username}' to Admin / Superuser!")

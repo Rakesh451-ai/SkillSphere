@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Coding Games Arcade - SkillSphere{% endblock %}
-{% block page_title %}Coding Games Arcade{% endblock %}
+{% block title %}Coding Game - SkillSphere{% endblock %}
+{% block page_title %}Coding Game{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -235,35 +235,57 @@
         transition: width 0.1s linear;
     }
 
-    /* Speed Typer Highlighting */
-    .char-node {
-        color: #a3a3a3 !important; /* Make untyped characters a clearly readable light gray */
-        border-bottom: 2px solid transparent;
-        transition: all 0.1s;
+    /* Speed Typer Highlighting & Indentation Fix */
+    #typer-editor {
+        white-space: pre !important;
+        font-family: 'Fira Code', 'Cascadia Code', 'Source Code Pro', Consolas, monospace !important;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        overflow-x: auto;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
     }
 
+    .char-node {
+        display: inline !important;
+        padding-bottom: 2px;
+        line-height: 1.7;
+        border-bottom: 2px solid transparent;
+        transition: color 0.1s, background-color 0.1s;
+    }
+
+    /* Syntax Highlighting Colors for Untyped Code */
+    .char-node.syn-keyword { color: #c084fc !important; font-weight: 600; } /* Purple/Indigo */
+    .char-node.syn-string  { color: #34d399 !important; } /* Emerald Green */
+    .char-node.syn-number  { color: #fbbf24 !important; } /* Amber Gold */
+    .char-node.syn-comment { color: #64748b !important; font-style: italic; } /* Slate Gray */
+    .char-node.syn-func    { color: #38bdf8 !important; } /* Sky Blue */
+    .char-node.syn-ident   { color: #e2e8f0 !important; } /* Soft White */
+    .char-node.syn-punct   { color: #94a3b8 !important; } /* Muted Slate */
+
+    /* Active, Correct & Wrong Character States */
     .char-node.char-correct {
-        color: #34d399 !important;
-        text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        color: #10b981 !important;
+        background-color: rgba(16, 185, 129, 0.18) !important;
+        text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
     }
 
     .char-node.char-wrong {
         color: #f87171 !important;
-        background-color: rgba(239, 68, 68, 0.18) !important;
-        border-bottom: 2px solid var(--cyber-red) !important;
+        background-color: rgba(239, 68, 68, 0.28) !important;
+        border-bottom: 2px solid #ef4444 !important;
     }
 
     .char-node.char-active {
-        color: #38bdf8 !important;
-        background-color: rgba(56, 189, 248, 0.15) !important;
+        background-color: rgba(56, 189, 248, 0.25) !important;
         border-bottom: 2px solid #38bdf8 !important;
         animation: activeCaret 0.8s infinite alternate;
     }
 
     .char-node.char-active.char-wrong {
         color: #f87171 !important;
-        background-color: rgba(239, 68, 68, 0.25) !important;
-        border-bottom: 2px solid var(--cyber-red) !important;
+        background-color: rgba(239, 68, 68, 0.35) !important;
+        border-bottom: 2px solid #ef4444 !important;
         animation: activeCaretError 0.8s infinite alternate;
     }
 
@@ -395,7 +417,7 @@
         background-color: #0b0f19;
         border: 1px solid rgba(139, 92, 246, 0.25);
         border-radius: 10px;
-        padding: 8px 16px;
+        padding: 10px 16px 10px 22px;
         margin-bottom: 10px;
         font-family: 'Fira Code', monospace;
         font-size: 0.9rem;
@@ -403,7 +425,7 @@
         align-items: center;
         justify-content: space-between;
         transition: padding-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        border-left: 4px solid var(--cyber-purple);
+        border-left: 5px solid var(--cyber-purple);
     }
 
     .workspace-block.line-correct {
@@ -508,12 +530,36 @@
 {% block content %}
 <!-- Arcade Header Card -->
 <div class="card-custom p-4 mb-4 text-center" style="background: linear-gradient(135deg, #1e1b4b 0%, #311084 100%); border: 2px solid var(--cyber-border); box-shadow: 0 10px 30px rgba(0,0,0,0.25);">
-    <h2 class="arcade-title mb-2"><i class="bi bi-controller me-2"></i>SkillSphere Coding Arcade</h2>
+    <h2 class="arcade-title mb-2"><i class="bi bi-controller me-2"></i>SkillSphere Coding Game</h2>
     <p class="text-light-50 mb-0 max-w-2xl mx-auto">Boost your programmer muscle memory, compiler inspection speed, and logical capabilities across multiple games and stages!</p>
 </div>
 
 <div class="arcade-container">
     <div class="row">
+        <!-- Programming Language Selector Bar -->
+        <div class="col-12 mb-4">
+            <div class="p-3 rounded-4 d-flex align-items-center justify-content-between flex-wrap gap-3" style="background: rgba(15, 23, 42, 0.75); border: 1px solid var(--cyber-border); backdrop-filter: blur(10px);">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-code-slash text-warning fs-5"></i>
+                    <span class="fw-bold text-white small text-uppercase">Game Language:</span>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-wrap" id="langSelectorGroup">
+                    <button type="button" class="btn btn-outline-info rounded-pill px-3 py-1 fw-bold lang-btn active" data-lang="cpp" onclick="switchGameLanguage('cpp')">
+                        <i class="bi bi-filetype-cpp me-1"></i> C++
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 fw-bold lang-btn" data-lang="python" onclick="switchGameLanguage('python')">
+                        <i class="bi bi-filetype-py me-1"></i> Python
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 fw-bold lang-btn" data-lang="java" onclick="switchGameLanguage('java')">
+                        <i class="bi bi-filetype-java me-1"></i> Java
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-1 fw-bold lang-btn" data-lang="javascript" onclick="switchGameLanguage('javascript')">
+                        <i class="bi bi-filetype-js me-1"></i> JavaScript
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Game Selection Nav Navigation -->
         <div class="col-12 mb-4">
             <div class="game-tab-nav">
@@ -543,6 +589,12 @@
                             <i class="bi bi-terminal-fill me-2"></i>Output Predictor
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link game-tab-btn" id="algo-tab" data-bs-toggle="tab" data-bs-target="#algo-content" type="button" role="tab">
+                            <i class="bi bi-diagram-3-fill me-2 text-warning"></i>Algo Master
+                        </button>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -574,31 +626,42 @@
                         </div>
 
                         <!-- WPM ACC HUD Indicators -->
-                        <div class="row g-3 mb-4">
-                            <div class="col-6 col-md-3">
-                                <div class="hud-panel text-center">
-                                    <span class="hud-label d-block mb-1">Words Per Minute</span>
+                        <div class="row g-2 g-md-3 mb-3">
+                            <div class="col-6 col-md">
+                                <div class="hud-panel text-center p-2.5">
+                                    <span class="hud-label d-block mb-1">Words / Min</span>
                                     <span class="hud-value text-warning" id="typer-wpm">0</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="hud-panel text-center">
+                            <div class="col-6 col-md">
+                                <div class="hud-panel text-center p-2.5">
                                     <span class="hud-label d-block mb-1">Accuracy</span>
                                     <span class="hud-value text-success" id="typer-accuracy">100%</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="hud-panel text-center">
+                            <div class="col-6 col-md">
+                                <div class="hud-panel text-center p-2.5">
+                                    <span class="hud-label d-block mb-1">Combo Streak</span>
+                                    <span class="hud-value text-warning fw-bold" id="typer-combo">🔥 0x</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md">
+                                <div class="hud-panel text-center p-2.5">
                                     <span class="hud-label d-block mb-1">Elapsed Time</span>
                                     <span class="hud-value text-info" id="typer-time">0.0s</span>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="hud-panel text-center">
-                                    <span class="hud-label d-block mb-1">High Score WPM</span>
-                                    <span class="hud-value text-danger" id="typer-highscore">0</span>
+                            <div class="col-12 col-md">
+                                <div class="hud-panel text-center p-2.5">
+                                    <span class="hud-label d-block mb-1">High Score</span>
+                                    <span class="hud-value text-danger" id="typer-highscore">0 WPM</span>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Live Typing Progress Bar -->
+                        <div class="progress bg-dark mb-4 rounded-pill overflow-hidden border border-secondary border-opacity-25" style="height: 8px;">
+                            <div id="typer-progress-bar" class="progress-bar bg-warning progress-bar-striped progress-bar-animated" style="width: 0%; transition: width 0.15s ease;"></div>
                         </div>
 
                         <!-- IDE Simulator Box -->
@@ -860,6 +923,119 @@
                     </div>
                 </div>
 
+                <!-- GAME 6: ALGORITHM SEQUENCE MASTER -->
+                <div class="tab-pane fade" id="algo-content" role="tabpanel">
+                    <div class="game-panel p-3 p-md-4">
+                        <!-- Header HUD Bar -->
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+                            <div>
+                                <h4 class="fw-bold mb-1 text-white"><i class="bi bi-diagram-3-fill text-warning me-2"></i>Algorithm Sequence Master</h4>
+                                <p class="text-muted small mb-0">Reconstruct essential interview algorithms step-by-step in correct execution sequence.</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hud-panel px-3 py-1.5 text-center" style="min-width: 170px;">
+                                    <span class="hud-label d-block mb-1 text-xs"><i class="bi bi-layers-fill text-warning me-1"></i>Select Level</span>
+                                    <select id="algo-level-select" class="form-select form-select-sm bg-dark text-warning border-warning font-mono fw-bold text-center" onchange="jumpToAlgoLevel(this.value)">
+                                        <!-- Options 1 to 50 dynamically populated -->
+                                    </select>
+                                </div>
+                                <div class="hud-panel px-3 py-1.5 text-center" style="min-width: 100px;">
+                                    <span class="hud-label d-block text-xs">Score</span>
+                                    <span class="fw-bold text-success fs-5" id="algo-score">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TOP CARD: Problem Overview & Visual Diagram Side-by-Side -->
+                        <div class="p-3 mb-3 rounded-4" style="background: rgba(3, 7, 18, 0.75); border: 1px solid rgba(245, 158, 11, 0.35);">
+                            <div class="row g-3 align-items-center">
+                                <!-- Left: Title, Badges, Problem, Example -->
+                                <div class="col-lg-7">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <h5 class="fw-bold text-warning mb-0" id="algo-title">Binary Search Algorithm</h5>
+                                        <span class="badge bg-warning text-dark font-mono px-2.5 py-1 fw-bold" id="algo-difficulty">Basic</span>
+                                    </div>
+                                    
+                                    <div class="d-flex flex-wrap gap-2 extra-small font-mono mb-2">
+                                        <span class="badge bg-secondary bg-opacity-20 text-light border border-secondary border-opacity-30"><i class="bi bi-clock me-1 text-info"></i>Time: <strong class="text-info" id="algo-time">O(log N)</strong></span>
+                                        <span class="badge bg-secondary bg-opacity-20 text-light border border-secondary border-opacity-30"><i class="bi bi-cpu me-1 text-info"></i>Space: <strong class="text-info" id="algo-space">O(1)</strong></span>
+                                        <span class="badge bg-secondary bg-opacity-20 text-light border border-secondary border-opacity-30"><i class="bi bi-tag me-1 text-warning"></i>Topic: <strong id="algo-category" class="text-warning">Searching</strong></span>
+                                    </div>
+
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <div class="p-2 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 h-100">
+                                                <div class="extra-small text-warning font-mono fw-bold mb-1"><i class="bi bi-puzzle-fill me-1"></i>Problem</div>
+                                                <p class="text-light-50 extra-small mb-0 lh-sm" id="algo-problem-text">Locate a target element in a sorted array by halving the search space recursively.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="p-2 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 font-mono extra-small h-100">
+                                                <div class="extra-small text-info font-mono fw-bold mb-1"><i class="bi bi-code-square me-1"></i>Example</div>
+                                                <div class="mb-0.5"><span class="text-muted">In:</span> <code class="text-warning bg-black bg-opacity-50 px-1 py-0.5 rounded" id="algo-example-input">nums = [2, 5, 8, 12, 16], target = 12</code></div>
+                                                <div><span class="text-muted">Out:</span> <code class="text-success bg-black bg-opacity-50 px-1 py-0.5 rounded" id="algo-example-output">Index 3</code></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right: SVG Visual Diagram Image -->
+                                <div class="col-lg-5">
+                                    <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 text-center overflow-hidden h-100 d-flex align-items-center justify-content-center" id="algo-diagram-container" style="min-height: 110px;">
+                                        <!-- Clean SVG diagram inserted dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BOTTOM WORKSPACE ROW: Split 50/50 -->
+                        <div class="row g-3">
+                            <!-- Left: Scrambled Steps Pool -->
+                            <div class="col-lg-6">
+                                <div class="p-3 rounded-4 h-100 d-flex flex-column" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);">
+                                    <h6 class="fw-bold text-uppercase font-mono text-muted small mb-2 d-flex justify-content-between align-items-center">
+                                        <span><i class="bi bi-shuffle me-1 text-warning"></i>Scrambled Steps</span>
+                                        <span class="extra-small text-light-50 font-sans fw-normal">Click "+ Add" to build sequence</span>
+                                    </h6>
+                                    <div id="algo-scrambled-pool" class="d-flex flex-column gap-2 overflow-auto flex-grow-1" style="max-height: 380px;">
+                                        <!-- Shuffled step cards inserted dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Execution Sequence Workspace -->
+                            <div class="col-lg-6">
+                                <div class="p-3 rounded-4 h-100 d-flex flex-column justify-content-between" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);">
+                                    <div>
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <h6 class="fw-bold text-uppercase font-mono text-success small mb-0"><i class="bi bi-list-ol me-1"></i>Execution Sequence</h6>
+                                            <button class="btn btn-outline-secondary btn-sm py-0 px-2 extra-small" onclick="resetAlgoWorkspace()"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+                                        </div>
+                                        
+                                        <div id="algo-workspace" class="d-flex flex-column gap-2 p-2 rounded-3 overflow-auto" style="background: #090d16; border: 2px dashed rgba(255, 255, 255, 0.1); min-height: 220px; max-height: 320px;">
+                                            <!-- Ordered steps placed here by user -->
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <div id="algo-feedback" class="alert alert-dark border-0 text-center py-2 mb-2 small" style="display: none;"></div>
+                                        <div class="d-flex justify-content-between gap-2">
+                                            <button id="algo-verify-btn" class="btn btn-warning flex-grow-1 fw-bold text-dark text-uppercase py-2 rounded-3" onclick="checkAlgoSequence()">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Verify Sequence
+                                            </button>
+                                            <button id="algo-next-btn" class="btn btn-success fw-bold text-uppercase py-2 px-4 rounded-3" style="display: none;" onclick="nextAlgoLevel()">
+                                                Next Level <i class="bi bi-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </div>
@@ -947,6 +1123,15 @@ const gameAudio = {
 };
 
 
+let savedLevels = {
+    typer: {{ typer_level|default:0 }},
+    bug: {{ bug_level|default:0 }},
+    complexity: {{ complexity_level|default:0 }},
+    parsons: {{ parsons_level|default:0 }},
+    predictor: {{ predictor_level|default:0 }},
+    algo: {{ algo_level|default:0 }}
+};
+
 // CSRF Helper & Save game progress function
 function getCookie(name) {
     let cookieValue = null;
@@ -981,13 +1166,64 @@ function saveGameProgress(gameType, level, score) {
     .then(data => {
         if (data.status === 'success') {
             console.log(`Saved progress: ${gameType} level ${level}`);
+            
+            if (data.typer_level !== undefined) savedLevels.typer = data.typer_level;
+            if (data.bug_level !== undefined) savedLevels.bug = data.bug_level;
+            if (data.complexity_level !== undefined) savedLevels.complexity = data.complexity_level;
+            if (data.parsons_level !== undefined) savedLevels.parsons = data.parsons_level;
+            if (data.predictor_level !== undefined) savedLevels.predictor = data.predictor_level;
+            if (data.algo_level !== undefined) savedLevels.algo = data.algo_level;
+
             const xpBadge = document.querySelector('.badge-xp');
             if (xpBadge) {
                 xpBadge.innerHTML = `<i class="bi bi-lightning-charge-fill"></i> ${data.xp_points} XP`;
             }
+
+            if (data.history_item) {
+                addHistoryRow(data.history_item);
+            }
         }
     })
     .catch(err => console.error('Failed to save progress:', err));
+}
+
+function addHistoryRow(item) {
+    const tbody = document.getElementById('game-history-tbody');
+    if (!tbody) return;
+    const emptyRow = document.getElementById('empty-history-row');
+    if (emptyRow) {
+        emptyRow.remove();
+    }
+
+    let iconClass = 'bi-controller text-secondary';
+    if (item.game_type === 'typer') iconClass = 'bi-keyboard-fill text-info';
+    else if (item.game_type === 'bug') iconClass = 'bi-bug-fill text-danger';
+    else if (item.game_type === 'complexity') iconClass = 'bi-speedometer2 text-warning';
+    else if (item.game_type === 'parsons') iconClass = 'bi-tools text-primary';
+    else if (item.game_type === 'predictor') iconClass = 'bi-terminal-fill text-success';
+
+    const tr = document.createElement('tr');
+    tr.className = 'align-middle';
+    tr.innerHTML = `
+        <td class="ps-4 fw-semibold text-white">
+            <i class="bi ${iconClass} me-2"></i>${item.game_display_name}
+        </td>
+        <td><span class="badge bg-secondary rounded-pill px-3 py-2">Level ${item.level}</span></td>
+        <td class="text-warning fw-bold">+${item.score} XP</td>
+        <td class="pe-4 text-light-50 small">${item.played_at}</td>
+    `;
+    
+    if (tbody.firstChild) {
+        tbody.insertBefore(tr, tbody.firstChild);
+    } else {
+        tbody.appendChild(tr);
+    }
+
+    const totalCountEl = document.getElementById('history-total-count');
+    if (totalCountEl) {
+        let count = parseInt(totalCountEl.textContent) || 0;
+        totalCountEl.textContent = count + 1;
+    }
 }
 
 
@@ -1045,7 +1281,90 @@ function isIndentationSpace(index, code) {
 // ----------------------------------------------------
 // GAME 1: SPEED TYPER LOGIC
 // ----------------------------------------------------
-const SPEED_TYPER_LEVELS = [
+
+// ====================================================
+// MULTI-LANGUAGE ENGINE FOR CODING GAMES ARCADE
+// ====================================================
+let currentSelectedLanguage = localStorage.getItem('arcade_selected_lang') || 'cpp';
+
+const SPEED_TYPER_LEVELS_BY_LANG = {
+    cpp: [
+        { lang: 'C++', file: 'binary_search.cpp', code: `int binarySearch(vector<int>& nums, int target) {\n    int low = 0, high = nums.size() - 1;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (nums[mid] == target) return mid;\n        if (nums[mid] < target) low = mid + 1;\n        else high = mid - 1;\n    }\n    return -1;\n}` },
+        { lang: 'C++', file: 'reverse_list.cpp', code: `ListNode* reverseList(ListNode* head) {\n    ListNode *prev = nullptr, *curr = head;\n    while (curr != nullptr) {\n        ListNode* nextNode = curr->next;\n        curr->next = prev;\n        prev = curr;\n        curr = nextNode;\n    }\n    return prev;\n}` },
+        { lang: 'C++', file: 'two_sum.cpp', code: `vector<int> twoSum(vector<int>& nums, int target) {\n    unordered_map<int, int> mp;\n    for (int i = 0; i < nums.size(); i++) {\n        int comp = target - nums[i];\n        if (mp.count(comp)) return {mp[comp], i};\n        mp[nums[i]] = i;\n    }\n    return {};\n}` },
+        { lang: 'C++', file: 'lru_cache.cpp', code: `class LRUCache {\n    int capacity;\n    list<pair<int, int>> cache;\n    unordered_map<int, list<pair<int, int>>::iterator> map;\npublic:\n    LRUCache(int cap) : capacity(cap) {}\n    int get(int key) {\n        if (!map.count(key)) return -1;\n        cache.splice(cache.begin(), cache, map[key]);\n        return map[key]->second;\n    }\n};` },
+        { lang: 'C++', file: 'quick_sort.cpp', code: `int partition(vector<int>& arr, int low, int high) {\n    int pivot = arr[high], i = low - 1;\n    for (int j = low; j < high; j++) {\n        if (arr[j] < pivot) swap(arr[++i], arr[j]);\n    }\n    swap(arr[i + 1], arr[high]);\n    return i + 1;\n}` }
+    ],
+    python: [
+        { lang: 'Python', file: 'binary_search.py', code: `def search(arr, target):\n    low, high = 0, len(arr) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1` },
+        { lang: 'Python', file: 'reverse_list.py', code: `def reverse_list(head):\n    prev, curr = None, head\n    while curr:\n        nxt = curr.next\n        curr.next = prev\n        prev = curr\n        curr = nxt\n    return prev` },
+        { lang: 'Python', file: 'two_sum.py', code: `def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i\n    return []` },
+        { lang: 'Python', file: 'lru_cache.py', code: `from collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.cache = OrderedDict()\n        self.cap = capacity\n\n    def get(self, key: int) -> int:\n        if key not in self.cache:\n            return -1\n        self.cache.move_to_end(key)\n        return self.cache[key]` },
+        { lang: 'Python', file: 'quick_sort.py', code: `def quicksort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quicksort(left) + middle + quicksort(right)` }
+    ],
+    java: [
+        { lang: 'Java', file: 'BinarySearch.java', code: `public static int binarySearch(int[] nums, int target) {\n    int low = 0, high = nums.length - 1;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (nums[mid] == target) return mid;\n        if (nums[mid] < target) low = mid + 1;\n        else high = mid - 1;\n    }\n    return -1;\n}` },
+        { lang: 'Java', file: 'ReverseList.java', code: `public ListNode reverseList(ListNode head) {\n    ListNode prev = null, curr = head;\n    while (curr != null) {\n        ListNode nextNode = curr.next;\n        curr.next = prev;\n        prev = curr;\n        curr = nextNode;\n    }\n    return prev;\n}` },
+        { lang: 'Java', file: 'TwoSum.java', code: `public int[] twoSum(int[] nums, int target) {\n    Map<Integer, Integer> map = new HashMap<>();\n    for (int i = 0; i < nums.length; i++) {\n        int comp = target - nums[i];\n        if (map.containsKey(comp)) return new int[] { map.get(comp), i };\n        map.put(nums[i], i);\n    }\n    return new int[]{};\n}` },
+        { lang: 'Java', file: 'LRUCache.java', code: `class LRUCache extends LinkedHashMap<Integer, Integer> {\n    private int capacity;\n    public LRUCache(int capacity) {\n        super(capacity, 0.75f, true);\n        this.capacity = capacity;\n    }\n    public int get(int key) {\n        return super.getOrDefault(key, -1);\n    }\n}` },
+        { lang: 'Java', file: 'QuickSort.java', code: `public static void quickSort(int[] arr, int low, int high) {\n    if (low < high) {\n        int pi = partition(arr, low, high);\n        quickSort(arr, low, pi - 1);\n        quickSort(arr, pi + 1, high);\n    }\n}` }
+    ],
+    javascript: [
+        { lang: 'JavaScript', file: 'binarySearch.js', code: `function binarySearch(nums, target) {\n  let low = 0, high = nums.length - 1;\n  while (low <= high) {\n    let mid = Math.floor((low + high) / 2);\n    if (nums[mid] === target) return mid;\n    if (nums[mid] < target) low = mid + 1;\n    else high = mid - 1;\n  }\n  return -1;\n}` },
+        { lang: 'JavaScript', file: 'reverseList.js', code: `function reverseList(head) {\n  let prev = null, curr = head;\n  while (curr !== null) {\n    let nextNode = curr.next;\n    curr.next = prev;\n    prev = curr;\n    curr = nextNode;\n  }\n  return prev;\n}` },
+        { lang: 'JavaScript', file: 'twoSum.js', code: `function twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    let comp = target - nums[i];\n    if (map.has(comp)) return [map.get(comp), i];\n    map.set(nums[i], i);\n  }\n  return [];\n}` },
+        { lang: 'JavaScript', file: 'debounce.js', code: `function debounce(func, delay) {\n  let timer;\n  return function(...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() => {\n      func.apply(this, args);\n    }, delay);\n  };\n}` },
+        { lang: 'JavaScript', file: 'quickSort.js', code: `function quickSort(arr) {\n  if (arr.length <= 1) return arr;\n  const pivot = arr[Math.floor(arr.length / 2)];\n  const left = arr.filter(x => x < pivot);\n  const middle = arr.filter(x => x === pivot);\n  const right = arr.filter(x => x > pivot);\n  return [...quickSort(left), ...middle, ...quickSort(right)];\n}` }
+    ]
+};
+
+let SPEED_TYPER_LEVELS = SPEED_TYPER_LEVELS_BY_LANG[currentSelectedLanguage] || SPEED_TYPER_LEVELS_BY_LANG['cpp'];
+
+
+let BUG_HUNTER_PUZZLES = [];
+let REPAIR_SHOP_PUZZLES = [];
+
+function switchGameLanguage(lang) {
+    currentSelectedLanguage = lang;
+    localStorage.setItem('arcade_selected_lang', lang);
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        if (btn.getAttribute('data-lang') === lang) {
+            btn.classList.add('active', 'btn-info', 'text-dark');
+            btn.classList.remove('btn-outline-secondary', 'text-white');
+        } else {
+            btn.classList.remove('active', 'btn-info', 'text-dark');
+            btn.classList.add('btn-outline-secondary', 'text-white');
+        }
+    });
+
+    const searchLang = (lang === 'cpp') ? 'c++' : (lang === 'javascript') ? 'javascript' : (lang === 'java') ? 'java' : 'python';
+
+    SPEED_TYPER_LEVELS = SPEED_TYPER_LEVELS_BY_LANG[lang] || SPEED_TYPER_LEVELS_BY_LANG['cpp'];
+
+    if (typeof ALL_BUG_HUNTER_PUZZLES !== 'undefined') {
+        let filtered = ALL_BUG_HUNTER_PUZZLES.filter(p => p.lang && p.lang.toLowerCase().includes(searchLang));
+        BUG_HUNTER_PUZZLES = filtered.length > 0 ? filtered : ALL_BUG_HUNTER_PUZZLES;
+    }
+
+    if (typeof ALL_REPAIR_SHOP_PUZZLES !== 'undefined') {
+        let filtered = ALL_REPAIR_SHOP_PUZZLES.filter(p => p.title && p.title.toLowerCase().includes(searchLang));
+        REPAIR_SHOP_PUZZLES = filtered.length > 0 ? filtered : ALL_REPAIR_SHOP_PUZZLES;
+    }
+
+    if (typeof populateTyperSelect === 'function') populateTyperSelect();
+    if (typeof initTyperGame === 'function') initTyperGame(0);
+    if (typeof initBugGame === 'function') initBugGame();
+    if (typeof initParsonsGame === 'function') initParsonsGame();
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchGameLanguage(currentSelectedLanguage);
+});
+
+// Original fallback dataset
+const ORIGINAL_TYPER_LEVELS = [
     {
         lang: 'Python',
         file: 'binary_search.py',
@@ -1259,7 +1578,7 @@ button.addEventListener("click", (event) => {
 ];
 
 let typerState = {
-    level: Math.max(0, Math.min({{ typer_level|default:0 }}, SPEED_TYPER_LEVELS.length - 1)),
+    level: Math.max(0, Math.min(savedLevels.typer, SPEED_TYPER_LEVELS.length - 1)),
     currentCode: '',
     currentIndex: 0,
     spans: [],
@@ -1267,7 +1586,10 @@ let typerState = {
     startTime: null,
     timer: null,
     totalTyped: 0,
-    correctTyped: 0
+    correctTyped: 0,
+    errors: 0,
+    combo: 0,
+    maxCombo: 0
 };
 
 const typerStartBtn = document.getElementById('typer-start-btn');
@@ -1293,16 +1615,10 @@ typerHiddenInput.addEventListener('blur', () => {
 typerHiddenInput.addEventListener('focus', () => {
     if (typerState.gameRunning) {
         document.getElementById('typer-editor-container').classList.remove('unfocused-active');
-        typerState.startTime = Date.now() - (parseFloat(document.getElementById('typer-time').textContent) * 1000);
-        typerState.timer = setInterval(() => {
-            const elapsed = (Date.now() - typerState.startTime) / 1000;
-            document.getElementById('typer-time').textContent = elapsed.toFixed(1) + 's';
-            
-            if (elapsed > 0) {
-                const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
-                document.getElementById('typer-wpm').textContent = wpm;
-            }
-        }, 100);
+        const currentTime = parseFloat(document.getElementById('typer-time').textContent) || 0;
+        typerState.startTime = Date.now() - (currentTime * 1000);
+        clearInterval(typerState.timer);
+        typerState.timer = setInterval(updateTyperHUD, 100);
     }
 });
 
@@ -1313,14 +1629,122 @@ typerEditor.addEventListener('click', () => {
     typerHiddenInput.focus({ preventScroll: true });
 });
 
+// Single document focus delegate - DO NOT call handleTypingInput here to avoid duplicate triggers!
 document.addEventListener('keydown', (e) => {
     if (typerState.gameRunning && document.activeElement !== typerHiddenInput) {
-        if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT' && document.activeElement.tagName !== 'TEXTAREA') {
+        const activeTag = document.activeElement ? document.activeElement.tagName : '';
+        if (activeTag !== 'INPUT' && activeTag !== 'SELECT' && activeTag !== 'TEXTAREA') {
             typerHiddenInput.focus({ preventScroll: true });
-            handleTypingInput(e);
         }
     }
 });
+
+function updateTyperHUD() {
+    if (!typerState.gameRunning) return;
+    const elapsed = (Date.now() - typerState.startTime) / 1000;
+    document.getElementById('typer-time').textContent = elapsed.toFixed(1) + 's';
+    
+    if (elapsed > 0) {
+        const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
+        document.getElementById('typer-wpm').textContent = wpm;
+    } else {
+        document.getElementById('typer-wpm').textContent = '0';
+    }
+    
+    const totalAttempts = typerState.correctTyped + typerState.errors;
+    const accuracy = totalAttempts > 0 ? Math.round((typerState.correctTyped / totalAttempts) * 100) : 100;
+    document.getElementById('typer-accuracy').textContent = accuracy + '%';
+
+    const comboEl = document.getElementById('typer-combo');
+    if (comboEl) {
+        comboEl.textContent = `🔥 ${typerState.combo}x`;
+    }
+
+    const progress = Math.min(100, Math.round((typerState.currentIndex / Math.max(1, typerState.currentCode.length)) * 100));
+    const progressBar = document.getElementById('typer-progress-bar');
+    if (progressBar) {
+        progressBar.style.width = `${progress}%`;
+    }
+}
+
+function getSyntaxClasses(code, lang) {
+    const classes = new Array(code.length).fill('syn-punct');
+    const keywords = [
+        'def', 'class', 'public', 'private', 'protected', 'return', 'import', 'from',
+        'function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'try', 'catch',
+        'finally', 'vector', 'int', 'void', 'string', 'double', 'float', 'bool', 'boolean',
+        'SELECT', 'FROM', 'WHERE', 'INNER', 'JOIN', 'ON', 'GROUP', 'BY', 'HAVING',
+        'ORDER', 'OVER', 'PARTITION', 'CREATE', 'TABLE', 'SERIAL', 'PRIMARY', 'KEY',
+        'VARCHAR', 'DECIMAL', 'DEFAULT', 'NOT', 'NULL', 'DENSE_RANK', 'as', 'with', 'open',
+        'struct', 'include', 'namespace', 'std', 'override', 'new', 'extends'
+    ];
+    
+    // Strings
+    let inString = false;
+    let stringChar = '';
+    for (let i = 0; i < code.length; i++) {
+        const c = code[i];
+        if (!inString && (c === '"' || c === "'")) {
+            inString = true;
+            stringChar = c;
+            classes[i] = 'syn-string';
+            continue;
+        }
+        if (inString) {
+            classes[i] = 'syn-string';
+            if (c === stringChar && code[i-1] !== '\\') {
+                inString = false;
+            }
+            continue;
+        }
+    }
+    
+    // Comments
+    let inComment = false;
+    for (let i = 0; i < code.length; i++) {
+        if (classes[i] === 'syn-string') continue;
+        if (!inComment) {
+            if (code[i] === '#' || (code[i] === '/' && code[i+1] === '/')) {
+                inComment = true;
+            }
+        }
+        if (inComment) {
+            classes[i] = 'syn-comment';
+            if (code[i] === '\n') {
+                inComment = false;
+            }
+            continue;
+        }
+    }
+    
+    // Identifiers & Keywords
+    const regex = /[a-zA-Z_][a-zA-Z0-9_]*/g;
+    let match;
+    while ((match = regex.exec(code)) !== null) {
+        const word = match[0];
+        const start = match.index;
+        const end = start + word.length;
+        let type = keywords.includes(word) ? 'syn-keyword' : ((code[end] === '(' || (code[end] === ' ' && code[end+1] === '(')) ? 'syn-func' : 'syn-ident');
+        for (let i = start; i < end; i++) {
+            if (classes[i] !== 'syn-string' && classes[i] !== 'syn-comment') {
+                classes[i] = type;
+            }
+        }
+    }
+    
+    // Numbers
+    const numRegex = /\b\d+(\.\d+)?\b/g;
+    while ((match = numRegex.exec(code)) !== null) {
+        const start = match.index;
+        const end = start + match[0].length;
+        for (let i = start; i < end; i++) {
+            if (classes[i] !== 'syn-string' && classes[i] !== 'syn-comment') {
+                classes[i] = 'syn-number';
+            }
+        }
+    }
+    return classes;
+}
 
 function loadTyperLevel() {
     const levelData = SPEED_TYPER_LEVELS[typerState.level];
@@ -1331,31 +1755,35 @@ function loadTyperLevel() {
     typerState.currentIndex = 0;
     typerState.totalTyped = 0;
     typerState.correctTyped = 0;
+    typerState.errors = 0;
+    typerState.combo = 0;
+    typerState.maxCombo = 0;
     
     typerEditor.innerHTML = '';
     typerState.spans = [];
     
+    const syntaxClasses = getSyntaxClasses(levelData.code, levelData.lang);
+    
     for (let i = 0; i < levelData.code.length; i++) {
         const char = levelData.code[i];
         const span = document.createElement('span');
-        span.className = 'char-node';
-        if (char === '\n') {
-            span.innerHTML = '<br>';
-        } else if (char === ' ') {
-            span.innerHTML = '&nbsp;';
-        } else {
-            span.textContent = char;
-        }
+        const synClass = syntaxClasses[i] || 'syn-punct';
+        span.className = `char-node ${synClass}`;
+        span.textContent = char;
         typerEditor.appendChild(span);
         typerState.spans.push(span);
     }
     
     const highScore = localStorage.getItem(`typer_highscore_${typerState.level}`) || 0;
-    document.getElementById('typer-highscore').textContent = highScore;
+    document.getElementById('typer-highscore').textContent = highScore + ' WPM';
     
     document.getElementById('typer-wpm').textContent = '0';
     document.getElementById('typer-accuracy').textContent = '100%';
     document.getElementById('typer-time').textContent = '0.0s';
+    const comboEl = document.getElementById('typer-combo');
+    if (comboEl) comboEl.textContent = '🔥 0x';
+    const progressBar = document.getElementById('typer-progress-bar');
+    if (progressBar) progressBar.style.width = '0%';
 }
 
 function toggleTyperGame() {
@@ -1383,27 +1811,51 @@ function toggleTyperGame() {
     
     typerHiddenInput.focus({ preventScroll: true });
     
-    typerState.timer = setInterval(() => {
-        const elapsed = (Date.now() - typerState.startTime) / 1000;
-        document.getElementById('typer-time').textContent = elapsed.toFixed(1) + 's';
-        
-        if (elapsed > 0) {
-            const wpm = Math.round((typerState.correctTyped / 5) / (elapsed / 60));
-            document.getElementById('typer-wpm').textContent = wpm;
-        }
-    }, 100);
+    clearInterval(typerState.timer);
+    typerState.timer = setInterval(updateTyperHUD, 100);
 }
 
 function handleTypingInput(e) {
     if (!typerState.gameRunning) return;
     
-    // Prevent default browser behavior on navigation keys to keep focus steady
+    // Prevent default browser behavior on space, tab, backspace, slash
     if (e.key === ' ' || e.key === 'Backspace' || e.key === '/' || e.key === 'Tab') {
         e.preventDefault();
     }
     
+    // Handle Backspace for error correction
+    if (e.key === 'Backspace') {
+        if (typerState.currentIndex > 0) {
+            const currentSpan = typerState.spans[typerState.currentIndex];
+            if (currentSpan) {
+                currentSpan.classList.remove('char-active', 'char-wrong');
+            }
+            typerState.currentIndex--;
+            const prevSpan = typerState.spans[typerState.currentIndex];
+            if (prevSpan) {
+                if (prevSpan.classList.contains('char-wrong')) {
+                    prevSpan.classList.remove('char-wrong');
+                    if (typerState.errors > 0) typerState.errors--;
+                }
+                if (prevSpan.classList.contains('char-correct')) {
+                    prevSpan.classList.remove('char-correct');
+                    if (typerState.correctTyped > 0) typerState.correctTyped--;
+                }
+                prevSpan.classList.add('char-active');
+            }
+            typerState.combo = 0;
+            updateTyperHUD();
+        }
+        return;
+    }
+
+    const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'];
+    if (ignoredKeys.includes(e.key)) {
+        return;
+    }
+    
     const targetChar = typerState.currentCode[typerState.currentIndex];
-    const pressedKey = e.key === 'Enter' ? '\n' : e.key;
+    const pressedKey = (e.key === 'Enter' ? '\n' : (e.key === 'Tab' ? '  ' : e.key));
     
     if (pressedKey === targetChar) {
         const span = typerState.spans[typerState.currentIndex];
@@ -1413,13 +1865,16 @@ function handleTypingInput(e) {
         typerState.currentIndex++;
         typerState.correctTyped++;
         typerState.totalTyped++;
+        typerState.combo++;
+        if (typerState.combo > typerState.maxCombo) typerState.maxCombo = typerState.combo;
         
-        // Auto-complete indentation spaces only
+        // Auto-complete leading indentation spaces after newline or tab
         while (typerState.currentIndex < typerState.currentCode.length && 
                typerState.currentCode[typerState.currentIndex] === ' ' && 
                isIndentationSpace(typerState.currentIndex, typerState.currentCode)) {
             
             const autoSpan = typerState.spans[typerState.currentIndex];
+            autoSpan.classList.remove('char-active', 'char-wrong');
             autoSpan.classList.add('char-correct');
             typerState.currentIndex++;
             typerState.correctTyped++;
@@ -1433,25 +1888,25 @@ function handleTypingInput(e) {
             endTyperGame(true);
         }
         
-        gameAudio.playBeep(500 + Math.random() * 250, 'sine', 0.04);
+        // Play pitch-accented combo sound effect
+        const basePitch = 500 + Math.min(400, typerState.combo * 15);
+        gameAudio.playBeep(basePitch, 'sine', 0.04);
     } else {
-        const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape', 'Backspace'];
-        if (!ignoredKeys.includes(e.key)) {
-            const span = typerState.spans[typerState.currentIndex];
+        const span = typerState.spans[typerState.currentIndex];
+        if (span) {
             span.classList.add('char-wrong');
-            typerState.totalTyped++;
-            gameAudio.onFailure();
-            
-            const container = document.getElementById('typer-editor-container');
-            container.classList.add('shake-anim');
-            setTimeout(() => container.classList.remove('shake-anim'), 200);
         }
+        typerState.totalTyped++;
+        typerState.errors++;
+        typerState.combo = 0;
+        gameAudio.onFailure();
+        
+        const container = document.getElementById('typer-editor-container');
+        container.classList.add('shake-anim');
+        setTimeout(() => container.classList.remove('shake-anim'), 200);
     }
     
-    if (typerState.totalTyped > 0) {
-        const accuracy = Math.round((typerState.correctTyped / typerState.totalTyped) * 100);
-        document.getElementById('typer-accuracy').textContent = accuracy + '%';
-    }
+    updateTyperHUD();
 }
 
 typerHiddenInput.addEventListener('keydown', handleTypingInput);
@@ -1472,10 +1927,10 @@ function endTyperGame(isSuccess) {
         const oldHigh = parseInt(localStorage.getItem(`typer_highscore_${typerState.level}`)) || 0;
         if (wpm > oldHigh) {
             localStorage.setItem(`typer_highscore_${typerState.level}`, wpm);
-            document.getElementById('typer-highscore').textContent = wpm;
+            document.getElementById('typer-highscore').textContent = wpm + ' WPM';
             showArcadeModal(
-                'New Record!',
-                `Level Complete! New WPM High Score: ${wpm} WPM!`,
+                '⚡ New Speed Record!',
+                `Level Complete! New WPM High Score: ${wpm} WPM! Max Combo: ${typerState.maxCombo}x 🔥`,
                 wpm,
                 'Next Level',
                 () => {
@@ -1486,8 +1941,8 @@ function endTyperGame(isSuccess) {
             );
         } else {
             showArcadeModal(
-                'Level Complete!',
-                `Speed: ${wpm} WPM (Record: ${oldHigh} WPM).`,
+                '🎉 Level Complete!',
+                `Speed: ${wpm} WPM (Record: ${oldHigh} WPM). Max Combo: ${typerState.maxCombo}x 🔥`,
                 wpm,
                 'Try Again',
                 () => {
@@ -1501,7 +1956,8 @@ function endTyperGame(isSuccess) {
 // ----------------------------------------------------
 // GAME 2: BUG HUNTER LOGIC
 // ----------------------------------------------------
-const BUG_HUNTER_PUZZLES = [
+const ALL_BUG_HUNTER_PUZZLES = [
+
     {
         lang: 'Python',
         code: `def append_to(element, target=[]):
@@ -1822,14 +2278,14 @@ for (Integer x : list) {
 ];
 
 let bugState = {
-    level: Math.max(0, Math.min({{ bug_level|default:0 }}, BUG_HUNTER_PUZZLES.length - 1)),
+    level: Math.max(0, Math.min(savedLevels.bug, BUG_HUNTER_PUZZLES.length - 1)),
     score: 0,
     lives: 3,
     active: false
 };
 
 function initBugGame() {
-    bugState.level = Math.max(0, Math.min({{ bug_level|default:0 }}, BUG_HUNTER_PUZZLES.length - 1));
+    bugState.level = Math.max(0, Math.min(savedLevels.bug, BUG_HUNTER_PUZZLES.length - 1));
     bugState.score = 0;
     bugState.lives = 3;
     bugState.active = true;
@@ -2224,7 +2680,8 @@ function revertComplexityIntro() {
 // ----------------------------------------------------
 // GAME 4: CODE REPAIR SHOP (PARSONS PUZZLE) LOGIC
 // ----------------------------------------------------
-const REPAIR_SHOP_PUZZLES = [
+const ALL_REPAIR_SHOP_PUZZLES = [
+
     {
         title: 'Reverse String (Python)',
         desc: 'Reorder and indent the lines to reverse a string inside reverse(s).',
@@ -2489,7 +2946,7 @@ const REPAIR_SHOP_PUZZLES = [
 ];
 
 let parsonsState = {
-    level: Math.max(0, Math.min({{ parsons_level|default:0 }}, REPAIR_SHOP_PUZZLES.length - 1)),
+    level: Math.max(0, Math.min(savedLevels.parsons, REPAIR_SHOP_PUZZLES.length - 1)),
     score: 0,
     scrambled: [],
     workspace: [],
@@ -2497,7 +2954,7 @@ let parsonsState = {
 };
 
 function initParsonsGame() {
-    parsonsState.level = Math.max(0, Math.min({{ parsons_level|default:0 }}, REPAIR_SHOP_PUZZLES.length - 1));
+    parsonsState.level = Math.max(0, Math.min(savedLevels.parsons, REPAIR_SHOP_PUZZLES.length - 1));
     parsonsState.score = 0;
     parsonsState.active = true;
     document.getElementById('parsons-score').textContent = '0';
@@ -3026,14 +3483,14 @@ System.out.println(i);`,
 ];
 
 let predState = {
-    level: Math.max(0, Math.min({{ predictor_level|default:0 }}, OUTPUT_PUZZLES.length - 1)),
+    level: Math.max(0, Math.min(savedLevels.predictor, OUTPUT_PUZZLES.length - 1)),
     score: 0,
     lives: 3,
     active: false
 };
 
 function initPredGame() {
-    predState.level = Math.max(0, Math.min({{ predictor_level|default:0 }}, OUTPUT_PUZZLES.length - 1));
+    predState.level = Math.max(0, Math.min(savedLevels.predictor, OUTPUT_PUZZLES.length - 1));
     predState.score = 0;
     predState.lives = 3;
     predState.active = true;
@@ -3141,6 +3598,1269 @@ document.getElementById('pred-next-btn').addEventListener('click', () => {
 });
 
 // ----------------------------------------------------
+// GAME 6: ALGORITHM SEQUENCE MASTER LOGIC
+// ----------------------------------------------------
+const ALGORITHM_MASTER_LEVELS = [
+    {
+        "title": "Binary Search Algorithm",
+        "category": "Searching & Arrays",
+        "difficulty": "Basic",
+        "timeComplexity": "O(log N)",
+        "spaceComplexity": "O(1)",
+        "description": "Locate a target element in a sorted array by halving search space.",
+        "problem": "Given sorted array nums and target value, locate index of target in logarithmic time.",
+        "exampleInput": "nums = [2, 5, 8, 12, 16, 23], target = 16",
+        "exampleOutput": "Index 4",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Binary search requires sorted array. Compute mid safely.",
+        "steps": [
+            "Initialize low = 0 and high = array.length - 1",
+            "Loop while low <= high",
+            "Calculate middle index mid = low + Math.floor((high - low) / 2)",
+            "If array[mid] == target, return index mid (Element Found!)",
+            "If array[mid] < target, update search boundary low = mid + 1",
+            "Else update search boundary high = mid - 1",
+            "If loop ends with low > high, return -1 (Target Not Present)"
+        ]
+    },
+    {
+        "title": "Selection Sort Algorithm",
+        "category": "Sorting Algorithms",
+        "difficulty": "Basic",
+        "timeComplexity": "O(N\u00b2)",
+        "spaceComplexity": "O(1)",
+        "description": "Repeatedly find minimum element from unsorted region and place at front.",
+        "problem": "Sort array by repeatedly finding minimum element in remaining unsorted partition.",
+        "exampleInput": "nums = [64, 25, 12, 22, 11]",
+        "exampleOutput": "[11, 12, 22, 25, 64]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"40\" width=\"28\" height=\"28\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"44\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">45</text>\n            <rect x=\"80\" y=\"28\" width=\"28\" height=\"40\" rx=\"4\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"94\" y=\"52\" fill=\"#eab308\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <rect x=\"130\" y=\"18\" width=\"28\" height=\"50\" rx=\"4\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"144\" y=\"48\" fill=\"#38bdf8\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">28</text>\n            <rect x=\"180\" y=\"10\" width=\"28\" height=\"58\" rx=\"4\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"194\" y=\"44\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">89</text>\n            <path d=\"M 94 18 Q 119 5 144 10\" fill=\"none\" stroke=\"#eab308\" stroke-width=\"1.5\" stroke-dasharray=\"3\"/>\n            <text x=\"119\" y=\"10\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">Swap</text>\n        </svg>",
+        "interviewTip": "Selection sort performs at most O(N) swaps.",
+        "steps": [
+            "Outer loop i from 0 to N - 1",
+            "Initialize minIndex = i for the unsorted partition",
+            "Inner loop j from i + 1 to N - 1 to inspect remaining elements",
+            "If array[j] < array[minIndex], update minIndex = j",
+            "Swap element array[i] with minimum element array[minIndex]",
+            "Repeat until outer loop finishes; array is now sorted"
+        ]
+    },
+    {
+        "title": "Merge Sort Divide & Conquer",
+        "category": "Divide & Conquer",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N log N)",
+        "spaceComplexity": "O(N)",
+        "description": "Split array into halves, recursively sort each half, and merge in order.",
+        "problem": "Sort unsorted array by splitting in half and merging sorted sub-arrays.",
+        "exampleInput": "nums = [38, 27, 43, 3, 9, 82, 10]",
+        "exampleOutput": "[3, 9, 10, 27, 38, 43, 82]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Merge sort guarantees O(N log N) worst-case time complexity.",
+        "steps": [
+            "Base Case: If array length <= 1, array is already sorted, return array",
+            "Divide: Calculate mid = floor(length / 2) to split array into left and right halves",
+            "Conquer: Recursively call mergeSort(leftHalf) and mergeSort(rightHalf)",
+            "Initialize two pointers i = 0 for left array and j = 0 for right array",
+            "Compare left[i] and right[j], append smaller element into merged output array",
+            "Append any remaining unmerged elements from left or right subarray to output",
+            "Return fully merged sorted array"
+        ]
+    },
+    {
+        "title": "Two Pointers Target Sum",
+        "category": "Optimized Array Search",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(1)",
+        "description": "Find two numbers in a sorted array that sum up to target.",
+        "problem": "Locate index pair in a sorted array that sums up to given target.",
+        "exampleInput": "nums = [2, 7, 11, 15], target = 9",
+        "exampleOutput": "[0, 1]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Using two pointers on a sorted array reduces O(N\u00b2) down to O(N).",
+        "steps": [
+            "Set left = 0 (start of array) and right = N - 1 (end of array)",
+            "Loop while left < right",
+            "Compute currentSum = array[left] + array[right]",
+            "If currentSum == target, return pair [array[left], array[right]]",
+            "If currentSum < target, increment left pointer (left++) to increase sum",
+            "Else decrement right pointer (right--) to decrease sum",
+            "If pointers cross without match, return No Pair Found"
+        ]
+    },
+    {
+        "title": "Floyd's Cycle Detection",
+        "category": "Linked List Pointers",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(1)",
+        "description": "Detect if a linked list contains a cycle using slow and fast pointers.",
+        "problem": "Determine whether a linked list contains a loop or terminates.",
+        "exampleInput": "Head -> 1 -> 2 -> 3 -> 4 (Loop back to 2)",
+        "exampleOutput": "Cycle Detected (True)",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "If a cycle exists, the fast pointer will catch up to slow pointer.",
+        "steps": [
+            "Initialize slow = head and fast = head",
+            "Loop while fast is not null and fast.next is not null",
+            "Advance slow pointer by 1 node: slow = slow.next",
+            "Advance fast pointer by 2 nodes: fast = fast.next.next",
+            "If slow == fast, pointers met inside cycle! Return True (Cycle Detected)",
+            "If fast or fast.next becomes null, loop ends. Return False (No Cycle)"
+        ]
+    },
+    {
+        "title": "Valid Parentheses Stack Matching",
+        "category": "Stacks & Queues",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(N)",
+        "description": "Validate if opening brackets are properly closed in correct order.",
+        "problem": "Determine if input string of brackets is valid and balanced.",
+        "exampleInput": "s = '{ [ ( ) ] }'",
+        "exampleOutput": "True (Valid)",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"110\" y=\"8\" width=\"100\" height=\"58\" rx=\"6\" fill=\"#0f172a\" stroke=\"#6366f1\" stroke-width=\"2\"/>\n            <rect x=\"120\" y=\"16\" width=\"80\" height=\"15\" rx=\"3\" fill=\"#312e81\" stroke=\"#818cf8\"/>\n            <text x=\"160\" y=\"27\" fill=\"#fff\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">Pop: '(' (Top)</text>\n            <rect x=\"120\" y=\"36\" width=\"80\" height=\"15\" rx=\"3\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"160\" y=\"47\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">Push: '['</text>\n        </svg>",
+        "interviewTip": "Matching brackets require Last-In, First-Out (LIFO) stack evaluation.",
+        "steps": [
+            "Initialize an empty stack",
+            "Iterate through each character char in the input string",
+            "If char is an opening bracket '(', '{', or '[', push it onto stack",
+            "If char is a closing bracket, check if stack is empty (If empty, Return Invalid)",
+            "Pop top bracket from stack and check if it matches closing bracket type",
+            "If popped bracket does not match closing bracket, Return Invalid",
+            "After processing string, return True if stack is empty, False otherwise"
+        ]
+    },
+    {
+        "title": "Binary Tree Inorder Traversal",
+        "category": "Trees & BST",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(H)",
+        "description": "Traverse a binary tree recursively: Left Subtree -> Root Node -> Right Subtree.",
+        "problem": "Return list of node values in Left-Root-Right sequence.",
+        "exampleInput": "Root = [1, null, 2, 3]",
+        "exampleOutput": "[1, 3, 2]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"160\" cy=\"18\" r=\"13\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"160\" y=\"23\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Root</text>\n            <line x1=\"150\" y1=\"28\" x2=\"100\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <line x1=\"170\" y1=\"28\" x2=\"220\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"95\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/>\n            <text x=\"95\" y=\"62\" fill=\"#38bdf8\" font-size=\"10\" text-anchor=\"middle\">Left</text>\n            <circle cx=\"225\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"225\" y=\"62\" fill=\"#4ade80\" font-size=\"10\" text-anchor=\"middle\">Right</text>\n        </svg>",
+        "interviewTip": "Inorder traversal of a BST visits nodes in strictly sorted order.",
+        "steps": [
+            "Base Case: If current root is null, return",
+            "Recursively traverse Left Subtree: inorder(root.left)",
+            "Process / Visit current Root Node (e.g. record root.value)",
+            "Recursively traverse Right Subtree: inorder(root.right)",
+            "Complete traversal when all recursive function calls return"
+        ]
+    },
+    {
+        "title": "Breadth-First Search (BFS)",
+        "category": "Graph Algorithms",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V)",
+        "description": "Traverse graph level-by-level using a Queue to explore nearest neighbors.",
+        "problem": "Explore graph level by level from starting source node.",
+        "exampleInput": "Graph starting at Node 0",
+        "exampleOutput": "Visited: [0, 1, 2, 3]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "BFS computes the shortest path in unweighted graphs.",
+        "steps": [
+            "Initialize a Queue and a visited set",
+            "Enqueue startNode into Queue and add to visited set",
+            "Loop while Queue is not empty",
+            "Dequeue current front node from Queue and process it",
+            "Iterate through all adjacent neighbor nodes of current node",
+            "If neighbor is not in visited set, mark neighbor visited and enqueue into Queue",
+            "Repeat until Queue becomes completely empty"
+        ]
+    },
+    {
+        "title": "Min-Heap Top-K Elements",
+        "category": "Heaps & Priority Queues",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(N log K)",
+        "spaceComplexity": "O(K)",
+        "description": "Find K largest elements in an unsorted array using a Min-Heap of size K.",
+        "problem": "Extract K largest numbers from unsorted list efficiently.",
+        "exampleInput": "nums = [3, 2, 1, 5, 6, 4], k = 2",
+        "exampleOutput": "[5, 6] (2nd largest = 5)",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"110\" y=\"8\" width=\"100\" height=\"58\" rx=\"6\" fill=\"#0f172a\" stroke=\"#6366f1\" stroke-width=\"2\"/>\n            <rect x=\"120\" y=\"16\" width=\"80\" height=\"15\" rx=\"3\" fill=\"#312e81\" stroke=\"#818cf8\"/>\n            <text x=\"160\" y=\"27\" fill=\"#fff\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">Pop: '(' (Top)</text>\n            <rect x=\"120\" y=\"36\" width=\"80\" height=\"15\" rx=\"3\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"160\" y=\"47\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">Push: '['</text>\n        </svg>",
+        "interviewTip": "Maintaining a Min-Heap of size K takes O(N log K) time.",
+        "steps": [
+            "Initialize an empty Min-Heap of size constraint K",
+            "Iterate through each number num in the input list",
+            "Push / Insert num into the Min-Heap",
+            "If Min-Heap size exceeds K, extract / pop minimum element (root)",
+            "After iterating through all elements, Min-Heap contains top K largest values"
+        ]
+    },
+    {
+        "title": "0/1 Knapsack Dynamic Programming",
+        "category": "Dynamic Programming",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(N \u00d7 W)",
+        "spaceComplexity": "O(N \u00d7 W)",
+        "description": "Maximize profit under capacity limit W using 2D table DP[i][w].",
+        "problem": "Select subset of items to maximize value without exceeding weight capacity.",
+        "exampleInput": "weights = [1, 2, 3], values = [10, 15, 40], W = 6",
+        "exampleOutput": "Max Profit = 65",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"40\" y=\"12\" width=\"240\" height=\"48\" rx=\"6\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1.5\"/>\n            <line x1=\"40\" y1=\"36\" x2=\"280\" y2=\"36\" stroke=\"#334155\"/>\n            <line x1=\"100\" y1=\"12\" x2=\"100\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"12\" x2=\"160\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"220\" y1=\"12\" x2=\"220\" y2=\"60\" stroke=\"#334155\"/>\n            <rect x=\"160\" y=\"36\" width=\"60\" height=\"24\" fill=\"#166534\" opacity=\"0.7\"/>\n            <text x=\"190\" y=\"52\" fill=\"#4ade80\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">DP[i][w]</text>\n            <text x=\"70\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">0</text>\n            <text x=\"130\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v1</text>\n            <text x=\"190\" y=\"28\" fill=\"#eab308\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">v2</text>\n            <text x=\"250\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v3</text>\n        </svg>",
+        "interviewTip": "0/1 Knapsack means each item can either be taken or excluded.",
+        "steps": [
+            "Create 2D DP array DP[N+1][W+1] initialized to 0",
+            "Outer loop i from 1 to N (items), Inner loop w from 1 to W (capacity)",
+            "If weight of item i-1 <= w, option1 = val[i-1] + DP[i-1][w - weight[i-1]]",
+            "option2 = DP[i-1][w] (exclude current item)",
+            "Set DP[i][w] = Math.max(option1, option2)",
+            "Else (item too heavy) set DP[i][w] = DP[i-1][w]",
+            "Return DP[N][W] as maximum achievable total value"
+        ]
+    },
+    {
+        "title": "Dijkstra's Shortest Path Algorithm",
+        "category": "Graph Shortest Path",
+        "difficulty": "Hard",
+        "timeComplexity": "O((V + E) log V)",
+        "spaceComplexity": "O(V)",
+        "description": "Find shortest distance from source vertex to all vertices using Priority Queue.",
+        "problem": "Calculate minimum path cost from source node to all graph nodes.",
+        "exampleInput": "Source Node A, non-negative weights",
+        "exampleOutput": "Distances: {A:0, B:2, C:5, D:4}",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "Dijkstra assumes non-negative edge weights and selects greedy min distance nodes.",
+        "steps": [
+            "Initialize dist[source] = 0 and dist[v] = infinity for all other vertices",
+            "Push tuple (dist[source]=0, source) into Min-Priority Queue",
+            "Loop while Priority Queue is not empty",
+            "Pop vertex u with smallest current distance dist[u]",
+            "For each adjacent neighbor v of u with edge weight w, calculate newDist = dist[u] + w",
+            "If newDist < dist[v], update dist[v] = newDist and push (newDist, v) into Priority Queue",
+            "Return dist array when Priority Queue becomes empty"
+        ]
+    },
+    {
+        "title": "Backtracking N-Queens Placement",
+        "category": "Backtracking",
+        "difficulty": "Hard",
+        "timeComplexity": "O(N!)",
+        "spaceComplexity": "O(N)",
+        "description": "Place N non-attacking queens on an N\u00d7N board using recursive backtracking.",
+        "problem": "Place N queens on an N\u00d7N chessboard such that no two queens attack each other.",
+        "exampleInput": "N = 4",
+        "exampleOutput": "2 Distinct Board Solutions",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"110\" y=\"8\" width=\"100\" height=\"58\" rx=\"6\" fill=\"#0f172a\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <line x1=\"135\" y1=\"8\" x2=\"135\" y2=\"66\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"8\" x2=\"160\" y2=\"66\" stroke=\"#334155\"/>\n            <line x1=\"185\" y1=\"8\" x2=\"185\" y2=\"66\" stroke=\"#334155\"/>\n            <line x1=\"110\" y1=\"27\" x2=\"210\" y2=\"27\" stroke=\"#334155\"/>\n            <line x1=\"110\" y1=\"46\" x2=\"210\" y2=\"46\" stroke=\"#334155\"/>\n            <text x=\"122\" y=\"23\" fill=\"#ef4444\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\">\u265b</text>\n            <text x=\"172\" y=\"42\" fill=\"#4ade80\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\">\u265b</text>\n        </svg>",
+        "interviewTip": "Backtracking explores state space tree: place, validate, recurse, backtrack.",
+        "steps": [
+            "Call solve(row = 0) to start placement",
+            "Base Case: If row == N, valid N-Queens configuration completed! Record solution and return",
+            "Loop col from 0 to N - 1 for current row",
+            "Check if placing queen at (row, col) is safe (no column or diagonal conflicts)",
+            "If safe: Place Queen at board[row][col]",
+            "Recursively call solve(row + 1) to place queen in next row",
+            "Backtrack: Remove Queen from board[row][col] to explore next column choice"
+        ]
+    },
+    {
+        "title": "Bubble Sort Algorithm",
+        "category": "Sorting Algorithms",
+        "difficulty": "Basic",
+        "timeComplexity": "O(N\u00b2)",
+        "spaceComplexity": "O(1)",
+        "description": "Repeatedly swap adjacent elements if they are in wrong order.",
+        "problem": "Sort array by continuously comparing and swapping adjacent out-of-order elements.",
+        "exampleInput": "nums = [5, 1, 4, 2, 8]",
+        "exampleOutput": "[1, 2, 4, 5, 8]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"40\" width=\"28\" height=\"28\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"44\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">45</text>\n            <rect x=\"80\" y=\"28\" width=\"28\" height=\"40\" rx=\"4\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"94\" y=\"52\" fill=\"#eab308\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <rect x=\"130\" y=\"18\" width=\"28\" height=\"50\" rx=\"4\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"144\" y=\"48\" fill=\"#38bdf8\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">28</text>\n            <rect x=\"180\" y=\"10\" width=\"28\" height=\"58\" rx=\"4\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"194\" y=\"44\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">89</text>\n            <path d=\"M 94 18 Q 119 5 144 10\" fill=\"none\" stroke=\"#eab308\" stroke-width=\"1.5\" stroke-dasharray=\"3\"/>\n            <text x=\"119\" y=\"10\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">Swap</text>\n        </svg>",
+        "interviewTip": "Simple pass-based sorting algorithm.",
+        "steps": [
+            "Step 1: Initialize data structure for Bubble Sort Algorithm",
+            "Step 2: Process input parameters and invariants for Sorting Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result ([1, 2, 4, 5, 8])"
+        ]
+    },
+    {
+        "title": "Insertion Sort Algorithm",
+        "category": "Sorting Algorithms",
+        "difficulty": "Basic",
+        "timeComplexity": "O(N\u00b2)",
+        "spaceComplexity": "O(1)",
+        "description": "Build sorted array one element at a time by inserting in correct position.",
+        "problem": "Insert elements one by one into their sorted position in left subarray.",
+        "exampleInput": "nums = [12, 11, 13, 5, 6]",
+        "exampleOutput": "[5, 6, 11, 12, 13]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"40\" width=\"28\" height=\"28\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"44\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">45</text>\n            <rect x=\"80\" y=\"28\" width=\"28\" height=\"40\" rx=\"4\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"94\" y=\"52\" fill=\"#eab308\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <rect x=\"130\" y=\"18\" width=\"28\" height=\"50\" rx=\"4\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"144\" y=\"48\" fill=\"#38bdf8\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">28</text>\n            <rect x=\"180\" y=\"10\" width=\"28\" height=\"58\" rx=\"4\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"194\" y=\"44\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">89</text>\n            <path d=\"M 94 18 Q 119 5 144 10\" fill=\"none\" stroke=\"#eab308\" stroke-width=\"1.5\" stroke-dasharray=\"3\"/>\n            <text x=\"119\" y=\"10\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">Swap</text>\n        </svg>",
+        "interviewTip": "Efficient for small datasets or nearly sorted arrays.",
+        "steps": [
+            "Step 1: Initialize data structure for Insertion Sort Algorithm",
+            "Step 2: Process input parameters and invariants for Sorting Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result ([5, 6, 11, 12, 13])"
+        ]
+    },
+    {
+        "title": "Quick Sort Partition (Lomuto)",
+        "category": "Divide & Conquer",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N log N)",
+        "spaceComplexity": "O(log N)",
+        "description": "Partition array around pivot element and sort partitions recursively.",
+        "problem": "Partition array so elements smaller than pivot are left and greater are right.",
+        "exampleInput": "nums = [10, 80, 30, 90, 40, 50, 70]",
+        "exampleOutput": "Pivot 70 placed at index 4",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "In-place divide and conquer sorting algorithm.",
+        "steps": [
+            "Step 1: Initialize data structure for Quick Sort Partition (Lomuto)",
+            "Step 2: Process input parameters and invariants for Divide & Conquer",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Pivot 70 placed at index 4)"
+        ]
+    },
+    {
+        "title": "Counting Sort Algorithm",
+        "category": "Sorting Algorithms",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N + K)",
+        "spaceComplexity": "O(K)",
+        "description": "Sort integer keys by counting frequency of each value.",
+        "problem": "Sort integers within range [0..K] in linear time by frequency counting.",
+        "exampleInput": "nums = [4, 2, 2, 8, 3, 3, 1]",
+        "exampleOutput": "[1, 2, 2, 3, 3, 4, 8]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"40\" width=\"28\" height=\"28\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"44\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">45</text>\n            <rect x=\"80\" y=\"28\" width=\"28\" height=\"40\" rx=\"4\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"94\" y=\"52\" fill=\"#eab308\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <rect x=\"130\" y=\"18\" width=\"28\" height=\"50\" rx=\"4\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"144\" y=\"48\" fill=\"#38bdf8\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">28</text>\n            <rect x=\"180\" y=\"10\" width=\"28\" height=\"58\" rx=\"4\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"194\" y=\"44\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">89</text>\n            <path d=\"M 94 18 Q 119 5 144 10\" fill=\"none\" stroke=\"#eab308\" stroke-width=\"1.5\" stroke-dasharray=\"3\"/>\n            <text x=\"119\" y=\"10\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">Swap</text>\n        </svg>",
+        "interviewTip": "Non-comparison sorting algorithm for bounded integer ranges.",
+        "steps": [
+            "Step 1: Initialize data structure for Counting Sort Algorithm",
+            "Step 2: Process input parameters and invariants for Sorting Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result ([1, 2, 2, 3, 3, 4, 8])"
+        ]
+    },
+    {
+        "title": "Radix Sort Algorithm",
+        "category": "Sorting Algorithms",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N \u00d7 d)",
+        "spaceComplexity": "O(N)",
+        "description": "Sort integer numbers digit by digit from LSD to MSD using Counting Sort.",
+        "problem": "Sort positive integers by processing individual digit positions from right to left.",
+        "exampleInput": "nums = [170, 45, 75, 90, 802, 24, 2, 66]",
+        "exampleOutput": "[2, 24, 45, 66, 75, 90, 170, 802]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"40\" width=\"28\" height=\"28\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"44\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">45</text>\n            <rect x=\"80\" y=\"28\" width=\"28\" height=\"40\" rx=\"4\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"94\" y=\"52\" fill=\"#eab308\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <rect x=\"130\" y=\"18\" width=\"28\" height=\"50\" rx=\"4\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"144\" y=\"48\" fill=\"#38bdf8\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">28</text>\n            <rect x=\"180\" y=\"10\" width=\"28\" height=\"58\" rx=\"4\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"194\" y=\"44\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">89</text>\n            <path d=\"M 94 18 Q 119 5 144 10\" fill=\"none\" stroke=\"#eab308\" stroke-width=\"1.5\" stroke-dasharray=\"3\"/>\n            <text x=\"119\" y=\"10\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">Swap</text>\n        </svg>",
+        "interviewTip": "Handles multi-digit integer ranges efficiently.",
+        "steps": [
+            "Step 1: Initialize data structure for Radix Sort Algorithm",
+            "Step 2: Process input parameters and invariants for Sorting Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result ([2, 24, 45, 66, 75, 90, 170, 802])"
+        ]
+    },
+    {
+        "title": "Sliding Window Max Subarray Sum",
+        "category": "Sliding Window",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(1)",
+        "description": "Find maximum subarray sum of fixed window size K.",
+        "problem": "Find max contiguous subarray sum of length K.",
+        "exampleInput": "nums = [2, 1, 5, 1, 3, 2], k = 3",
+        "exampleOutput": "Max Sum = 9 ([5, 1, 3])",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Reuses previous window sum in O(1) time per step.",
+        "steps": [
+            "Step 1: Initialize data structure for Sliding Window Max Subarray Sum",
+            "Step 2: Process input parameters and invariants for Sliding Window",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Max Sum = 9 ([5, 1, 3]))"
+        ]
+    },
+    {
+        "title": "Prefix Sum Array Queries",
+        "category": "Arrays & Math",
+        "difficulty": "Basic",
+        "timeComplexity": "O(N) Prep / O(1) Query",
+        "spaceComplexity": "O(N)",
+        "description": "Precompute cumulative sums for instant O(1) subarray range queries.",
+        "problem": "Answer range sum queries [L, R] in O(1) constant time.",
+        "exampleInput": "nums = [1, 2, 3, 4, 5], Query [1, 3]",
+        "exampleOutput": "Sum = 2 + 3 + 4 = 9",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Enables O(1) subsegment sum calculations.",
+        "steps": [
+            "Step 1: Initialize data structure for Prefix Sum Array Queries",
+            "Step 2: Process input parameters and invariants for Arrays & Math",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Sum = 2 + 3 + 4 = 9)"
+        ]
+    },
+    {
+        "title": "Kadane's Algorithm (Max Subarray)",
+        "category": "Arrays & DP",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(1)",
+        "description": "Find maximum contiguous subarray sum in O(N) linear time.",
+        "problem": "Locate contiguous subarray with largest sum in an array containing negative numbers.",
+        "exampleInput": "nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]",
+        "exampleOutput": "Max Sum = 6 ([4, -1, 2, 1])",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"40\" y=\"12\" width=\"240\" height=\"48\" rx=\"6\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1.5\"/>\n            <line x1=\"40\" y1=\"36\" x2=\"280\" y2=\"36\" stroke=\"#334155\"/>\n            <line x1=\"100\" y1=\"12\" x2=\"100\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"12\" x2=\"160\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"220\" y1=\"12\" x2=\"220\" y2=\"60\" stroke=\"#334155\"/>\n            <rect x=\"160\" y=\"36\" width=\"60\" height=\"24\" fill=\"#166534\" opacity=\"0.7\"/>\n            <text x=\"190\" y=\"52\" fill=\"#4ade80\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">DP[i][w]</text>\n            <text x=\"70\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">0</text>\n            <text x=\"130\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v1</text>\n            <text x=\"190\" y=\"28\" fill=\"#eab308\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">v2</text>\n            <text x=\"250\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v3</text>\n        </svg>",
+        "interviewTip": "Optimal dynamic programming approach for max subarray.",
+        "steps": [
+            "Step 1: Initialize data structure for Kadane's Algorithm (Max Subarray)",
+            "Step 2: Process input parameters and invariants for Arrays & DP",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Max Sum = 6 ([4, -1, 2, 1]))"
+        ]
+    },
+    {
+        "title": "KMP String Matching Algorithm",
+        "category": "String Algorithms",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(N + M)",
+        "spaceComplexity": "O(M)",
+        "description": "Search pattern in text using Longest Prefix Suffix (LPS) table.",
+        "problem": "Find starting indices of pattern in text in linear time O(N+M).",
+        "exampleInput": "text = 'ABABDABACDABABCABAB', pattern = 'ABABCABAB'",
+        "exampleOutput": "Pattern found at Index 10",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Avoids redundant text character re-evaluations.",
+        "steps": [
+            "Step 1: Initialize data structure for KMP String Matching Algorithm",
+            "Step 2: Process input parameters and invariants for String Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Pattern found at Index 10)"
+        ]
+    },
+    {
+        "title": "Rabin-Karp Rolling Hash Search",
+        "category": "String Algorithms",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(N + M)",
+        "spaceComplexity": "O(1)",
+        "description": "Match pattern in text using rolling hash function values.",
+        "problem": "Find pattern occurrences using rolling hash comparisons.",
+        "exampleInput": "text = 'GEEKS FOR GEEKS', pattern = 'GEEK'",
+        "exampleOutput": "Pattern found at Indices 0 and 10",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Efficient for multi-pattern matching.",
+        "steps": [
+            "Step 1: Initialize data structure for Rabin-Karp Rolling Hash Search",
+            "Step 2: Process input parameters and invariants for String Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Pattern found at Indices 0 and 10)"
+        ]
+    },
+    {
+        "title": "Z-Algorithm String Searching",
+        "category": "String Algorithms",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(N + M)",
+        "spaceComplexity": "O(N + M)",
+        "description": "Find pattern occurrences using Z-array prefix matching.",
+        "problem": "Construct Z-array of concatenated string S = pattern + '$' + text.",
+        "exampleInput": "text = 'baabaa', pattern = 'aab'",
+        "exampleOutput": "Match at Index 1",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Linear time exact pattern matching algorithm.",
+        "steps": [
+            "Step 1: Initialize data structure for Z-Algorithm String Searching",
+            "Step 2: Process input parameters and invariants for String Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Match at Index 1)"
+        ]
+    },
+    {
+        "title": "Longest Common Subsequence (LCS)",
+        "category": "Dynamic Programming",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(M \u00d7 N)",
+        "spaceComplexity": "O(M \u00d7 N)",
+        "description": "Find length of longest subsequence common to two strings.",
+        "problem": "Find length of longest sequence that appears in both strings in same order.",
+        "exampleInput": "s1 = 'abcde', s2 = 'ace'",
+        "exampleOutput": "Length = 3 ('ace')",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"40\" y=\"12\" width=\"240\" height=\"48\" rx=\"6\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1.5\"/>\n            <line x1=\"40\" y1=\"36\" x2=\"280\" y2=\"36\" stroke=\"#334155\"/>\n            <line x1=\"100\" y1=\"12\" x2=\"100\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"12\" x2=\"160\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"220\" y1=\"12\" x2=\"220\" y2=\"60\" stroke=\"#334155\"/>\n            <rect x=\"160\" y=\"36\" width=\"60\" height=\"24\" fill=\"#166534\" opacity=\"0.7\"/>\n            <text x=\"190\" y=\"52\" fill=\"#4ade80\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">DP[i][w]</text>\n            <text x=\"70\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">0</text>\n            <text x=\"130\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v1</text>\n            <text x=\"190\" y=\"28\" fill=\"#eab308\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">v2</text>\n            <text x=\"250\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v3</text>\n        </svg>",
+        "interviewTip": "Classic 2D matrix dynamic programming problem.",
+        "steps": [
+            "Step 1: Initialize data structure for Longest Common Subsequence (LCS)",
+            "Step 2: Process input parameters and invariants for Dynamic Programming",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Length = 3 ('ace'))"
+        ]
+    },
+    {
+        "title": "Longest Increasing Subsequence (LIS)",
+        "category": "Dynamic Programming",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N log N)",
+        "spaceComplexity": "O(N)",
+        "description": "Find length of longest strictly increasing subsequence in array.",
+        "problem": "Determine length of longest strictly increasing subsequence in array.",
+        "exampleInput": "nums = [10, 9, 2, 5, 3, 7, 101, 18]",
+        "exampleOutput": "Length = 4 ([2, 3, 7, 101])",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"40\" y=\"12\" width=\"240\" height=\"48\" rx=\"6\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1.5\"/>\n            <line x1=\"40\" y1=\"36\" x2=\"280\" y2=\"36\" stroke=\"#334155\"/>\n            <line x1=\"100\" y1=\"12\" x2=\"100\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"12\" x2=\"160\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"220\" y1=\"12\" x2=\"220\" y2=\"60\" stroke=\"#334155\"/>\n            <rect x=\"160\" y=\"36\" width=\"60\" height=\"24\" fill=\"#166534\" opacity=\"0.7\"/>\n            <text x=\"190\" y=\"52\" fill=\"#4ade80\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">DP[i][w]</text>\n            <text x=\"70\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">0</text>\n            <text x=\"130\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v1</text>\n            <text x=\"190\" y=\"28\" fill=\"#eab308\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">v2</text>\n            <text x=\"250\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v3</text>\n        </svg>",
+        "interviewTip": "Binary search optimization yields O(N log N) runtime.",
+        "steps": [
+            "Step 1: Initialize data structure for Longest Increasing Subsequence (LIS)",
+            "Step 2: Process input parameters and invariants for Dynamic Programming",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Length = 4 ([2, 3, 7, 101]))"
+        ]
+    },
+    {
+        "title": "Matrix Chain Multiplication (MCM)",
+        "category": "Dynamic Programming",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(N\u00b3)",
+        "spaceComplexity": "O(N\u00b2)",
+        "description": "Find optimal parenthesization to minimize scalar multiplications.",
+        "problem": "Determine most efficient way to multiply chain of matrices.",
+        "exampleInput": "Dimensions arr = [40, 20, 30, 10, 30]",
+        "exampleOutput": "Min Operations = 26,000",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"40\" y=\"12\" width=\"240\" height=\"48\" rx=\"6\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1.5\"/>\n            <line x1=\"40\" y1=\"36\" x2=\"280\" y2=\"36\" stroke=\"#334155\"/>\n            <line x1=\"100\" y1=\"12\" x2=\"100\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"12\" x2=\"160\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"220\" y1=\"12\" x2=\"220\" y2=\"60\" stroke=\"#334155\"/>\n            <rect x=\"160\" y=\"36\" width=\"60\" height=\"24\" fill=\"#166534\" opacity=\"0.7\"/>\n            <text x=\"190\" y=\"52\" fill=\"#4ade80\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">DP[i][w]</text>\n            <text x=\"70\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">0</text>\n            <text x=\"130\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v1</text>\n            <text x=\"190\" y=\"28\" fill=\"#eab308\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">v2</text>\n            <text x=\"250\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v3</text>\n        </svg>",
+        "interviewTip": "Classic interval DP problem.",
+        "steps": [
+            "Step 1: Initialize data structure for Matrix Chain Multiplication (MCM)",
+            "Step 2: Process input parameters and invariants for Dynamic Programming",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Min Operations = 26,000)"
+        ]
+    },
+    {
+        "title": "Coin Change Minimum Coins",
+        "category": "Dynamic Programming",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N \u00d7 Amount)",
+        "spaceComplexity": "O(Amount)",
+        "description": "Find minimum coins needed to make up target Amount.",
+        "problem": "Compute fewest coins required to sum up to given target amount.",
+        "exampleInput": "coins = [1, 2, 5], amount = 11",
+        "exampleOutput": "Min Coins = 3 (5 + 5 + 1)",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"40\" y=\"12\" width=\"240\" height=\"48\" rx=\"6\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1.5\"/>\n            <line x1=\"40\" y1=\"36\" x2=\"280\" y2=\"36\" stroke=\"#334155\"/>\n            <line x1=\"100\" y1=\"12\" x2=\"100\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"12\" x2=\"160\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"220\" y1=\"12\" x2=\"220\" y2=\"60\" stroke=\"#334155\"/>\n            <rect x=\"160\" y=\"36\" width=\"60\" height=\"24\" fill=\"#166534\" opacity=\"0.7\"/>\n            <text x=\"190\" y=\"52\" fill=\"#4ade80\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">DP[i][w]</text>\n            <text x=\"70\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">0</text>\n            <text x=\"130\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v1</text>\n            <text x=\"190\" y=\"28\" fill=\"#eab308\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">v2</text>\n            <text x=\"250\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v3</text>\n        </svg>",
+        "interviewTip": "Unbounded knapsack dynamic programming pattern.",
+        "steps": [
+            "Step 1: Initialize data structure for Coin Change Minimum Coins",
+            "Step 2: Process input parameters and invariants for Dynamic Programming",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Min Coins = 3 (5 + 5 + 1))"
+        ]
+    },
+    {
+        "title": "Edit Distance (Levenshtein)",
+        "category": "Dynamic Programming",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(M \u00d7 N)",
+        "spaceComplexity": "O(M \u00d7 N)",
+        "description": "Find minimum operations to transform str1 into str2.",
+        "problem": "Calculate min edit operations (insert, delete, replace) to convert word1 into word2.",
+        "exampleInput": "word1 = 'horse', word2 = 'ros'",
+        "exampleOutput": "Min Operations = 3",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"40\" y=\"12\" width=\"240\" height=\"48\" rx=\"6\" fill=\"#0f172a\" stroke=\"#334155\" stroke-width=\"1.5\"/>\n            <line x1=\"40\" y1=\"36\" x2=\"280\" y2=\"36\" stroke=\"#334155\"/>\n            <line x1=\"100\" y1=\"12\" x2=\"100\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"12\" x2=\"160\" y2=\"60\" stroke=\"#334155\"/>\n            <line x1=\"220\" y1=\"12\" x2=\"220\" y2=\"60\" stroke=\"#334155\"/>\n            <rect x=\"160\" y=\"36\" width=\"60\" height=\"24\" fill=\"#166534\" opacity=\"0.7\"/>\n            <text x=\"190\" y=\"52\" fill=\"#4ade80\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">DP[i][w]</text>\n            <text x=\"70\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">0</text>\n            <text x=\"130\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v1</text>\n            <text x=\"190\" y=\"28\" fill=\"#eab308\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">v2</text>\n            <text x=\"250\" y=\"28\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">v3</text>\n        </svg>",
+        "interviewTip": "2D grid string alignment dynamic programming.",
+        "steps": [
+            "Step 1: Initialize data structure for Edit Distance (Levenshtein)",
+            "Step 2: Process input parameters and invariants for Dynamic Programming",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Min Operations = 3)"
+        ]
+    },
+    {
+        "title": "Depth-First Search (DFS) Traversal",
+        "category": "Graph Algorithms",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V)",
+        "description": "Explore graph along each branch as far as possible before backtracking.",
+        "problem": "Traverse graph deeply down each path before backtracking.",
+        "exampleInput": "Graph with 4 nodes starting at Node 0",
+        "exampleOutput": "Visited: [0, 1, 2, 3]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "Recursive or stack-based graph exploration.",
+        "steps": [
+            "Step 1: Initialize data structure for Depth-First Search (DFS) Traversal",
+            "Step 2: Process input parameters and invariants for Graph Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Visited: [0, 1, 2, 3])"
+        ]
+    },
+    {
+        "title": "Topological Sort (Kahn's BFS)",
+        "category": "Graph DAG",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V)",
+        "description": "Order vertices in DAG such that edge u->v puts u before v.",
+        "problem": "Generate linear ordering of DAG vertices respecting dependencies.",
+        "exampleInput": "DAG with 6 nodes and dependencies",
+        "exampleOutput": "Order: [5, 4, 2, 3, 1, 0]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "Uses in-degree array and Queue.",
+        "steps": [
+            "Step 1: Initialize data structure for Topological Sort (Kahn's BFS)",
+            "Step 2: Process input parameters and invariants for Graph DAG",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Order: [5, 4, 2, 3, 1, 0])"
+        ]
+    },
+    {
+        "title": "Cycle Detection in Directed Graph",
+        "category": "Graph Algorithms",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V)",
+        "description": "Detect cycle in directed graph using recursion stack tracking.",
+        "problem": "Detect if directed graph contains any directed cycle loop.",
+        "exampleInput": "Directed graph with 4 nodes",
+        "exampleOutput": "Cycle Detected = True",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "3-state color tracking (Unvisited, Visiting, Visited).",
+        "steps": [
+            "Step 1: Initialize data structure for Cycle Detection in Directed Graph",
+            "Step 2: Process input parameters and invariants for Graph Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Cycle Detected = True)"
+        ]
+    },
+    {
+        "title": "Bipartite Graph Check (2-Coloring)",
+        "category": "Graph Algorithms",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V)",
+        "description": "Determine if graph can be colored with 2 colors without adjacent matches.",
+        "problem": "Determine if vertices can be split into 2 disjoint sets with edges only between sets.",
+        "exampleInput": "Graph with 4 nodes in a ring",
+        "exampleOutput": "True (Bipartite)",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "2-Coloring BFS or DFS graph traversal.",
+        "steps": [
+            "Step 1: Initialize data structure for Bipartite Graph Check (2-Coloring)",
+            "Step 2: Process input parameters and invariants for Graph Algorithms",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (True (Bipartite))"
+        ]
+    },
+    {
+        "title": "Kruskal's Minimum Spanning Tree",
+        "category": "Greedy & Disjoint Set",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(E log E)",
+        "spaceComplexity": "O(V)",
+        "description": "Find Minimum Spanning Tree using Greedy edge selection & DSU.",
+        "problem": "Find MST connecting all graph vertices with minimum total edge weight.",
+        "exampleInput": "Weighted graph with 4 nodes & 5 edges",
+        "exampleOutput": "MST Total Weight = 19",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Greedy edge sorting + Union-Find.",
+        "steps": [
+            "Step 1: Initialize data structure for Kruskal's Minimum Spanning Tree",
+            "Step 2: Process input parameters and invariants for Greedy & Disjoint Set",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (MST Total Weight = 19)"
+        ]
+    },
+    {
+        "title": "Prim's Minimum Spanning Tree",
+        "category": "Greedy & Priority Queue",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(E log V)",
+        "spaceComplexity": "O(V)",
+        "description": "Grow Minimum Spanning Tree vertex by vertex using Min-PQ.",
+        "problem": "Build MST incrementally by adding cheapest edge connecting MST to unvisited node.",
+        "exampleInput": "Weighted graph with 5 nodes",
+        "exampleOutput": "MST Cost = 16",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"110\" y=\"8\" width=\"100\" height=\"58\" rx=\"6\" fill=\"#0f172a\" stroke=\"#6366f1\" stroke-width=\"2\"/>\n            <rect x=\"120\" y=\"16\" width=\"80\" height=\"15\" rx=\"3\" fill=\"#312e81\" stroke=\"#818cf8\"/>\n            <text x=\"160\" y=\"27\" fill=\"#fff\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\">Pop: '(' (Top)</text>\n            <rect x=\"120\" y=\"36\" width=\"80\" height=\"15\" rx=\"3\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"160\" y=\"47\" fill=\"#94a3b8\" font-size=\"10\" text-anchor=\"middle\">Push: '['</text>\n        </svg>",
+        "interviewTip": "Greedy vertex addition into MST.",
+        "steps": [
+            "Step 1: Initialize data structure for Prim's Minimum Spanning Tree",
+            "Step 2: Process input parameters and invariants for Greedy & Priority Queue",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (MST Cost = 16)"
+        ]
+    },
+    {
+        "title": "Bellman-Ford Shortest Path",
+        "category": "Graph Shortest Path",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(V \u00d7 E)",
+        "spaceComplexity": "O(V)",
+        "description": "Find shortest path with negative edge weights & detect negative cycles.",
+        "problem": "Find shortest path from source node when graph has negative edge weights.",
+        "exampleInput": "Graph with negative edges & source 0",
+        "exampleOutput": "Distances: [0, -1, 2, -2]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "Relax all edges V-1 times.",
+        "steps": [
+            "Step 1: Initialize data structure for Bellman-Ford Shortest Path",
+            "Step 2: Process input parameters and invariants for Graph Shortest Path",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Distances: [0, -1, 2, -2])"
+        ]
+    },
+    {
+        "title": "Floyd-Warshall All-Pairs Path",
+        "category": "Graph Matrix DP",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(V\u00b3)",
+        "spaceComplexity": "O(V\u00b2)",
+        "description": "Find shortest distance between all pairs of vertices.",
+        "problem": "Compute shortest path matrix between all node pairs in weighted graph.",
+        "exampleInput": "4-node weighted matrix graph",
+        "exampleOutput": "All-Pairs Dist Matrix Computed",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "3-nested loop matrix dynamic programming.",
+        "steps": [
+            "Step 1: Initialize data structure for Floyd-Warshall All-Pairs Path",
+            "Step 2: Process input parameters and invariants for Graph Matrix DP",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (All-Pairs Dist Matrix Computed)"
+        ]
+    },
+    {
+        "title": "Trie Prefix Tree Search",
+        "category": "Advanced Data Structures",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(L)",
+        "spaceComplexity": "O(N \u00d7 L)",
+        "description": "Insert and search words efficiently in O(L) time.",
+        "problem": "Implement prefix tree structure for fast string dictionary insertion and search.",
+        "exampleInput": "Insert ('apple'), Search ('app')",
+        "exampleOutput": "Prefix Found = True",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Tree structure with character edges.",
+        "steps": [
+            "Step 1: Initialize data structure for Trie Prefix Tree Search",
+            "Step 2: Process input parameters and invariants for Advanced Data Structures",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Prefix Found = True)"
+        ]
+    },
+    {
+        "title": "Disjoint Set Union (DSU)",
+        "category": "Advanced Data Structures",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(\u03b1(N))",
+        "spaceComplexity": "O(N)",
+        "description": "Manage disjoint sets with Path Compression & Union by Rank.",
+        "problem": "Maintain partitioned sets with union(u, v) and find(u) in near O(1) time.",
+        "exampleInput": "Nodes 1..5, union(1,2), union(2,3)",
+        "exampleOutput": "find(1) == find(3) (True)",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "Near O(1) amortized set operations.",
+        "steps": [
+            "Step 1: Initialize data structure for Disjoint Set Union (DSU)",
+            "Step 2: Process input parameters and invariants for Advanced Data Structures",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (find(1) == find(3) (True))"
+        ]
+    },
+    {
+        "title": "Fenwick Tree (Binary Indexed Tree)",
+        "category": "Advanced Data Structures",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(log N)",
+        "spaceComplexity": "O(N)",
+        "description": "Perform point updates and prefix sum queries in O(log N).",
+        "problem": "Maintain prefix sums under dynamic point value updates.",
+        "exampleInput": "Array of size 8, update(idx=3, +5)",
+        "exampleOutput": "PrefixSum(4) = Updated",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Uses lowest set bit (i & -i) arithmetic.",
+        "steps": [
+            "Step 1: Initialize data structure for Fenwick Tree (Binary Indexed Tree)",
+            "Step 2: Process input parameters and invariants for Advanced Data Structures",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (PrefixSum(4) = Updated)"
+        ]
+    },
+    {
+        "title": "Segment Tree Range Sum Query",
+        "category": "Advanced Data Structures",
+        "difficulty": "Advanced",
+        "timeComplexity": "O(log N)",
+        "spaceComplexity": "O(N)",
+        "description": "Build tree for fast range minimum/maximum/sum queries and updates.",
+        "problem": "Perform range sum queries and point updates in O(log N) time.",
+        "exampleInput": "nums = [1, 3, 5, 7, 9, 11], Query [1, 3]",
+        "exampleOutput": "Sum = 15 (3 + 5 + 7)",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"30\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"46\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">2</text>\n            <text x=\"46\" y=\"15\" fill=\"#4ade80\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">low</text>\n            <rect x=\"80\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"96\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">5</text>\n            <rect x=\"130\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e1b4b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"146\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">12</text>\n            <text x=\"146\" y=\"15\" fill=\"#eab308\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">mid</text>\n            <rect x=\"180\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#475569\"/>\n            <text x=\"196\" y=\"43\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">16</text>\n            <rect x=\"230\" y=\"22\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#1e293b\" stroke=\"#ef4444\" stroke-width=\"2\"/>\n            <text x=\"246\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">38</text>\n            <text x=\"246\" y=\"15\" fill=\"#ef4444\" font-size=\"9\" font-weight=\"bold\" text-anchor=\"middle\">high</text>\n        </svg>",
+        "interviewTip": "Divide & conquer tree indexing.",
+        "steps": [
+            "Step 1: Initialize data structure for Segment Tree Range Sum Query",
+            "Step 2: Process input parameters and invariants for Advanced Data Structures",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Sum = 15 (3 + 5 + 7))"
+        ]
+    },
+    {
+        "title": "Binary Tree Preorder Traversal",
+        "category": "Trees & BST",
+        "difficulty": "Basic",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(H)",
+        "description": "Traverse binary tree: Root Node -> Left Subtree -> Right Subtree.",
+        "problem": "Return node values in Root-Left-Right sequence.",
+        "exampleInput": "Root = [1, null, 2, 3]",
+        "exampleOutput": "[1, 2, 3]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"160\" cy=\"18\" r=\"13\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"160\" y=\"23\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Root</text>\n            <line x1=\"150\" y1=\"28\" x2=\"100\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <line x1=\"170\" y1=\"28\" x2=\"220\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"95\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/>\n            <text x=\"95\" y=\"62\" fill=\"#38bdf8\" font-size=\"10\" text-anchor=\"middle\">Left</text>\n            <circle cx=\"225\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"225\" y=\"62\" fill=\"#4ade80\" font-size=\"10\" text-anchor=\"middle\">Right</text>\n        </svg>",
+        "interviewTip": "Root node processed first.",
+        "steps": [
+            "Step 1: Initialize data structure for Binary Tree Preorder Traversal",
+            "Step 2: Process input parameters and invariants for Trees & BST",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result ([1, 2, 3])"
+        ]
+    },
+    {
+        "title": "Binary Tree Postorder Traversal",
+        "category": "Trees & BST",
+        "difficulty": "Basic",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(H)",
+        "description": "Traverse binary tree: Left Subtree -> Right Subtree -> Root Node.",
+        "problem": "Return node values in Left-Right-Root sequence.",
+        "exampleInput": "Root = [1, null, 2, 3]",
+        "exampleOutput": "[3, 2, 1]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"160\" cy=\"18\" r=\"13\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"160\" y=\"23\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Root</text>\n            <line x1=\"150\" y1=\"28\" x2=\"100\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <line x1=\"170\" y1=\"28\" x2=\"220\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"95\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/>\n            <text x=\"95\" y=\"62\" fill=\"#38bdf8\" font-size=\"10\" text-anchor=\"middle\">Left</text>\n            <circle cx=\"225\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"225\" y=\"62\" fill=\"#4ade80\" font-size=\"10\" text-anchor=\"middle\">Right</text>\n        </svg>",
+        "interviewTip": "Root node processed last.",
+        "steps": [
+            "Step 1: Initialize data structure for Binary Tree Postorder Traversal",
+            "Step 2: Process input parameters and invariants for Trees & BST",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result ([3, 2, 1])"
+        ]
+    },
+    {
+        "title": "Binary Tree Level Order Traversal",
+        "category": "Trees & BST",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(W)",
+        "description": "Traverse binary tree level by level using Queue.",
+        "problem": "Return node values grouped by tree depth level.",
+        "exampleInput": "Root = [3, 9, 20, null, null, 15, 7]",
+        "exampleOutput": "[[3], [9, 20], [15, 7]]",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"160\" cy=\"18\" r=\"13\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"160\" y=\"23\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Root</text>\n            <line x1=\"150\" y1=\"28\" x2=\"100\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <line x1=\"170\" y1=\"28\" x2=\"220\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"95\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/>\n            <text x=\"95\" y=\"62\" fill=\"#38bdf8\" font-size=\"10\" text-anchor=\"middle\">Left</text>\n            <circle cx=\"225\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"225\" y=\"62\" fill=\"#4ade80\" font-size=\"10\" text-anchor=\"middle\">Right</text>\n        </svg>",
+        "interviewTip": "Breadth-first tree traversal.",
+        "steps": [
+            "Step 1: Initialize data structure for Binary Tree Level Order Traversal",
+            "Step 2: Process input parameters and invariants for Trees & BST",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result ([[3], [9, 20], [15, 7]])"
+        ]
+    },
+    {
+        "title": "BST Insertion & Search",
+        "category": "Trees & BST",
+        "difficulty": "Basic",
+        "timeComplexity": "O(H)",
+        "spaceComplexity": "O(H)",
+        "description": "Insert and search keys in Binary Search Tree adhering to BST property.",
+        "problem": "Locate key or insert new node preserving BST invariants.",
+        "exampleInput": "BST with keys [4, 2, 7, 1, 3], Search 3",
+        "exampleOutput": "Found at Node 3",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"160\" cy=\"18\" r=\"13\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"160\" y=\"23\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Root</text>\n            <line x1=\"150\" y1=\"28\" x2=\"100\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <line x1=\"170\" y1=\"28\" x2=\"220\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"95\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/>\n            <text x=\"95\" y=\"62\" fill=\"#38bdf8\" font-size=\"10\" text-anchor=\"middle\">Left</text>\n            <circle cx=\"225\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"225\" y=\"62\" fill=\"#4ade80\" font-size=\"10\" text-anchor=\"middle\">Right</text>\n        </svg>",
+        "interviewTip": "Left < Root < Right BST invariant.",
+        "steps": [
+            "Step 1: Initialize data structure for BST Insertion & Search",
+            "Step 2: Process input parameters and invariants for Trees & BST",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Found at Node 3)"
+        ]
+    },
+    {
+        "title": "Lowest Common Ancestor (LCA)",
+        "category": "Trees & BST",
+        "difficulty": "Intermediate",
+        "timeComplexity": "O(N)",
+        "spaceComplexity": "O(H)",
+        "description": "Find lowest shared ancestor node of two target nodes in binary tree.",
+        "problem": "Locate lowest node in tree that has both p and q as descendants.",
+        "exampleInput": "Tree Root = 3, p = 5, q = 1",
+        "exampleOutput": "LCA Node = 3",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"160\" cy=\"18\" r=\"13\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"160\" y=\"23\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">Root</text>\n            <line x1=\"150\" y1=\"28\" x2=\"100\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <line x1=\"170\" y1=\"28\" x2=\"220\" y2=\"50\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"95\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"1.5\"/>\n            <text x=\"95\" y=\"62\" fill=\"#38bdf8\" font-size=\"10\" text-anchor=\"middle\">Left</text>\n            <circle cx=\"225\" cy=\"58\" r=\"11\" fill=\"#1e293b\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"225\" y=\"62\" fill=\"#4ade80\" font-size=\"10\" text-anchor=\"middle\">Right</text>\n        </svg>",
+        "interviewTip": "Recursive subtree evaluation.",
+        "steps": [
+            "Step 1: Initialize data structure for Lowest Common Ancestor (LCA)",
+            "Step 2: Process input parameters and invariants for Trees & BST",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (LCA Node = 3)"
+        ]
+    },
+    {
+        "title": "Tarjan's Strongly Connected Components",
+        "category": "Advanced Graphs",
+        "difficulty": "Hard",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V)",
+        "description": "Find all Strongly Connected Components in directed graph using DFS.",
+        "problem": "Find all maximal strongly connected subgraphs in single DFS pass.",
+        "exampleInput": "Directed graph with 5 vertices",
+        "exampleOutput": "2 SCC Components Discovered",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "Single DFS pass SCC discovery.",
+        "steps": [
+            "Step 1: Initialize data structure for Tarjan's Strongly Connected Components",
+            "Step 2: Process input parameters and invariants for Advanced Graphs",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (2 SCC Components Discovered)"
+        ]
+    },
+    {
+        "title": "Kosaraju's SCC Algorithm",
+        "category": "Advanced Graphs",
+        "difficulty": "Hard",
+        "timeComplexity": "O(V + E)",
+        "spaceComplexity": "O(V)",
+        "description": "Find SCCs in directed graph using DFS finish times & transposed graph.",
+        "problem": "Find all SCCs using two DFS passes and graph transpose.",
+        "exampleInput": "Directed graph with 8 vertices",
+        "exampleOutput": "3 SCC Components Discovered",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "Two-pass DFS algorithm.",
+        "steps": [
+            "Step 1: Initialize data structure for Kosaraju's SCC Algorithm",
+            "Step 2: Process input parameters and invariants for Advanced Graphs",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (3 SCC Components Discovered)"
+        ]
+    },
+    {
+        "title": "Ford-Fulkerson Max Flow Algorithm",
+        "category": "Network Flow",
+        "difficulty": "Hard",
+        "timeComplexity": "O(E \u00d7 maxFlow)",
+        "spaceComplexity": "O(V + E)",
+        "description": "Compute maximum network flow from source to sink using augmenting paths.",
+        "problem": "Compute max network flow from source to sink in flow network.",
+        "exampleInput": "Flow network with source 0 and sink 5",
+        "exampleOutput": "Max Flow = 23",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "Residual graph augmenting path algorithm.",
+        "steps": [
+            "Step 1: Initialize data structure for Ford-Fulkerson Max Flow Algorithm",
+            "Step 2: Process input parameters and invariants for Network Flow",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Max Flow = 23)"
+        ]
+    },
+    {
+        "title": "Edmonds-Karp Max Flow Algorithm",
+        "category": "Network Flow",
+        "difficulty": "Hard",
+        "timeComplexity": "O(V \u00d7 E\u00b2)",
+        "spaceComplexity": "O(V + E)",
+        "description": "Compute maximum flow using BFS for shortest augmenting paths.",
+        "problem": "Compute max flow using BFS shortest augmenting path algorithm.",
+        "exampleInput": "Flow network with 6 vertices",
+        "exampleOutput": "Max Flow = 23",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <circle cx=\"50\" cy=\"38\" r=\"14\" fill=\"#1e293b\" stroke=\"#38bdf8\" stroke-width=\"2\"/>\n            <text x=\"50\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">A</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"23\" stroke=\"#eab308\" stroke-width=\"1.5\"/>\n            <text x=\"100\" y=\"24\" fill=\"#eab308\" font-size=\"9\" text-anchor=\"middle\">w=2</text>\n            <line x1=\"64\" y1=\"38\" x2=\"140\" y2=\"53\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <circle cx=\"154\" cy=\"23\" r=\"14\" fill=\"#1e293b\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <text x=\"154\" y=\"28\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">B</text>\n            <circle cx=\"154\" cy=\"53\" r=\"14\" fill=\"#1e293b\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n            <text x=\"154\" y=\"58\" fill=\"#94a3b8\" font-size=\"11\" text-anchor=\"middle\">C</text>\n            <line x1=\"168\" y1=\"23\" x2=\"244\" y2=\"38\" stroke=\"#4ade80\" stroke-width=\"1.5\"/>\n            <text x=\"206\" y=\"26\" fill=\"#4ade80\" font-size=\"9\" text-anchor=\"middle\">w=1</text>\n            <circle cx=\"258\" cy=\"38\" r=\"14\" fill=\"#166534\" stroke=\"#4ade80\" stroke-width=\"2\"/>\n            <text x=\"258\" y=\"43\" fill=\"#fff\" font-size=\"11\" font-weight=\"bold\" text-anchor=\"middle\">D</text>\n        </svg>",
+        "interviewTip": "BFS implementation of Ford-Fulkerson.",
+        "steps": [
+            "Step 1: Initialize data structure for Edmonds-Karp Max Flow Algorithm",
+            "Step 2: Process input parameters and invariants for Network Flow",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Max Flow = 23)"
+        ]
+    },
+    {
+        "title": "Sudoku Solver Backtracking",
+        "category": "Advanced Backtracking",
+        "difficulty": "Hard",
+        "timeComplexity": "O(9^(N*N))",
+        "spaceComplexity": "O(N*N)",
+        "description": "Solve 9x9 Sudoku puzzle using recursive backtracking & constraint validation.",
+        "problem": "Fill 9x9 grid so each row, column, and 3x3 box contains digits 1-9.",
+        "exampleInput": "9x9 Sudoku board with empty cells",
+        "exampleOutput": "Sudoku Solved (True)",
+        "svgDiagram": "<svg viewBox=\"0 0 320 75\" class=\"w-100\" style=\"max-height:80px;\">\n            <rect x=\"110\" y=\"8\" width=\"100\" height=\"58\" rx=\"6\" fill=\"#0f172a\" stroke=\"#eab308\" stroke-width=\"2\"/>\n            <line x1=\"135\" y1=\"8\" x2=\"135\" y2=\"66\" stroke=\"#334155\"/>\n            <line x1=\"160\" y1=\"8\" x2=\"160\" y2=\"66\" stroke=\"#334155\"/>\n            <line x1=\"185\" y1=\"8\" x2=\"185\" y2=\"66\" stroke=\"#334155\"/>\n            <line x1=\"110\" y1=\"27\" x2=\"210\" y2=\"27\" stroke=\"#334155\"/>\n            <line x1=\"110\" y1=\"46\" x2=\"210\" y2=\"46\" stroke=\"#334155\"/>\n            <text x=\"122\" y=\"23\" fill=\"#ef4444\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\">\u265b</text>\n            <text x=\"172\" y=\"42\" fill=\"#4ade80\" font-size=\"13\" font-weight=\"bold\" text-anchor=\"middle\">\u265b</text>\n        </svg>",
+        "interviewTip": "Constraint satisfaction backtracking.",
+        "steps": [
+            "Step 1: Initialize data structure for Sudoku Solver Backtracking",
+            "Step 2: Process input parameters and invariants for Advanced Backtracking",
+            "Step 3: Execute core algorithmic loop / state transition",
+            "Step 4: Update state and check termination criteria",
+            "Step 5: Return final computed result (Sudoku Solved (True))"
+        ]
+    }
+];
+
+let algoState = {
+    level: Math.max(0, Math.min(savedLevels.algo || 0, ALGORITHM_MASTER_LEVELS.length - 1)),
+    score: 0,
+    active: true,
+    userWorkspace: [],
+    scrambledPool: []
+};
+
+function initAlgoGame() {
+    algoState.level = Math.max(0, Math.min(savedLevels.algo || 0, ALGORITHM_MASTER_LEVELS.length - 1));
+    algoState.score = 0;
+    algoState.active = true;
+    populateAlgoLevelSelect();
+    renderAlgoLevel();
+}
+
+function populateAlgoLevelSelect() {
+    const select = document.getElementById('algo-level-select');
+    if (!select) return;
+    select.innerHTML = '';
+    ALGORITHM_MASTER_LEVELS.forEach((algo, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = `Lvl ${index + 1}: ${algo.title}`;
+        if (index === algoState.level) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
+function jumpToAlgoLevel(lvlIndex) {
+    const idx = parseInt(lvlIndex);
+    if (isNaN(idx) || idx < 0 || idx >= ALGORITHM_MASTER_LEVELS.length) return;
+    algoState.level = idx;
+    algoState.active = true;
+    renderAlgoLevel();
+}
+
+function renderAlgoLevel() {
+    if (algoState.level >= ALGORITHM_MASTER_LEVELS.length) {
+        algoState.active = false;
+        showArcadeModal(
+            'Mastered All Algorithms!',
+            'Outstanding! You completed all 12 interview algorithm levels!',
+            algoState.score,
+            'Restart Quest',
+            () => {
+                algoState.level = 0;
+                initAlgoGame();
+            }
+        );
+        return;
+    }
+
+    const algo = ALGORITHM_MASTER_LEVELS[algoState.level];
+    
+    document.getElementById('algo-title').textContent = algo.title;
+    document.getElementById('algo-difficulty').textContent = algo.difficulty;
+    document.getElementById('algo-time').textContent = algo.timeComplexity;
+    document.getElementById('algo-space').textContent = algo.spaceComplexity;
+    document.getElementById('algo-category').textContent = algo.category;
+    document.getElementById('algo-score').textContent = algoState.score;
+    
+    if (document.getElementById('algo-problem-text')) {
+        document.getElementById('algo-problem-text').textContent = algo.problem || algo.description;
+    }
+    if (document.getElementById('algo-example-input')) {
+        document.getElementById('algo-example-input').textContent = algo.exampleInput || 'N/A';
+    }
+    if (document.getElementById('algo-example-output')) {
+        document.getElementById('algo-example-output').textContent = algo.exampleOutput || 'N/A';
+    }
+    if (document.getElementById('algo-diagram-container')) {
+        document.getElementById('algo-diagram-container').innerHTML = algo.svgDiagram || '';
+    }
+    
+    const select = document.getElementById('algo-level-select');
+    if (select) {
+        if (select.children.length !== ALGORITHM_MASTER_LEVELS.length) {
+            populateAlgoLevelSelect();
+        }
+        select.value = algoState.level;
+    }
+    
+    document.getElementById('algo-feedback').style.display = 'none';
+    document.getElementById('algo-verify-btn').style.display = 'block';
+    document.getElementById('algo-next-btn').style.display = 'none';
+
+    let stepsCopy = algo.steps.map((text, idx) => ({ id: idx, text: text }));
+    for (let i = stepsCopy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [stepsCopy[i], stepsCopy[j]] = [stepsCopy[j], stepsCopy[i]];
+    }
+
+    algoState.scrambledPool = stepsCopy;
+    algoState.userWorkspace = [];
+
+    renderAlgoPoolAndWorkspace();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function renderAlgoPoolAndWorkspace() {
+    const poolContainer = document.getElementById('algo-scrambled-pool');
+    const workspaceContainer = document.getElementById('algo-workspace');
+
+    poolContainer.innerHTML = '';
+    workspaceContainer.innerHTML = '';
+
+    if (algoState.scrambledPool.length === 0) {
+        poolContainer.innerHTML = '<div class="text-muted text-center py-3 small font-mono">All steps added to sequence workspace!</div>';
+    } else {
+        algoState.scrambledPool.forEach((item, poolIdx) => {
+            const card = document.createElement('div');
+            card.className = 'repair-block text-white small shadow-sm d-flex justify-content-between align-items-start gap-2';
+            card.innerHTML = `
+                <div class="me-2 text-wrap lh-sm"><i class="bi bi-grip-vertical text-warning me-1"></i> ${escapeHtml(item.text)}</div>
+                <button class="repair-controls-btn flex-shrink-0" onclick="addStepToWorkspace(${poolIdx})"><i class="bi bi-plus-lg"></i> Add</button>
+            `;
+            poolContainer.appendChild(card);
+        });
+    }
+
+    if (algoState.userWorkspace.length === 0) {
+        workspaceContainer.innerHTML = '<div class="text-muted text-center py-4 small font-mono">Click "+ Add" on steps above to assemble sequence...</div>';
+    } else {
+        algoState.userWorkspace.forEach((item, wsIdx) => {
+            const card = document.createElement('div');
+            card.className = `workspace-block text-white small shadow-sm d-flex justify-content-between align-items-start gap-2 ${item.statusClass || ''}`;
+            card.innerHTML = `
+                <div class="d-flex align-items-start me-2">
+                    <span class="badge bg-warning text-dark font-mono me-2 mt-1">${wsIdx + 1}</span>
+                    <span class="text-wrap lh-sm">${escapeHtml(item.text)}</span>
+                </div>
+                <div class="d-flex gap-1 flex-shrink-0 ms-auto">
+                    <button class="repair-controls-btn" onclick="moveStepUp(${wsIdx})" ${wsIdx === 0 ? 'disabled' : ''}><i class="bi bi-arrow-up"></i></button>
+                    <button class="repair-controls-btn" onclick="moveStepDown(${wsIdx})" ${wsIdx === algoState.userWorkspace.length - 1 ? 'disabled' : ''}><i class="bi bi-arrow-down"></i></button>
+                    <button class="repair-controls-btn btn-remove" onclick="removeStepFromWorkspace(${wsIdx})"><i class="bi bi-x-lg"></i></button>
+                </div>
+            `;
+            workspaceContainer.appendChild(card);
+        });
+    }
+}
+
+function addStepToWorkspace(poolIdx) {
+    if (!algoState.active) return;
+    const step = algoState.scrambledPool.splice(poolIdx, 1)[0];
+    step.statusClass = '';
+    algoState.userWorkspace.push(step);
+    renderAlgoPoolAndWorkspace();
+}
+
+function removeStepFromWorkspace(wsIdx) {
+    if (!algoState.active) return;
+    const step = algoState.userWorkspace.splice(wsIdx, 1)[0];
+    step.statusClass = '';
+    algoState.scrambledPool.push(step);
+    renderAlgoPoolAndWorkspace();
+}
+
+function moveStepUp(wsIdx) {
+    if (!algoState.active || wsIdx <= 0) return;
+    [algoState.userWorkspace[wsIdx - 1], algoState.userWorkspace[wsIdx]] = [algoState.userWorkspace[wsIdx], algoState.userWorkspace[wsIdx - 1]];
+    renderAlgoPoolAndWorkspace();
+}
+
+function moveStepDown(wsIdx) {
+    if (!algoState.active || wsIdx >= algoState.userWorkspace.length - 1) return;
+    [algoState.userWorkspace[wsIdx], algoState.userWorkspace[wsIdx + 1]] = [algoState.userWorkspace[wsIdx + 1], algoState.userWorkspace[wsIdx]];
+    renderAlgoPoolAndWorkspace();
+}
+
+function resetAlgoWorkspace() {
+    if (!algoState.active) return;
+    renderAlgoLevel();
+}
+
+function checkAlgoSequence() {
+    if (!algoState.active) return;
+
+    const algo = ALGORITHM_MASTER_LEVELS[algoState.level];
+    const feedbackBox = document.getElementById('algo-feedback');
+
+    if (algoState.userWorkspace.length !== algo.steps.length) {
+        feedbackBox.className = 'alert alert-warning border-0 text-center py-2 mb-3 small';
+        feedbackBox.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> Please include all algorithm steps in your sequence!';
+        feedbackBox.style.display = 'block';
+        return;
+    }
+
+    let isCorrect = true;
+    algoState.userWorkspace.forEach((item, idx) => {
+        if (item.text === algo.steps[idx]) {
+            item.statusClass = 'line-correct';
+        } else {
+            item.statusClass = 'line-error';
+            isCorrect = false;
+        }
+    });
+
+    renderAlgoPoolAndWorkspace();
+
+    if (isCorrect) {
+        gameAudio.onSuccess();
+        algoState.score += 150;
+        document.getElementById('algo-score').textContent = algoState.score;
+
+        feedbackBox.className = 'alert alert-success border-0 py-3 mb-3 text-start';
+        feedbackBox.innerHTML = `
+            <div class="fw-bold text-success mb-1"><i class="bi bi-patch-check-fill me-1"></i> Perfect Sequence! Algorithm Verified</div>
+            <div class="small text-light mb-1"><strong>Interview Tip:</strong> ${escapeHtml(algo.interviewTip)}</div>
+            <div class="text-xs font-mono text-warning">Time Complexity: ${algo.timeComplexity} | Space: ${algo.spaceComplexity}</div>
+        `;
+        feedbackBox.style.display = 'block';
+
+        document.getElementById('algo-verify-btn').style.display = 'none';
+        document.getElementById('algo-next-btn').style.display = 'block';
+    } else {
+        gameAudio.onFailure();
+        feedbackBox.className = 'alert alert-danger border-0 text-center py-2 mb-3 small';
+        feedbackBox.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Incorrect Step Order. Mismatched steps are highlighted in red!';
+        feedbackBox.style.display = 'block';
+    }
+}
+
+function nextAlgoLevel() {
+    algoState.level++;
+    saveGameProgress('algo', algoState.level, 50);
+    renderAlgoLevel();
+}
+
+// ----------------------------------------------------
 // Tab Navigation Handlers
 // ----------------------------------------------------
 function clearAllTimers() {
@@ -3153,6 +4873,7 @@ function clearAllTimers() {
     bugState.active = false;
     parsonsState.active = false;
     predState.active = false;
+    algoState.active = false;
 }
 
 document.getElementById('typer-tab').addEventListener('click', () => {
@@ -3181,13 +4902,68 @@ document.getElementById('predictor-tab').addEventListener('click', () => {
     initPredGame();
 });
 
-// Safe initialization handling DOMContentLoaded state
+document.getElementById('algo-tab').addEventListener('click', () => {
+    clearAllTimers();
+    initAlgoGame();
+});
+
+document.getElementById('history-tab').addEventListener('click', () => {
+    clearAllTimers();
+});
+
+// Safe initialization handling DOMContentLoaded state & URL parameters
 function initArcadePage() {
     populateTyperSelect();
     if (typerLevelSelect) {
         typerLevelSelect.value = typerState.level;
     }
-    loadTyperLevel();
+    
+    // Check URL parameters for active game tab
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameParam = urlParams.get('game') || window.location.hash.replace('#', '');
+    
+    if (gameParam === 'complexity') {
+        const tabBtn = document.getElementById('complexity-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+        }
+    } else if (gameParam === 'bug') {
+        const tabBtn = document.getElementById('bug-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+            initBugGame();
+        }
+    } else if (gameParam === 'parsons') {
+        const tabBtn = document.getElementById('parsons-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+            initParsonsGame();
+        }
+    } else if (gameParam === 'predictor') {
+        const tabBtn = document.getElementById('predictor-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+            initPredGame();
+        }
+    } else if (gameParam === 'algo') {
+        const tabBtn = document.getElementById('algo-tab');
+        if (tabBtn) {
+            const bsTab = new bootstrap.Tab(tabBtn);
+            bsTab.show();
+            clearAllTimers();
+            initAlgoGame();
+        }
+    } else {
+        loadTyperLevel();
+    }
 }
 
 if (document.readyState === 'loading') {

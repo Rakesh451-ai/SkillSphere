@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Resume Diagnostic Result - SkillSphere{% endblock %}
+{% block page_title %}Resume Evaluation Report{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Back Header -->
+    <div>
+        <a href="{% url 'resume_analysis:upload' %}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white text-decoration-none transition-colors mb-2">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to Resume Analysis Studio</span>
+        </a>
+    </div>
+
+    <!-- Main Results Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left: ATS Score Gauge Card -->
+        <div class="premium-card p-6 flex flex-col justify-between items-center text-center space-y-4">
+            <div>
+                <h2 class="text-base font-bold text-white mb-1">Overall ATS Score</h2>
+                <p class="text-xs text-slate-400 mb-0">Automated diagnostic score based on ATS section detection and keyword density.</p>
+            </div>
+
+            <!-- Gauge Indicator Circle -->
+            <div class="relative w-44 h-44 flex items-center justify-center my-4">
+                <div class="w-full h-full rounded-full border-8 flex items-center justify-center shadow-2xl transition-all {% if analysis.score >= 70 %}border-emerald-500 bg-emerald-500/10 shadow-emerald-500/20{% elif analysis.score >= 40 %}border-amber-500 bg-amber-500/10 shadow-amber-500/20{% else %}border-rose-500 bg-rose-500/10 shadow-rose-500/20{% endif %}">
+                    <div>
+                        <div class="text-4xl font-extrabold text-white tracking-tight">{{ analysis.score }}</div>
+                        <div class="text-[11px] font-mono font-bold text-slate-400 uppercase">out of 100</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
+                <span class="text-slate-400">Score Rating: </span>
+                <span class="font-extrabold {% if analysis.score >= 70 %}text-emerald-400{% elif analysis.score >= 40 %}text-amber-400{% else %}text-rose-400{% endif %}">
+                    {% if analysis.score >= 70 %}Excellent Placement Ready{% elif analysis.score >= 40 %}Good (Optimization Needed){% else %}Needs Immediate Action{% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Right: Diagnostic Breakdown & Suggestions -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Suggestions Card -->
+            <div class="premium-card p-6">
+                <h2 class="text-base font-bold text-white flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                    <span>Improvement Suggestions</span>
+                </h2>
+                <div class="space-y-3">
+                    {% for suggestion in analysis.suggestions %}
+                    <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-3 text-xs text-slate-300">
+                        <i class="fa-solid fa-circle-arrow-right text-indigo-400 text-sm mt-0.5"></i>
+                        <span class="leading-relaxed">{{ suggestion }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                        <span>Your resume looks great! No major section issues detected.</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Sections Found & Missing Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Sections Found -->
+                <div class="premium-card p-6">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                        <span>Detected Sections</span>
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for section in analysis.sections_found %}
+                        <span class="px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-1.5">
+                            <i class="fa-solid fa-check text-[10px]"></i> {{ section }}
+                        </span>
+                        {% empty %}
+                        <span class="text-xs text-slate-500">No standard sections detected.</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Missing Sections -->
+                <div class="premium-card p-6">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-circle-xmark text-rose-400"></i>
+                        <span>Missing Sections</span>
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for section in analysis.missing_sections %}
+                        <span class="px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-1.5">
+                            <i class="fa-solid fa-xmark text-[10px]"></i> {{ section }}
+                        </span>
+                        {% empty %}
+                        <span class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-check"></i> All essential sections detected!
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extracted Tech Skills -->
+            <div class="premium-card p-6">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
+                    <i class="fa-solid fa-code text-cyan-400"></i>
+                    <span>Extracted Tech Skills & Keywords</span>
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for skill in analysis.skills_found %}
+                    <span class="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-semibold">
+                        # {{ skill }}
+                    </span>
+                    {% empty %}
+                    <span class="text-xs text-slate-500">No tech skills detected in text extraction.</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

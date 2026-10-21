@@ -1,139 +1,374 @@
 {% extends "base.html" %}
-{% block title %}Dashboard - SkillSphere{% endblock %}
-{% block page_title %}Dashboard{% endblock %}
+{% block title %}Dashboard Overview - SkillSphere{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
 {% block content %}
-<!-- Stats Cards -->
-<div class="row g-4 mb-4">
-    <div class="col-md-4 col-lg-2-4">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small">Total Study Hours</p>
-                    <div class="stat-value text-primary">{{ total_hours }}</div>
-                </div>
-                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-clock-fill"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-lg-2-4">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small">Current Streak</p>
-                    <div class="stat-value" style="color:#e17055;">{{ current_streak }} <small class="fs-6">days</small></div>
-                </div>
-                <div class="stat-icon" style="background:#e1705510;color:#e17055;"><i class="bi bi-fire"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-lg-2-4">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small">Placement Readiness</p>
-                    <div class="stat-value" style="color:#00cec9;">{{ placement_score }}%</div>
-                </div>
-                <div class="stat-icon" style="background:#00cec910;color:#00cec9;"><i class="bi bi-briefcase-fill"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-lg-2-4">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small">Goals Completed</p>
-                    <div class="stat-value" style="color:#6c5ce7;">{{ completed_goals }}<small class="fs-6 text-muted">/{{ total_goals }}</small></div>
-                </div>
-                <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-bullseye"></i></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-lg-2-4">
-        <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <p class="text-muted mb-1 small">Productivity Score</p>
-                    <div class="stat-value" style="color:#fd79a8;">{{ productivity_score }}%</div>
-                </div>
-                <div class="stat-icon" style="background:#fd79a810;color:#fd79a8;"><i class="bi bi-speedometer2"></i></div>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="space-y-8">
+    <!-- Hero Wishing & Live Clock Banner -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-900/90 via-slate-900 to-slate-900 border border-indigo-500/30 p-6 md:p-8 shadow-2xl">
+        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -top-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-<!-- Charts Row -->
-<div class="row g-4 mb-4">
-    <div class="col-lg-8">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3">Weekly Study Hours</h6>
-            <canvas id="weeklyChart" height="200"></canvas>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3">Skill Progress</h6>
-            <canvas id="skillChart" height="200"></canvas>
-        </div>
-    </div>
-</div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <div id="hero-special-day-banner" class="hidden">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 text-white shadow-lg shadow-rose-500/20">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span id="hero-special-day-title">Special Event</span>
+                    </span>
+                    <p id="hero-special-day-msg" class="text-xs font-semibold text-slate-300 mt-1"></p>
+                </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-lg-6">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3">Productivity Trend</h6>
-            <canvas id="productivityChart" height="180"></canvas>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3">Monthly Analytics</h6>
-            <canvas id="monthlyChart" height="180"></canvas>
-        </div>
-    </div>
-</div>
+                <h1 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight" id="hero-greeting-text" data-user-name="{{ user.display_name }}">
+                    Welcome back, {{ user.display_name }}! 👋
+                </h1>
 
-<!-- Insights -->
-<div class="row g-4">
-    <div class="col-lg-4">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3"><i class="bi bi-arrow-up-circle-fill text-success"></i> Most Improved</h6>
-            {% if most_improved %}
-            <p class="mb-1 fw-semibold">{{ most_improved.skill_name }}</p>
-            <p class="text-muted small">{{ most_improved.hours_practiced }} hours practiced</p>
-            <div class="progress" style="height:8px;">
-                <div class="progress-bar" style="width:{{ most_improved.progress }}%;"></div>
             </div>
-            {% else %}
-            <p class="text-muted">Add skills to see insights</p>
-            {% endif %}
+
+            <!-- Live Clock Card -->
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 backdrop-blur-md shadow-xl self-start md:self-auto">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl shadow-inner">
+                    <i class="fa-solid fa-clock animate-pulse"></i>
+                </div>
+                <div>
+                    <div class="font-mono text-xl font-bold text-indigo-400 tracking-wider" id="hero-live-time">
+                        00:00:00 AM
+                    </div>
+                    <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest" id="hero-live-date">
+                        Loading Date...
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-lg-4">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3"><i class="bi bi-arrow-down-circle-fill text-danger"></i> Needs Improvement</h6>
-            {% if weakest %}
-            <p class="mb-1 fw-semibold">{{ weakest.skill_name }}</p>
-            <p class="text-muted small">{{ weakest.hours_practiced }} hours practiced</p>
-            <div class="progress" style="height:8px;">
-                <div class="progress-bar bg-danger" style="width:{{ weakest.progress }}%;"></div>
+
+    <!-- 4 Key Stat Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Stat 1: Placement Readiness -->
+        <div class="premium-card p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Placement Score</span>
+                    <div class="text-3xl font-extrabold text-white mt-1 group-hover:text-cyan-400 transition-colors">{{ placement_score }}%</div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
             </div>
-            {% else %}
-            <p class="text-muted">Add skills to see insights</p>
-            {% endif %}
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/60 pt-3">
+                <span>ATS & Skills Evaluation</span>
+                <span class="text-cyan-400 font-semibold flex items-center gap-1"><i class="fa-solid fa-arrow-up text-[10px]"></i> Live</span>
+            </div>
+        </div>
+
+        <!-- Stat 2: Active Streak -->
+        <div class="premium-card p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Streak</span>
+                    <div class="text-3xl font-extrabold text-amber-400 mt-1 flex items-baseline gap-1.5">
+                        {{ current_streak }} <span class="text-xs font-medium text-slate-400">Days</span>
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-fire animate-bounce"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/60 pt-3">
+                <span>Longest: <strong class="text-white">{{ user.longest_streak }}d</strong></span>
+                <span class="text-amber-400 font-semibold">Keep it up!</span>
+            </div>
+        </div>
+
+        <!-- Stat 3: DSA Problems -->
+        <div class="premium-card p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">DSA Sheet Progress</span>
+                    <div class="text-3xl font-extrabold text-emerald-400 mt-1 flex items-baseline gap-1">
+                        {{ completed_dsa_count }} <span class="text-xs font-normal text-slate-400">/{{ total_dsa_problems }}</span>
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/60 pt-3">
+                <span>Completion Rate</span>
+                <span class="text-emerald-400 font-bold font-mono">{{ dsa_rate }}%</span>
+            </div>
+        </div>
+
+        <!-- Stat 4: Games Arcade Level -->
+        <div class="premium-card p-5 relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Arcade Level</span>
+                    <div class="text-3xl font-extrabold text-indigo-400 mt-1">Lvl {{ total_game_level }}</div>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/60 pt-3">
+                <span>Typer & Bug Hunter</span>
+                <a href="{% url 'dashboard:cpp_calculator' %}" class="text-indigo-400 hover:text-indigo-300 font-semibold text-decoration-none">Play Hub &rarr;</a>
+            </div>
         </div>
     </div>
-    <div class="col-lg-4">
-        <div class="card-custom p-4">
-            <h6 class="fw-bold mb-3"><i class="bi bi-lightbulb-fill text-warning"></i> AI Recommendations</h6>
-            {% for rec in recommendations %}
-            <div class="d-flex align-items-start mb-2">
-                <span class="badge bg-{{ rec.priority|default:'medium' }} me-2" style="{% if rec.priority == 'high' %}background:#e17055!important;{% elif rec.priority == 'low' %}background:#00cec9!important;{% else %}background:#fdcb6e!important;color:#333!important;{% endif %}">{{ rec.priority }}</span>
-                <small>{{ rec.message }}</small>
+
+    <!-- Row 1: Preparation Modules & LeetCode Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <!-- 1. Preparation Modules Card (Left 2 Columns) -->
+        <div class="lg:col-span-2 premium-card p-6 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-rocket text-amber-400"></i>
+                    <span>Preparation Modules</span>
+                </h2>
+                <a href="{% url 'dashboard:study_materials' %}" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 text-decoration-none">Explore All &rarr;</a>
             </div>
-            {% empty %}
-            <p class="text-muted small">No recommendations yet. Log some study sessions first!</p>
-            {% endfor %}
-            <a href="{% url 'recommendations:list' %}" class="btn btn-sm btn-outline-primary mt-2">View All</a>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="{% url 'dashboard:study_materials' %}" class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/50 transition-all text-decoration-none group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base group-hover:text-indigo-300 transition-colors">DSA & Problem Sheets</h3>
+                            <p class="text-xs text-slate-400 mt-1 mb-2">{{ completed_dsa_count }} of {{ total_dsa_problems }} topics completed ({{ dsa_rate }}%)</p>
+                            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-indigo-500 h-full rounded-full" style="width: {{ dsa_rate }}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{% url 'dashboard:dsa_visualizer' %}" class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-cyan-500/50 transition-all text-decoration-none group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-code-branch"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base group-hover:text-cyan-300 transition-colors">DSA Theory Studio</h3>
+                            <p class="text-xs text-slate-400 mt-1 mb-0">Interactive step-by-step algorithms, memory diagrams, and C++ code visualizer.</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{% url 'dashboard:cpp_calculator' %}" class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-amber-500/50 transition-all text-decoration-none group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base group-hover:text-amber-300 transition-colors">Coding Game</h3>
+                            <p class="text-xs text-slate-400 mt-1 mb-0">Speed Typer, Bug Hunter & Big-O Complexity Arcade.</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{% url 'dashboard:quiz_list' %}" class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-rose-500/50 transition-all text-decoration-none group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-circle-question"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base group-hover:text-rose-300 transition-colors">Live Quizzes</h3>
+                            <p class="text-xs text-slate-400 mt-1 mb-0">15 curated DSA quizzes & 375 instant evaluation questions.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 2. LeetCode & DSA Breakdown Card (Right 1 Column) -->
+        <div class="lg:col-span-1 premium-card p-6 flex flex-col justify-between">
+            <div class="mb-4">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-cyan-400"></i>
+                    <span>LeetCode & DSA Breakdown</span>
+                </h2>
+                <p class="text-xs text-slate-400 mb-0">Easy, Medium, and Hard problem status</p>
+            </div>
+            <div class="h-44 w-full flex items-center justify-center">
+                <canvas id="skillBreakdownChart"></canvas>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800 flex justify-around text-center text-xs">
+                <div>
+                    <span class="block text-slate-400">Easy</span>
+                    <span class="font-bold text-emerald-400 text-sm">{{ user.leetcode_easy_solved }}</span>
+                </div>
+                <div class="border-x border-slate-800 px-4">
+                    <span class="block text-slate-400">Medium</span>
+                    <span class="font-bold text-amber-400 text-sm">{{ user.leetcode_medium_solved }}</span>
+                </div>
+                <div>
+                    <span class="block text-slate-400">Hard</span>
+                    <span class="font-bold text-rose-400 text-sm">{{ user.leetcode_hard_solved }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2: Latest Tech News & Placement Jobs (Full Width Block) -->
+    <div class="mb-6">
+        <div class="premium-card p-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-800">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-newspaper text-indigo-400"></i>
+                        <span>Latest Tech News & Placement Jobs</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mb-0">Automated real-time industry news, tech releases & active SDE hiring openings</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <button class="tech-feed-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-600/30" onclick="filterTechFeed('all', this)">
+                            <i class="fa-solid fa-bolt me-1 text-amber-300"></i> All Live Feed
+                        </button>
+                        <button class="tech-feed-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-900 text-slate-400 hover:text-white border border-slate-800" onclick="filterTechFeed('news', this)">
+                            <i class="fa-solid fa-newspaper me-1 text-indigo-400"></i> 🔥 Tech News
+                        </button>
+                        <button class="tech-feed-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-900 text-slate-400 hover:text-white border border-slate-800" onclick="filterTechFeed('job', this)">
+                            <i class="fa-solid fa-briefcase me-1 text-emerald-400"></i> 💼 Active Jobs
+                        </button>
+                    </div>
+
+                    <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center gap-1.5 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        Auto-Updating Live
+                    </span>
+
+                    <span class="text-[11px] font-mono text-slate-400" id="tech-feed-last-updated">
+                        <i class="fa-solid fa-rotate me-1 text-indigo-400 animate-spin"></i> Live Syncing...
+                    </span>
+                </div>
+            </div>
+
+            <!-- Full Width Grid Container (3 Columns inside the block) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto pr-1" style="max-height: 480px;" id="tech-feed-container">
+                {% for item in tech_feed %}
+                <div class="tech-feed-item p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/40 transition-all flex flex-col justify-between gap-3 group h-full" data-type="{{ item.type }}">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {% if item.type == 'job' %}bg-emerald-500/20 text-emerald-300 border border-emerald-500/30{% else %}bg-indigo-500/20 text-indigo-300 border border-indigo-500/30{% endif %}">
+                                {% if item.type == 'job' %}<i class="fa-solid fa-briefcase me-1"></i>Job Opening{% else %}<i class="fa-solid fa-newspaper me-1"></i>Tech News{% endif %}
+                            </span>
+                            <span class="text-[11px] text-slate-500"><span class="feed-time-label">{{ item.time_ago }}</span></span>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700/60 flex items-center justify-center text-lg flex-shrink-0 group-hover:scale-105 transition-transform">
+                                <i class="{{ item.logo_icon }}"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-slate-300 block mb-0.5">{% if item.type == 'job' %}{{ item.company }}{% else %}{{ item.source }}{% endif %}</span>
+                                <h3 class="font-bold text-white text-sm group-hover:text-indigo-300 transition-colors mb-1 leading-snug">
+                                    <a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" class="text-white hover:text-indigo-300 text-decoration-none">
+                                        {{ item.title }}
+                                    </a>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-slate-400 leading-relaxed mb-0 line-clamp-2">{{ item.description }}</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-800/60 text-xs mt-2">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            {% if item.type == 'job' %}
+                            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 text-[11px]">
+                                <i class="fa-solid fa-money-bill-wave me-1"></i>{{ item.salary }}
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px]">
+                                <i class="fa-solid fa-location-dot me-1 text-slate-400"></i>{{ item.location }}
+                            </span>
+                            {% else %}
+                            {% for tag in item.tags %}
+                            <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-[11px]">
+                                #{{ tag }}
+                            </span>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold {% if item.type == 'job' %}text-emerald-400 hover:text-emerald-300{% else %}text-indigo-400 hover:text-indigo-300{% endif %} text-decoration-none transition-colors">
+                            <span>{% if item.type == 'job' %}Apply Job{% else %}Read Story{% endif %}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full p-6 text-center text-slate-400 text-xs space-y-2">
+                    <i class="fa-solid fa-rotate text-2xl text-indigo-400 animate-spin"></i>
+                    <p class="mb-0">Loading live tech news and active job openings...</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 3: Action Points AI Recommendations (Full Width Block) -->
+    <div>
+        <div class="premium-card p-6">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-800">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-compass text-indigo-400"></i>
+                        <span>Action Points & AI Recommendations</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mb-0">Personalized study plan & skill gap recommendations based on your performance</p>
+                </div>
+                <a href="{% url 'resume_analysis:upload' %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 text-decoration-none transition-all">
+                    <i class="fa-solid fa-file-upload"></i>
+                    <span>Run Resume Diagnostic</span>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for rec in recommendations %}
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/40 transition-all flex flex-col justify-between space-y-2">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider {% if rec.priority == 'high' %}bg-rose-500/20 text-rose-300 border border-rose-500/30{% elif rec.priority == 'medium' %}bg-amber-500/20 text-amber-300 border border-amber-500/30{% else %}bg-emerald-500/20 text-emerald-300 border border-emerald-500/30{% endif %}">
+                                {{ rec.priority|title }} Priority
+                            </span>
+                            {% if rec.impact_badge %}
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                {{ rec.impact_badge }}
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        {% if rec.title %}
+                        <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-400 text-xs"></i>
+                            <span>{{ rec.title }}</span>
+                        </h3>
+                        {% endif %}
+
+                        <p class="text-xs text-slate-400 leading-relaxed mb-0">{{ rec.message }}</p>
+                    </div>
+
+                    {% if rec.action_url %}
+                    <div class="pt-2 border-t border-slate-800/60">
+                        <a href="{{ rec.action_url }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-400 hover:text-indigo-300 text-decoration-none">
+                            <span>{{ rec.action_text|default:"Take Action" }}</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="col-span-full p-6 text-center text-slate-400 text-xs space-y-2">
+                    <i class="fa-solid fa-check-circle text-2xl text-emerald-400"></i>
+                    <p class="mb-0">No pending recommendations! Keep practicing problems.</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
@@ -141,68 +376,118 @@
 
 {% block extra_js %}
 <script>
-const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
-new Chart(weeklyCtx, {
-    type: 'bar',
-    data: {
-        labels: {{ weekly_labels|safe }},
-        datasets: [{
-            label: 'Hours',
-            data: {{ weekly_data|safe }},
-            backgroundColor: 'rgba(108, 92, 231, 0.7)',
-            borderRadius: 8,
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
+    // Live Clock & Time-based Greeting
+    function updateDateTimeAndWishing() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = String(hours % 12 || 12).padStart(2, '0');
+        const timeString = `${displayHours}:${minutes}:${seconds} ${ampm}`;
+
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' };
+        const dateString = now.toLocaleDateString('en-US', options);
+
+        const heroTime = document.getElementById('hero-live-time');
+        const heroDate = document.getElementById('hero-live-date');
+        if (heroTime) heroTime.textContent = timeString;
+        if (heroDate) heroDate.textContent = dateString;
+
+        let greetingText = "Hello";
+        let greetingEmoji = "👋";
+        if (hours >= 5 && hours < 12) {
+            greetingText = "Good Morning";
+            greetingEmoji = "☀️";
+        } else if (hours >= 12 && hours < 17) {
+            greetingText = "Good Afternoon";
+            greetingEmoji = "🌤️";
+        } else if (hours >= 17 && hours < 21) {
+            greetingText = "Good Evening";
+            greetingEmoji = "🌆";
+        } else {
+            greetingText = "Late Night Session";
+            greetingEmoji = "🌙";
+        }
+
+        const greetingElement = document.getElementById('hero-greeting-text');
+        if (greetingElement) {
+            const userName = greetingElement.getAttribute('data-user-name') || '';
+            greetingElement.innerHTML = `${greetingText}, ${userName}! ${greetingEmoji}`;
+        }
     }
-});
 
-const skillCtx = document.getElementById('skillChart').getContext('2d');
-new Chart(skillCtx, {
-    type: 'doughnut',
-    data: {
-        labels: {{ skill_names|safe }},
-        datasets: [{
-            data: {{ skill_hours|safe }},
-            backgroundColor: ['#6c5ce7','#00cec9','#fd79a8','#fdcb6e','#e17055','#0984e3','#55efc4','#a29bfe'],
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } } }
-});
+    // Tech News & Placement Jobs Feed Filter & Automated Live Updating
+    function filterTechFeed(type, btn) {
+        document.querySelectorAll('.tech-feed-tab-btn').forEach(b => {
+            b.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/30');
+            b.classList.add('bg-slate-900', 'text-slate-400', 'border', 'border-slate-800');
+        });
+        btn.classList.remove('bg-slate-900', 'text-slate-400', 'border', 'border-slate-800');
+        btn.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/30');
 
-const prodCtx = document.getElementById('productivityChart').getContext('2d');
-new Chart(prodCtx, {
-    type: 'line',
-    data: {
-        labels: {{ weekly_labels|safe }},
-        datasets: [{
-            label: 'Productivity',
-            data: {{ productivity_data|safe }},
-            borderColor: '#fd79a8',
-            backgroundColor: 'rgba(253,121,168,0.1)',
-            fill: true,
-            tension: 0.4,
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 10 } } }
-});
+        const items = document.querySelectorAll('.tech-feed-item');
+        items.forEach(item => {
+            const itemType = item.getAttribute('data-type');
+            if (type === 'all' || itemType === type) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
 
-const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-new Chart(monthlyCtx, {
-    type: 'bar',
-    data: {
-        labels: {{ monthly_labels|safe }},
-        datasets: [{
-            label: 'Hours',
-            data: {{ monthly_hours|safe }},
-            backgroundColor: 'rgba(0, 206, 201, 0.7)',
-            borderRadius: 8,
-        }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-});
+    function autoUpdateTechFeed() {
+        const statusEl = document.getElementById('tech-feed-last-updated');
+        if (statusEl) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            statusEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 me-1"></i> Auto-Synced ${timeStr}`;
+        }
+    }
+
+    // Initialize Chart.js Graphs
+    function initDashboardCharts() {
+
+        // Chart 2: LeetCode & Skill Breakdown Doughnut
+        const ctx2 = document.getElementById('skillBreakdownChart');
+        if (ctx2) {
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Easy', 'Medium', 'Hard'],
+                    datasets: [{
+                        data: [
+                            {{ user.leetcode_easy_solved|default:12 }},
+                            {{ user.leetcode_medium_solved|default:8 }},
+                            {{ user.leetcode_hard_solved|default:2 }}
+                        ],
+                        backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { family: 'Inter', size: 11 }, padding: 14 }
+                        }
+                    },
+                    cutout: '72%'
+                }
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateDateTimeAndWishing();
+        setInterval(updateDateTimeAndWishing, 1000);
+        initDashboardCharts();
+        autoUpdateTechFeed();
+        setInterval(autoUpdateTechFeed, 15000);
+    });
 </script>
 {% endblock %}

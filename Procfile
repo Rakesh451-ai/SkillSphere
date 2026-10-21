@@ -1,1 +1,1 @@
-web: python create_superuser.py && python manage.py migrate --noinput && python manage.py seed_db && gunicorn skillsphere.wsgi:application
+web: bash start.sh

@@ -20,6 +20,23 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        if username:
+            from accounts.models import User
+            from django.utils import timezone
+            target_user = User.objects.filter(username=username).first()
+            if target_user and not target_user.is_active:
+                if target_user.suspended_until and timezone.now() >= target_user.suspended_until:
+                    target_user.is_active = True
+                    target_user.suspended_until = None
+                    target_user.suspension_reason = ''
+                    target_user.save(update_fields=['is_active', 'suspended_until', 'suspension_reason'])
+                    messages.info(request, 'Your temporary suspension period has expired. Your account has been automatically reactivated!')
+                elif target_user.suspended_until:
+                    until_str = target_user.suspended_until.strftime('%b %d, %Y %I:%M %p')
+                    reason = f" Reason: {target_user.suspension_reason}" if target_user.suspension_reason else ""
+                    messages.error(request, f'Your account is currently suspended until {until_str}.{reason}')
+
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
@@ -66,18 +83,9 @@ def profile_view(request):
     else:
         form = ProfileForm(instance=user)
         
-    from django.db.models import Sum
-    from goals.models import Goal
-    from studylogs.models import StudyLog
-    
-    goals_completed = Goal.objects.filter(user=user, status='completed').count()
-    study_hours = StudyLog.objects.filter(user=user).aggregate(total=Sum('hours'))['total'] or 0
-    
     context = {
         'profile_user': user,
         'is_own_profile': is_own_profile,
         'form': form,
-        'goals_completed': goals_completed,
-        'study_hours': study_hours,
     }
     return render(request, 'accounts/profile.html', context)

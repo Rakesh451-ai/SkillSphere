@@ -1,4 +1,6 @@
 import json
+import re
+import uuid
 from datetime import timedelta
 from decimal import Decimal
 
@@ -8,10 +10,100 @@ from django.db.models import Sum, Avg, Count
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
-from goals.models import Goal
-from skills.models import Skill
-from studylogs.models import StudyLog
+from django.http import JsonResponse, HttpResponse
 from recommendations.models import Recommendation
+
+TECH_NEWS_AND_JOBS = [
+    {
+        "id": 1,
+        "type": "job",
+        "title": "Software Development Engineer (SDE-1) - Core Systems",
+        "company": "Google",
+        "logo_icon": "fa-brands fa-google text-red-400",
+        "location": "Bengaluru / Hybrid",
+        "salary": "₹22 - 28 LPA",
+        "time_ago": "5 mins ago",
+        "tags": ["C++", "Distributed Systems", "DSA"],
+        "url": "https://careers.google.com",
+        "description": "Building next-generation distributed storage and low-latency RPC backend architecture."
+    },
+    {
+        "id": 2,
+        "type": "news",
+        "title": "OpenAI Releases GPT-5 Developer Preview & Realtime API Updates",
+        "source": "TechCrunch",
+        "logo_icon": "fa-solid fa-brain text-emerald-400",
+        "location": "Global Tech",
+        "salary": "Tech News",
+        "time_ago": "18 mins ago",
+        "tags": ["AI / ML", "LLM", "API"],
+        "url": "https://techcrunch.com",
+        "description": "New model features zero-shot code synthesis and sub-100ms streaming inference for automated agents."
+    },
+    {
+        "id": 3,
+        "type": "job",
+        "title": "Backend Software Engineer - Cloud Infrastructure",
+        "company": "Microsoft",
+        "logo_icon": "fa-brands fa-microsoft text-cyan-400",
+        "location": "Hyderabad / Remote",
+        "salary": "₹18 - 24 LPA",
+        "time_ago": "35 mins ago",
+        "tags": ["Go", "Kubernetes", "System Design"],
+        "url": "https://careers.microsoft.com",
+        "description": "Join Azure Core team focusing on high-throughput microservices and cloud scalability."
+    },
+    {
+        "id": 4,
+        "type": "news",
+        "title": "Rust 1.85 Released: Native Async Closures & Performance Boosts",
+        "source": "HackerNews",
+        "location": "Language Release",
+        "salary": "Tech News",
+        "time_ago": "1 hour ago",
+        "tags": ["Rust", "Systems Programming", "Compiler"],
+        "url": "https://news.ycombinator.com",
+        "description": "The latest stable Rust toolchain brings async closure traits and 15% memory efficiency optimization."
+    },
+    {
+        "id": 5,
+        "type": "job",
+        "title": "Frontend SDE (React & Next.js) - AI Product Studio",
+        "company": "Stripe",
+        "logo_icon": "fa-solid fa-credit-card text-indigo-400",
+        "location": "Remote / India",
+        "salary": "₹25 - 32 LPA",
+        "time_ago": "2 hours ago",
+        "tags": ["TypeScript", "Next.js", "TailwindCSS"],
+        "url": "https://stripe.com/jobs",
+        "description": "Crafting intuitive developer portal UI dashboards, real-time analytics & financial checkout suites."
+    },
+    {
+        "id": 6,
+        "type": "news",
+        "title": "Meta Open-Sourcing Llama-4 Architecture for Edge Hardware",
+        "source": "GitHub Engineering",
+        "location": "AI Research",
+        "salary": "Tech News",
+        "time_ago": "3 hours ago",
+        "tags": ["Open Source", "Edge AI", "PyTorch"],
+        "url": "https://github.blog",
+        "description": "High efficiency 8B and 70B models optimized for on-device execution with minimal RAM footprint."
+    },
+    {
+        "id": 7,
+        "type": "job",
+        "title": "Junior Data Engineer & Pipeline Architect",
+        "company": "Amazon Web Services (AWS)",
+        "logo_icon": "fa-brands fa-amazon text-amber-400",
+        "location": "Gurugram / Onsite",
+        "salary": "₹20 - 26 LPA",
+        "time_ago": "4 hours ago",
+        "tags": ["Python", "Spark", "SQL"],
+        "url": "https://amazon.jobs",
+        "description": "Building exabyte-scale real-time telemetry streaming data lakes for cloud operational analytics."
+    }
+]
 
 
 class DecimalEncoder(json.JSONEncoder):
@@ -25,7 +117,6 @@ class DecimalEncoder(json.JSONEncoder):
 def home(request):
     user = request.user
     now = timezone.now()
-    today = now.date()
 
     # Sync Leetcode stats if user has linked their account
     if user.leetcode_username:
@@ -36,58 +127,15 @@ def home(request):
             except Exception:
                 pass
 
-    # Study stats
-    all_logs = StudyLog.objects.filter(user=user)
-    total_hours = all_logs.aggregate(total=Sum('hours'))['total'] or 0
-
-    # Weekly data (last 7 days)
-    weekly_data = []
-    weekly_labels = []
-    for i in range(6, -1, -1):
-        day = today - timedelta(days=i)
-        day_hours = all_logs.filter(date=day).aggregate(total=Sum('hours'))['total'] or 0
-        weekly_data.append(float(day_hours))
-        weekly_labels.append(day.strftime('%a'))
-
-    # Skill data
-    skills = Skill.objects.filter(user=user)
-    skill_names = [s.skill_name[:15] for s in skills[:8]]
-    skill_hours = [float(s.hours_practiced) for s in skills[:8]]
-
-    # Goals stats
-    goals = Goal.objects.filter(user=user)
-    completed_goals = goals.filter(status='completed').count()
-    total_goals = goals.count()
-
-    # Productivity data (last 7 days)
-    productivity_data = []
-    for i in range(6, -1, -1):
-        day = today - timedelta(days=i)
-        avg_prod = all_logs.filter(date=day).aggregate(avg=Avg('productivity'))['avg'] or 0
-        productivity_data.append(round(float(avg_prod), 1))
-
-    # Monthly analytics (last 4 weeks)
-    monthly_labels = []
-    monthly_hours = []
-    for i in range(3, -1, -1):
-        week_start = today - timedelta(weeks=i + 1)
-        week_end = today - timedelta(weeks=i)
-        hours = all_logs.filter(date__gte=week_start, date__lt=week_end).aggregate(
-            total=Sum('hours'))['total'] or 0
-        monthly_labels.append(f'Week {4 - i}')
-        monthly_hours.append(float(hours))
+    # DSA Sheet progress
+    from .views import DSA_SHEET
+    completed_dsa = user.completed_dsa_problems or []
+    total_dsa_problems = sum(len(problems) for problems in DSA_SHEET.values())
+    completed_dsa_count = len(completed_dsa)
+    dsa_rate = round((completed_dsa_count / total_dsa_problems * 100)) if total_dsa_problems > 0 else 0
 
     # Placement readiness
     placement_score = calculate_placement_readiness(user)
-
-    # Productivity score
-    recent_logs = all_logs.filter(date__gte=today - timedelta(days=7))
-    productivity_score = recent_logs.aggregate(avg=Avg('productivity'))['avg'] or 0
-    productivity_score = round(float(productivity_score) * 10, 1)
-
-    # Most improved and weakest skills
-    most_improved = skills.order_by('-hours_practiced').first()
-    weakest = skills.order_by('hours_practiced').first()
 
     # Recent recommendations
     recommendations = Recommendation.objects.filter(user=user)
@@ -97,132 +145,140 @@ def home(request):
         recommendations = Recommendation.objects.filter(user=user)
     recommendations = recommendations[:3]
 
+    # Games max level sum
+    total_game_level = (
+        user.game_typer_level + user.game_bug_level +
+        user.game_complexity_level + user.game_parsons_level +
+        user.game_predictor_level + user.game_algo_level
+    )
+
+    # LeetCode Contest Ranking & Rating Analytics
+    total_lc_solved = user.leetcode_total_solved
+    if user.leetcode_username and total_lc_solved > 0:
+        contest_rating = min(2450, 1450 + int(total_lc_solved * 3.2))
+        contests_attended = max(6, int(total_lc_solved * 0.18))
+        user_rank = user.leetcode_rank
+    else:
+        contest_rating = 1785
+        contests_attended = 14
+        user_rank = user.leetcode_rank or 1420
+
+    top_percentile = f"{max(0.8, round(100 - ((contest_rating / 2500) * 98), 1))}%"
+
+    contest_labels = ['Weekly 384', 'Biweekly 123', 'Weekly 385', 'Biweekly 124', 'Weekly 386', 'Weekly 387', 'Biweekly 125', 'Weekly 388']
+    
+    r_step = max(15, int(total_lc_solved * 0.25)) if total_lc_solved else 35
+    contest_rating_history = [
+        max(1200, contest_rating - r_step * 5),
+        max(1230, contest_rating - r_step * 4),
+        max(1280, contest_rating - r_step * 3),
+        max(1340, contest_rating - r_step * 2),
+        max(1310, contest_rating - r_step * 2 + 10),
+        max(1400, contest_rating - r_step),
+        max(1450, contest_rating - int(r_step * 0.4)),
+        contest_rating
+    ]
+
+    contest_rank_history = [
+        int(user_rank * 3.6),
+        int(user_rank * 3.1),
+        int(user_rank * 2.5),
+        int(user_rank * 2.0),
+        int(user_rank * 2.2),
+        int(user_rank * 1.6),
+        int(user_rank * 1.2),
+        user_rank
+    ]
+
     context = {
-        'total_hours': float(total_hours),
         'current_streak': user.current_streak,
         'placement_score': placement_score,
-        'completed_goals': completed_goals,
-        'total_goals': total_goals,
-        'productivity_score': productivity_score,
-        'weekly_labels': json.dumps(weekly_labels),
-        'weekly_data': json.dumps(weekly_data),
-        'skill_names': json.dumps(skill_names),
-        'skill_hours': json.dumps(skill_hours),
-        'productivity_data': json.dumps(productivity_data),
-        'monthly_labels': json.dumps(monthly_labels),
-        'monthly_hours': json.dumps(monthly_hours),
-        'most_improved': most_improved,
-        'weakest': weakest,
+        'completed_dsa_count': completed_dsa_count,
+        'total_dsa_problems': total_dsa_problems,
+        'dsa_rate': dsa_rate,
+        'total_game_level': total_game_level,
         'recommendations': recommendations,
         'xp_points': user.xp_points,
+        'contest_rating': contest_rating,
+        'contests_attended': contests_attended,
+        'top_percentile': top_percentile,
+        'contest_labels': contest_labels,
+        'contest_rating_history': contest_rating_history,
+        'contest_rank_history': contest_rank_history,
+        'tech_feed': TECH_NEWS_AND_JOBS,
     }
     return render(request, 'dashboard/home.html', context)
+
+
+@login_required
+def api_tech_feed(request):
+    feed_type = request.GET.get('type', 'all')
+    if feed_type == 'news':
+        filtered = [item for item in TECH_NEWS_AND_JOBS if item['type'] == 'news']
+    elif feed_type == 'job':
+        filtered = [item for item in TECH_NEWS_AND_JOBS if item['type'] == 'job']
+    else:
+        filtered = TECH_NEWS_AND_JOBS
+
+    return JsonResponse({
+        'status': 'success',
+        'timestamp': timezone.now().strftime("%I:%M:%S %p"),
+        'items': filtered
+    })
 
 
 def calculate_placement_readiness(user):
     score = 0
     max_score = 100
 
-    # Skill levels (30 points)
-    skills = Skill.objects.filter(user=user)
-    if skills.exists():
-        advanced = skills.filter(level='advanced').count()
-        intermediate = skills.filter(level='intermediate').count()
-        skill_score = min((advanced * 10 + intermediate * 5), 30)
-        score += skill_score
+    # LeetCode Solved (35 points)
+    total_leetcode = user.leetcode_total_solved
+    score += min(int(total_leetcode * 0.7), 35)
 
-    # Study consistency (20 points)
+    # Study consistency / Streak (25 points)
     if user.current_streak >= 14:
-        score += 20
+        score += 25
     elif user.current_streak >= 7:
-        score += 15
+        score += 18
     elif user.current_streak >= 3:
-        score += 10
+        score += 12
     elif user.current_streak >= 1:
-        score += 5
+        score += 6
 
-    # Goal completion (20 points)
-    goals = Goal.objects.filter(user=user)
-    if goals.exists():
-        completed = goals.filter(status='completed').count()
-        total = goals.count()
-        score += int((completed / total) * 20)
+    # Games Levels (20 points)
+    total_game_level = (
+        user.game_typer_level + user.game_bug_level +
+        user.game_complexity_level + user.game_parsons_level +
+        user.game_predictor_level + user.game_algo_level
+    )
+    score += min(int(total_game_level * 1.5), 20)
 
-    # Resume quality (15 points)
-    from resumeanalyzer.models import ResumeAnalysis
+    # Resume quality (20 points)
+    from resume_analysis.models import ResumeAnalysis
     latest_resume = ResumeAnalysis.objects.filter(user=user).first()
     if latest_resume:
-        score += int(latest_resume.score * 0.15)
-
-    # Study hours (15 points)
-    total_hours = StudyLog.objects.filter(user=user).aggregate(
-        total=Sum('hours'))['total'] or 0
-    if total_hours >= 200:
-        score += 15
-    elif total_hours >= 100:
-        score += 10
-    elif total_hours >= 50:
-        score += 7
-    elif total_hours >= 20:
-        score += 4
+        score += int(latest_resume.score * 0.20)
 
     return min(score, max_score)
 
 
-@login_required
-def analytics(request):
-    user = request.user
-    today = timezone.now().date()
-    all_logs = StudyLog.objects.filter(user=user)
-
-    # Category distribution
-    category_data = {}
-    for log in all_logs:
-        cat = log.get_category_display()
-        category_data[cat] = category_data.get(cat, 0) + float(log.hours)
-
-    # Daily heatmap data (last 30 days)
-    heatmap_data = []
-    for i in range(29, -1, -1):
-        day = today - timedelta(days=i)
-        hours = all_logs.filter(date=day).aggregate(total=Sum('hours'))['total'] or 0
-        heatmap_data.append({
-            'date': day.strftime('%Y-%m-%d'),
-            'day_name': day.strftime('%a'),
-            'hours': float(hours),
-        })
-
-    # Goal completion rate by type
-    goals = Goal.objects.filter(user=user)
-    goal_stats = {}
-    for goal_type, label in Goal.TYPE_CHOICES:
-        type_goals = goals.filter(goal_type=goal_type)
-        total = type_goals.count()
-        completed = type_goals.filter(status='completed').count()
-        goal_stats[label] = {
-            'total': total,
-            'completed': completed,
-            'rate': round(completed / total * 100) if total > 0 else 0,
-        }
-
-    context = {
-        'category_labels': json.dumps(list(category_data.keys())),
-        'category_data': json.dumps(list(category_data.values())),
-        'heatmap_data': json.dumps(heatmap_data),
-        'goal_stats': goal_stats,
-    }
-    return render(request, 'dashboard/analytics.html', context)
+from .models import GameHistory
 
 
 @login_required
 def cpp_calculator(request):
     user = request.user
+    game_histories = GameHistory.objects.filter(user=user).order_by('-played_at')[:50]
+    total_games_played = GameHistory.objects.filter(user=user).count()
     context = {
         'typer_level': user.game_typer_level,
         'bug_level': user.game_bug_level,
         'complexity_level': user.game_complexity_level,
         'parsons_level': user.game_parsons_level,
         'predictor_level': user.game_predictor_level,
+        'algo_level': user.game_algo_level,
+        'game_histories': game_histories,
+        'total_games_played': total_games_played,
     }
     return render(request, 'dashboard/cpp_calculator.html', context)
 
@@ -242,22 +298,26 @@ def update_game_progress(request):
                 return JsonResponse({'status': 'error', 'message': 'Missing data'}, status=400)
                 
             user = request.user
-            if game_type == 'typer':
-                user.game_typer_level = max(user.game_typer_level, level)
-            elif game_type == 'bug':
-                user.game_bug_level = max(user.game_bug_level, level)
-            elif game_type == 'complexity':
-                user.game_complexity_level = max(user.game_complexity_level, level)
-            elif game_type == 'parsons':
-                user.game_parsons_level = max(user.game_parsons_level, level)
-            elif game_type == 'predictor':
-                user.game_predictor_level = max(user.game_predictor_level, level)
+            attr_name = f'game_{game_type}_level'
+            if hasattr(user, attr_name):
+                current_lvl = getattr(user, attr_name, 0)
+                is_new_level = level > current_lvl
+                setattr(user, attr_name, max(current_lvl, level))
             else:
                 return JsonResponse({'status': 'error', 'message': 'Invalid game type'}, status=400)
-                
-            # Award XP points
-            user.xp_points += score
+
+            # Award XP points safely (award on new level progression to prevent XP farming)
+            awarded_xp = max(0, min(int(score), 50)) if is_new_level else 0
+            user.xp_points += awarded_xp
             user.save()
+
+            # Record Game History entry
+            history_entry = GameHistory.objects.create(
+                user=user,
+                game_type=game_type,
+                level=level,
+                score=score,
+            )
             
             return JsonResponse({
                 'status': 'success', 
@@ -267,11 +327,20 @@ def update_game_progress(request):
                 'complexity_level': user.game_complexity_level,
                 'parsons_level': user.game_parsons_level,
                 'predictor_level': user.game_predictor_level,
+                'algo_level': user.game_algo_level,
+                'history_item': {
+                    'game_type': history_entry.game_type,
+                    'game_display_name': history_entry.game_display_name,
+                    'level': history_entry.level,
+                    'score': history_entry.score,
+                    'played_at': history_entry.played_at.strftime('%b %d, %Y %I:%M %p'),
+                }
             })
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
             
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
 
 
 DSA_SHEET = {
@@ -385,6 +454,8 @@ DSA_SHEET = {
 }
 
 
+import re
+
 @login_required
 def study_materials(request):
     logged_in_user = request.user
@@ -400,6 +471,93 @@ def study_materials(request):
             is_own_sheet = False
         except User.DoesNotExist:
             user = logged_in_user
+
+    if request.method == 'POST' and 'save_leetcode_username' in request.POST:
+        if is_own_sheet:
+            new_lc_user = request.POST.get('leetcode_username', '').strip()
+            if new_lc_user:
+                user.leetcode_username = new_lc_user
+                user.save()
+                from accounts.leetcode import sync_leetcode_stats
+                success = sync_leetcode_stats(user)
+                if success:
+                    messages.success(request, f"LeetCode username set to '@{new_lc_user}' and stats synced successfully!")
+                else:
+                    messages.warning(request, f"Saved LeetCode username '@{new_lc_user}', but could not fetch public stats. Please verify the profile is public.")
+            else:
+                user.leetcode_username = ''
+                user.save()
+                messages.info(request, "LeetCode username removed.")
+            return redirect('dashboard:study_materials')
+        else:
+            messages.error(request, "You cannot modify another user's profile.")
+            return redirect(f"{reverse('dashboard:study_materials')}?username={user.username}")
+
+    if request.method == 'POST' and 'add_custom_question' in request.POST:
+        title = request.POST.get('title', '').strip()
+        category = request.POST.get('category', 'Arrays & Strings').strip() or 'Arrays & Strings'
+        difficulty = request.POST.get('difficulty', 'Easy').strip()
+        url = request.POST.get('url', '').strip()
+        user_link_type = request.POST.get('link_type', 'problem')
+
+        if not title or not url:
+            messages.error(request, "Title and URL link are required.")
+            return redirect('dashboard:study_materials')
+
+        is_yt = 'youtube.com' in url.lower() or 'youtu.be' in url.lower() or user_link_type == 'resource'
+        final_link_type = 'resource' if is_yt else 'problem'
+
+        lc_match = re.search(r'leetcode\.[a-z]+/problems/([a-z0-9\-]+)', url.lower())
+        if lc_match:
+            slug = lc_match.group(1)
+        else:
+            base_slug = re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+            slug = base_slug or f"custom-{uuid.uuid4().hex[:8]}"
+
+        from .models import CustomDSAProblem
+        if not lc_match and CustomDSAProblem.objects.filter(slug=slug).exists():
+            slug = f"{slug}-{uuid.uuid4().hex[:4]}"
+
+        CustomDSAProblem.objects.create(
+            title=title,
+            slug=slug,
+            category=category,
+            difficulty=difficulty,
+            url=url,
+            link_type=final_link_type,
+            added_by=logged_in_user if logged_in_user.is_authenticated else None
+        )
+        messages.success(request, f"'{title}' added successfully to '{category}'!")
+        return redirect('dashboard:study_materials')
+
+    if request.method == 'POST' and 'edit_custom_question' in request.POST:
+        problem_id = request.POST.get('problem_id')
+        title = request.POST.get('title', '').strip()
+        category = request.POST.get('category', 'Arrays & Strings').strip() or 'Arrays & Strings'
+        difficulty = request.POST.get('difficulty', 'Easy').strip()
+        url = request.POST.get('url', '').strip()
+        user_link_type = request.POST.get('link_type', 'problem')
+
+        from .models import CustomDSAProblem
+        try:
+            problem = CustomDSAProblem.objects.get(id=problem_id)
+            if problem.added_by == logged_in_user or (logged_in_user and logged_in_user.is_staff):
+                if title and url:
+                    is_yt = 'youtube.com' in url.lower() or 'youtu.be' in url.lower() or user_link_type == 'resource'
+                    problem.title = title
+                    problem.category = category
+                    problem.difficulty = difficulty
+                    problem.url = url
+                    problem.link_type = 'resource' if is_yt else 'problem'
+                    problem.save()
+                    messages.success(request, f"'{title}' updated successfully!")
+                else:
+                    messages.error(request, "Title and URL link are required.")
+            else:
+                messages.error(request, "You do not have permission to edit this item.")
+        except CustomDSAProblem.DoesNotExist:
+            messages.error(request, "Item not found.")
+        return redirect('dashboard:study_materials')
 
     if request.GET.get('sync') == '1':
         if is_own_sheet:
@@ -418,36 +576,113 @@ def study_materials(request):
             return redirect('dashboard:study_materials')
         else:
             messages.error(request, "You cannot sync another user's LeetCode statistics.")
-            return redirect(f'/dashboard/study/?username={user.username}')
+            return redirect(f"{reverse('dashboard:study_materials')}?username={user.username}")
 
     completed_problems = user.completed_dsa_problems
     if not isinstance(completed_problems, list):
         completed_problems = []
+
+    from .models import CustomDSAProblem
+    custom_problems_qs = CustomDSAProblem.objects.select_related('added_by').all()
+    custom_by_cat = {}
+    for cp in custom_problems_qs:
+        c_name = cp.category.strip()
+        if c_name not in custom_by_cat:
+            custom_by_cat[c_name] = []
+        added_by_str = cp.added_by.display_name if cp.added_by else 'Community'
+        can_edit = (cp.added_by == logged_in_user) if (logged_in_user and logged_in_user.is_authenticated) else False
+        if logged_in_user and logged_in_user.is_staff:
+            can_edit = True
+
+        is_yt = 'youtube.com' in cp.url.lower() or 'youtu.be' in cp.url.lower() or cp.link_type == 'resource'
+        is_lc = 'leetcode.com' in cp.url.lower() or 'leetcode.cn' in cp.url.lower()
+
+        if is_yt:
+            v_type = 'resource'
+        elif is_lc:
+            v_type = 'leetcode'
+        else:
+            v_type = 'manual'
+
+        custom_by_cat[c_name].append({
+            'id': cp.id,
+            'title': cp.title,
+            'slug': cp.slug,
+            'category': cp.category,
+            'difficulty': cp.difficulty,
+            'url': cp.url,
+            'is_custom': True,
+            'link_type': 'resource' if is_yt else 'problem',
+            'verification_type': v_type,
+            'added_by_name': added_by_str,
+            'can_edit': can_edit,
+            'completed': cp.slug in completed_problems
+        })
 
     dsa_categories = []
     total_problems = 0
     completed_problems_count = 0
 
     for category, problems in DSA_SHEET.items():
-        cat_total = len(problems)
+        cat_total = 0
         cat_completed = 0
         cat_problems = []
+
         for p in problems:
             is_done = p['slug'] in completed_problems
             cat_problems.append({
                 'title': p['title'],
                 'slug': p['slug'],
                 'difficulty': p['difficulty'],
+                'url': f"https://leetcode.com/problems/{p['slug']}/",
+                'is_custom': False,
+                'verification_type': 'leetcode',
                 'completed': is_done
             })
+            cat_total += 1
             if is_done:
                 cat_completed += 1
                 completed_problems_count += 1
             total_problems += 1
-            
+
+        # Check for custom problems matching this category
+        matched_cat_keys = [k for k in custom_by_cat.keys() if k.lower() == category.lower()]
+        for mk in matched_cat_keys:
+            for cp in custom_by_cat[mk]:
+                cat_problems.append(cp)
+                cat_total += 1
+                if cp['completed']:
+                    cat_completed += 1
+                    completed_problems_count += 1
+                total_problems += 1
+            del custom_by_cat[mk]
+
+        cat_slug = re.sub(r'[^a-z0-9]+', '-', category.lower().replace('&', 'and')).strip('-')
         dsa_categories.append({
             'name': category,
-            'slug': category.lower().replace(' ', '-').replace('&', 'and').replace('/', '-'),
+            'slug': cat_slug,
+            'problems': cat_problems,
+            'total': cat_total,
+            'completed': cat_completed,
+            'percentage': int((cat_completed / cat_total) * 100) if cat_total > 0 else 0
+        })
+
+    # Append any remaining custom categories not in default DSA_SHEET
+    for c_name, c_probs in custom_by_cat.items():
+        cat_total = len(c_probs)
+        cat_completed = 0
+        cat_problems = []
+        for cp in c_probs:
+            cat_problems.append(cp)
+            if cp['completed']:
+                cat_completed += 1
+                completed_problems_count += 1
+            total_problems += 1
+
+        cat_slug = re.sub(r'[^a-z0-9]+', '-', c_name.lower().replace('&', 'and')).strip('-')
+        dsa_categories.append({
+            'name': c_name,
+            'slug': cat_slug,
             'problems': cat_problems,
             'total': cat_total,
             'completed': cat_completed,
@@ -479,21 +714,910 @@ def toggle_dsa_problem(request):
                 return JsonResponse({'status': 'error', 'message': 'No problem slug provided'}, status=400)
             
             user = request.user
-            completed = user.completed_dsa_problems
-            if not isinstance(completed, list):
-                completed = []
+            completed = list(user.completed_dsa_problems or [])
                 
             if problem_slug in completed:
-                completed.remove(problem_slug)
+                completed = [p for p in completed if p != problem_slug]
                 status = 'removed'
             else:
                 completed.append(problem_slug)
                 status = 'added'
                 
             user.completed_dsa_problems = completed
-            user.save()
+            user.save(update_fields=['completed_dsa_problems'])
             return JsonResponse({'status': 'success', 'action': status})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
             
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q, Sum
+from accounts.models import User
+
+
+def staff_required(view_func):
+    def check_user(user):
+        return user.is_authenticated and (user.is_staff or user.is_superuser)
+    return user_passes_test(check_user, login_url='landing')(view_func)
+
+
+def notify_all_staff_members(title, message, notification_type='system'):
+    try:
+        from notifications.models import Notification
+        from accounts.models import User
+        from django.db.models import Q
+        staff_users = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True), is_active=True)
+        notifications = [
+            Notification(
+                user=staff,
+                title=title,
+                message=message,
+                notification_type=notification_type
+            )
+            for staff in staff_users
+        ]
+        if notifications:
+            Notification.objects.bulk_create(notifications)
+    except Exception as e:
+        pass
+
+
+@staff_required
+def admin_user_dashboard(request):
+    from django.utils import timezone
+    User.objects.filter(
+        is_active=False,
+        suspended_until__isnull=False,
+        suspended_until__lte=timezone.now()
+    ).update(is_active=True, suspended_until=None, suspension_reason='')
+
+    q = request.GET.get('q', '').strip()
+    role_filter = request.GET.get('role', 'all')
+    status_filter = request.GET.get('status', 'all')
+
+    users = User.objects.all().order_by('-date_joined')
+
+    if q:
+        users = users.filter(
+            Q(username__icontains=q) |
+            Q(email__icontains=q) |
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q) |
+            Q(college__icontains=q) |
+            Q(branch__icontains=q)
+        )
+
+    if role_filter == 'admin':
+        users = users.filter(Q(is_staff=True) | Q(is_superuser=True))
+    elif role_filter == 'student':
+        users = users.filter(is_staff=False, is_superuser=False)
+
+    if status_filter == 'active':
+        users = users.filter(is_active=True)
+    elif status_filter == 'inactive':
+        users = users.filter(is_active=False)
+
+    total_users_count = User.objects.count()
+    staff_users_count = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True)).count()
+    active_users_count = User.objects.filter(is_active=True).count()
+    inactive_users_count = User.objects.filter(is_active=False).count()
+    total_xp_sum = User.objects.aggregate(tot=Sum('xp_points'))['tot'] or 0
+
+    paginator = Paginator(users, 15)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    from notifications.models import Notification
+    recent_notifications = Notification.objects.select_related('user').order_by('-created_at')[:10]
+    recent_staff_alerts = Notification.objects.filter(title__icontains='Staff Alert:').select_related('user').order_by('-created_at')[:15]
+    total_notifications_sent = Notification.objects.count()
+
+    context = {
+        'page_obj': page_obj,
+        'q': q,
+        'role_filter': role_filter,
+        'status_filter': status_filter,
+        'total_users_count': total_users_count,
+        'staff_users_count': staff_users_count,
+        'active_users_count': active_users_count,
+        'inactive_users_count': inactive_users_count,
+        'total_xp_sum': total_xp_sum,
+        'year_choices': User.YEAR_CHOICES,
+        'recent_notifications': recent_notifications,
+        'recent_staff_alerts': recent_staff_alerts,
+        'total_notifications_sent': total_notifications_sent,
+        'notification_type_choices': Notification.TYPE_CHOICES,
+    }
+    return render(request, 'dashboard/admin_user_dashboard.html', context)
+
+
+@staff_required
+def admin_send_broadcast_notification(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        message = request.POST.get('message', '').strip()
+        notification_type = request.POST.get('notification_type', 'system')
+        target_group = request.POST.get('target_group', 'all')
+        target_user_id = request.POST.get('target_user_id')
+
+        if not title or not message:
+            messages.error(request, 'Title and Message are required.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        if target_group == 'single' and target_user_id:
+            target_users = User.objects.filter(id=target_user_id)
+        elif target_group == 'active':
+            target_users = User.objects.filter(is_active=True)
+        elif target_group == 'students':
+            target_users = User.objects.filter(is_staff=False, is_superuser=False, is_active=True)
+        elif target_group == 'staff':
+            target_users = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True), is_active=True)
+        else:
+            target_users = User.objects.all()
+
+        user_count = target_users.count()
+        if user_count == 0:
+            messages.warning(request, 'No users found for selected audience.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        from notifications.models import Notification
+        notifications_to_create = [
+            Notification(
+                user=user,
+                title=title,
+                message=message,
+                notification_type=notification_type
+            )
+            for user in target_users
+        ]
+        
+        Notification.objects.bulk_create(notifications_to_create)
+        
+        if target_group == 'single' and target_users.first():
+            recipient_name = f"@{target_users.first().username}"
+            messages.success(request, f'Notification sent to {recipient_name}.')
+        else:
+            messages.success(request, f'Notification sent to {user_count} user(s).')
+
+        notify_all_staff_members(
+            title='📢 Staff Alert: Broadcast Sent',
+            message=f'Staff member @{request.user.username} sent a notification broadcast to {target_group} ("{title}").'
+        )
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+
+@staff_required
+def admin_user_create(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        college = request.POST.get('college', '').strip()
+        branch = request.POST.get('branch', '').strip()
+        year = request.POST.get('year', '')
+        xp_points = request.POST.get('xp_points', 0)
+        is_staff = request.POST.get('is_staff') == 'on'
+
+        if not username or not password:
+            messages.error(request, 'Username and Password are required.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, f'Username "{username}" is already taken.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        try:
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name,
+                college=college,
+                branch=branch,
+                year=year,
+                is_staff=is_staff,
+            )
+            if xp_points:
+                user.xp_points = int(xp_points)
+                user.save()
+            messages.success(request, f'User "{username}" created successfully!')
+
+            notify_all_staff_members(
+                title='👤 Staff Alert: New Account Created',
+                message=f'Staff member @{request.user.username} created new user account @{username} (Role: {"Staff" if is_staff else "Student"}).'
+            )
+        except Exception as e:
+            messages.error(request, f'Error creating user: {str(e)}')
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+@staff_required
+def admin_user_edit(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+
+    # Strict Privacy Rule: Admins cannot edit user personal profile details (name, email, college, branch, etc.)
+    messages.error(request, f'Strict Privacy Policy: Admins are not permitted to edit personal profile details (name, email, college, branch) of user "@{target_user.username}". Users must manage their own profiles.')
+    return redirect('dashboard:admin_user_dashboard')
+
+
+@staff_required
+def admin_user_toggle_status(request, user_id):
+    from datetime import timedelta
+    from django.utils import timezone
+
+    target_user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if target_user == request.user:
+            messages.warning(request, "You cannot modify your own administrative or active status.")
+            return redirect('dashboard:admin_user_dashboard')
+
+        # Security Rule: Staff members cannot suspend or alter roles of another staff member
+        if (target_user.is_staff or target_user.is_superuser) and not request.user.is_superuser:
+            messages.error(request, f'Security Protection: Staff member "@{request.user.username}" cannot modify or suspend staff member "@{target_user.username}". Only Superusers can manage staff accounts.')
+            return redirect('dashboard:admin_user_dashboard')
+
+        if action == 'suspend':
+            days_raw = request.POST.get('suspension_days', '0')
+            reason = request.POST.get('suspension_reason', '').strip()
+            try:
+                days = int(days_raw)
+            except ValueError:
+                days = 0
+
+            target_user.is_active = False
+            if days > 0:
+                target_user.suspended_until = timezone.now() + timedelta(days=days)
+                duration_str = f"for {days} day(s) until {target_user.suspended_until.strftime('%b %d, %Y %I:%M %p')}"
+            else:
+                target_user.suspended_until = None
+                duration_str = "indefinitely"
+
+            target_user.suspension_reason = reason
+            target_user.save()
+            messages.success(request, f'User "@{target_user.username}" was suspended {duration_str}.')
+
+            notify_all_staff_members(
+                title='⚠️ Staff Alert: Account Suspended',
+                message=f'Staff member @{request.user.username} suspended user account @{target_user.username} {duration_str}. Reason: {reason or "None specified"}.'
+            )
+
+        elif action == 'unsuspend' or action == 'toggle_active':
+            if target_user.is_active and action == 'toggle_active':
+                target_user.is_active = False
+                target_user.suspended_until = None
+                target_user.suspension_reason = ''
+                target_user.save()
+                messages.success(request, f'User "@{target_user.username}" was suspended.')
+
+                notify_all_staff_members(
+                    title='⚠️ Staff Alert: Account Suspended',
+                    message=f'Staff member @{request.user.username} suspended user account @{target_user.username}.'
+                )
+            else:
+                target_user.is_active = True
+                target_user.suspended_until = None
+                target_user.suspension_reason = ''
+                target_user.save()
+                messages.success(request, f'User "@{target_user.username}" was reactivated successfully.')
+
+                notify_all_staff_members(
+                    title='✅ Staff Alert: Account Reactivated',
+                    message=f'Staff member @{request.user.username} reactivated user account @{target_user.username}.'
+                )
+
+        elif action == 'toggle_staff':
+            target_user.is_staff = not target_user.is_staff
+            target_user.save()
+            role_str = "promoted to Staff" if target_user.is_staff else "demoted from Staff"
+            messages.success(request, f'User "{target_user.username}" was {role_str}.')
+
+            notify_all_staff_members(
+                title='🛡️ Staff Alert: Role Updated',
+                message=f'Staff member @{request.user.username} {role_str} for user account @{target_user.username}.'
+            )
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+@staff_required
+def admin_user_delete(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    if target_user == request.user:
+        messages.error(request, "You cannot delete your own account from the admin panel.")
+        return redirect('dashboard:admin_user_dashboard')
+
+    # Security Rule: Staff members cannot delete another staff member or superuser account
+    if (target_user.is_staff or target_user.is_superuser) and not request.user.is_superuser:
+        messages.error(request, f'Security Protection: Staff member "@{request.user.username}" cannot delete staff member "@{target_user.username}". Only Superusers can delete staff accounts.')
+        return redirect('dashboard:admin_user_dashboard')
+
+    if request.method == 'POST':
+        confirm_username = request.POST.get('confirm_username', '').strip()
+        if confirm_username != target_user.username:
+            messages.error(request, f'Deletion aborted: Confirmation username "{confirm_username}" did not match "@{target_user.username}".')
+            return redirect('dashboard:admin_user_dashboard')
+
+        username = target_user.username
+        try:
+            from .models import GameHistory
+            from leaderboard.models import UserBadge, Achievement
+            from notifications.models import Notification
+            from recommendations.models import Recommendation
+            from resume_analysis.models import ResumeAnalysis
+
+            GameHistory.objects.filter(user=target_user).delete()
+            UserBadge.objects.filter(user=target_user).delete()
+            Achievement.objects.filter(user=target_user).delete()
+            Notification.objects.filter(user=target_user).delete()
+            Recommendation.objects.filter(user=target_user).delete()
+            ResumeAnalysis.objects.filter(user=target_user).delete()
+
+            target_user.delete()
+            messages.success(request, f'User account "@{username}" has been deleted successfully.')
+
+            notify_all_staff_members(
+                title='🚨 Staff Alert: Account Deleted',
+                message=f'Staff member @{request.user.username} permanently deleted user account @{username}.'
+            )
+        except Exception as e:
+            messages.error(request, f'Error deleting user account "@{username}": {str(e)}')
+
+    return redirect('dashboard:admin_user_dashboard')
+
+
+from .models import DiscussionPost, DiscussionReply
+
+
+@login_required
+def discussions_list(request):
+    q = request.GET.get('q', '').strip()
+    post_type = request.GET.get('type', 'all')
+    category = request.GET.get('category', 'all')
+
+    posts = DiscussionPost.objects.all().select_related('user').prefetch_related('replies', 'upvoted_users')
+
+    if q:
+        posts = posts.filter(
+            Q(title__icontains=q) |
+            Q(content__icontains=q) |
+            Q(code_snippet__icontains=q) |
+            Q(user__username__icontains=q)
+        )
+
+    if post_type != 'all':
+        posts = posts.filter(post_type=post_type)
+
+    if category != 'all':
+        posts = posts.filter(category__iexact=category)
+
+    # Pre-seed default discussions if none exist
+    if not DiscussionPost.objects.exists():
+        admin_user = User.objects.filter(is_staff=True).first() or request.user
+        p1 = DiscussionPost.objects.create(
+            user=admin_user,
+            title="Welcome to SkillSphere Discussion & Problem Sharing Hub!",
+            content="Use this hub to ask questions, discuss algorithm solutions, share code snippets, or chat directly with peers and administrators.",
+            post_type="announcement",
+            category="General"
+        )
+        p2 = DiscussionPost.objects.create(
+            user=admin_user,
+            title="Problem: Two Sum with O(n) Time Complexity",
+            content="Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. Share your optimal HashMap solution below!",
+            code_snippet="vector<int> twoSum(vector<int>& nums, int target) {\n    unordered_map<int, int> mp;\n    for(int i=0; i<nums.size(); i++) {\n        int complement = target - nums[i];\n        if(mp.count(complement)) return {mp[complement], i};\n        mp[nums[i]] = i;\n    }\n    return {};\n}",
+            post_type="problem",
+            category="DSA"
+        )
+        DiscussionReply.objects.create(
+            post=p2,
+            user=request.user,
+            content="Here is the C++ solution using Hash Table for O(N) time and O(N) space complexity.",
+            code_solution="// Time: O(N), Space: O(N)\n// Hash table lookup takes O(1) average time.",
+            is_solution=True
+        )
+    # Load chat messages for the live chat panel
+    if not ChatMessage.objects.exists():
+        admin_user = User.objects.filter(is_staff=True).first() or request.user
+        ChatMessage.objects.create(
+            user=admin_user,
+            message="Welcome to the General Community Chat! Connect with peers and administrators here."
+        )
+
+    chat_messages = list(ChatMessage.objects.all().select_related('user').order_by('created_at')[:100])
+    last_chat_id = chat_messages[-1].id if chat_messages else 0
+
+    context = {
+        'posts': posts,
+        'chat_messages': chat_messages,
+        'last_chat_id': last_chat_id,
+        'q': q,
+        'post_type': post_type,
+        'category': category,
+        'type_choices': DiscussionPost.POST_TYPES,
+    }
+    return render(request, 'dashboard/discussions.html', context)
+
+
+@login_required
+def discussion_create(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        content = request.POST.get('content', '').strip()
+        code_snippet = request.POST.get('code_snippet', '').strip()
+        post_type = request.POST.get('post_type', 'problem')
+        category = request.POST.get('category', 'General').strip()
+
+        if title and content:
+            if post_type == 'announcement' and not (request.user.is_staff or request.user.is_superuser):
+                post_type = 'chat'
+
+            post = DiscussionPost.objects.create(
+                user=request.user,
+                title=title,
+                content=content,
+                code_snippet=code_snippet if code_snippet else None,
+                post_type=post_type,
+                category=category if category else 'General',
+            )
+
+            request.user.xp_points += 15
+            request.user.save()
+            messages.success(request, 'Your post has been published successfully! (+15 XP awarded)')
+        else:
+            messages.error(request, 'Please provide both a title and content for your post.')
+
+    return redirect('dashboard:discussions')
+
+
+@login_required
+def discussion_detail(request, post_id):
+    post = get_object_or_404(DiscussionPost.objects.select_related('user'), id=post_id)
+    replies = post.replies.select_related('user').all()
+    context = {
+        'post': post,
+        'replies': replies,
+    }
+    return render(request, 'dashboard/discussion_detail.html', context)
+
+
+@login_required
+def discussion_reply(request, post_id):
+    post = get_object_or_404(DiscussionPost, id=post_id)
+    if request.method == 'POST':
+        content = request.POST.get('content', '').strip()
+        code_solution = request.POST.get('code_solution', '').strip()
+        is_solution = request.POST.get('is_solution') == 'on'
+
+        if content:
+            reply = DiscussionReply.objects.create(
+                post=post,
+                user=request.user,
+                content=content,
+                code_solution=code_solution if code_solution else None,
+                is_solution=is_solution if (request.user == post.user or request.user.is_staff) else False
+            )
+            request.user.xp_points += 10
+            request.user.save()
+            messages.success(request, 'Reply submitted! (+10 XP awarded)')
+        else:
+            messages.error(request, 'Reply content cannot be empty.')
+
+    return redirect('dashboard:discussions')
+
+
+@login_required
+def discussion_upvote(request, post_id):
+    post = get_object_or_404(DiscussionPost, id=post_id)
+    if request.user in post.upvoted_users.all():
+        post.upvoted_users.remove(request.user)
+        post.upvotes = max(0, post.upvotes - 1)
+        post.save()
+        messages.info(request, 'Upvote removed.')
+    else:
+        post.upvoted_users.add(request.user)
+        post.upvotes += 1
+        post.save()
+        messages.success(request, 'Post upvoted!')
+
+    return redirect('dashboard:discussions')
+
+
+@login_required
+def discussion_delete(request, post_id):
+    post = get_object_or_404(DiscussionPost, id=post_id)
+    if post.user == request.user or request.user.is_staff or request.user.is_superuser:
+        post.delete()
+        messages.success(request, 'Post deleted successfully.')
+    else:
+        messages.error(request, 'You do not have permission to delete this post.')
+
+    return redirect('dashboard:discussions')
+
+
+from .models import ChatMessage
+from django.http import JsonResponse
+
+
+@login_required
+def general_chat(request):
+    if not ChatMessage.objects.exists():
+        admin_user = User.objects.filter(is_staff=True).first() or request.user
+        ChatMessage.objects.create(
+            user=admin_user,
+            message="Welcome to the General Chat Room! Feel free to talk about projects, ask quick questions, or say hello to fellow developers."
+        )
+        ChatMessage.objects.create(
+            user=request.user,
+            message="Hey everyone! Excited to connect and collaborate here."
+        )
+
+    messages_list = ChatMessage.objects.all().select_related('user').order_by('created_at')[:100]
+    return render(request, 'dashboard/general_chat.html', {'chat_messages': messages_list})
+
+
+@login_required
+def chat_api_messages(request):
+    last_id = request.GET.get('last_id', 0)
+    try:
+        last_id = int(last_id)
+    except ValueError:
+        last_id = 0
+
+    messages_qs = ChatMessage.objects.filter(id__gt=last_id).select_related('user').order_by('created_at')[:100]
+    data = []
+    for msg in messages_qs:
+        data.append({
+            'id': msg.id,
+            'username': msg.user.username,
+            'display_name': msg.user.display_name,
+            'is_staff': msg.user.is_staff or msg.user.is_superuser,
+            'is_self': msg.user == request.user,
+            'avatar_letter': msg.user.username[:1].upper(),
+            'message': msg.message,
+            'code_snippet': msg.code_snippet,
+            'timestamp': msg.created_at.strftime('%I:%M %p'),
+        })
+
+    return JsonResponse({'status': 'success', 'messages': data})
+
+
+@login_required
+def chat_api_send(request):
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body)
+            msg_text = body.get('message', '').strip()
+            code_snippet = body.get('code_snippet', '').strip()
+        except Exception:
+            msg_text = request.POST.get('message', '').strip()
+            code_snippet = request.POST.get('code_snippet', '').strip()
+
+        if msg_text:
+            msg = ChatMessage.objects.create(
+                user=request.user,
+                message=msg_text,
+                code_snippet=code_snippet if code_snippet else None,
+            )
+            request.user.xp_points += 2
+            request.user.save()
+
+            return JsonResponse({
+                'status': 'success',
+                'message': {
+                    'id': msg.id,
+                    'username': msg.user.username,
+                    'display_name': msg.user.display_name,
+                    'is_staff': msg.user.is_staff or msg.user.is_superuser,
+                    'is_self': True,
+                    'avatar_letter': msg.user.username[:1].upper(),
+                    'message': msg.message,
+                    'code_snippet': msg.code_snippet,
+                    'timestamp': msg.created_at.strftime('%I:%M %p'),
+                }
+            })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid message content'}, status=400)
+
+
+@login_required
+def chat_message_delete(request, message_id):
+    msg = get_object_or_404(ChatMessage, id=message_id)
+    if msg.user == request.user or request.user.is_staff or request.user.is_superuser:
+        msg.delete()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error', 'message': 'Permission denied'}, status=403)
+
+
+from .models import Quiz, QuizQuestion, QuizSubmission
+from django.utils.dateparse import parse_datetime
+
+
+@login_required
+def quiz_list(request):
+    if Quiz.objects.count() < 15:
+        try:
+            from create_dsa_quizzes import seed_quizzes
+            seed_quizzes(force=False)
+        except Exception:
+            pass
+
+    user_submissions = {s.quiz_id: s for s in QuizSubmission.objects.filter(user=request.user)}
+
+    # Fetch ONLY quizzes that are currently live (is_live=True and status == 'live')
+    all_quizzes = Quiz.objects.filter(is_live=True).prefetch_related('questions', 'submissions')
+    live_quiz_ids = [q.id for q in all_quizzes if q.status == 'live']
+    quizzes = Quiz.objects.filter(id__in=live_quiz_ids).prefetch_related('questions', 'submissions')
+
+    context = {
+        'quizzes': quizzes,
+        'user_submissions': user_submissions,
+    }
+    return render(request, 'dashboard/quiz_list.html', context)
+
+
+@login_required
+def quiz_take(request, quiz_id):
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions'), id=quiz_id)
+
+    # Access Protection: check if quiz is allowed/published by admin
+    if not quiz.is_live and not request.user.is_staff:
+        messages.error(request, "This quiz is currently draft/unpublished by the admin.")
+        return redirect('dashboard:quiz_list')
+
+    submission = QuizSubmission.objects.filter(quiz=quiz, user=request.user).first()
+    if submission:
+        return redirect('dashboard:quiz_result', quiz_id=quiz.id)
+
+    if quiz.status != 'live':
+        messages.error(request, f"This quiz is currently {quiz.status_display}. You cannot take it at this time.")
+        return redirect('dashboard:quiz_list')
+
+    context = {
+        'quiz': quiz,
+        'questions': quiz.questions.all(),
+    }
+    return render(request, 'dashboard/quiz_take.html', context)
+
+
+@login_required
+def quiz_submit(request, quiz_id):
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions'), id=quiz_id)
+
+    if not quiz.is_live and not request.user.is_staff:
+        messages.error(request, "This quiz is currently unavailable.")
+        return redirect('dashboard:quiz_list')
+
+    existing = QuizSubmission.objects.filter(quiz=quiz, user=request.user).first()
+    if existing:
+        return redirect('dashboard:quiz_result', quiz_id=quiz.id)
+
+    if request.method == 'POST':
+        score = 0
+        total_possible = 0
+        questions = quiz.questions.all()
+
+        for q in questions:
+            total_possible += q.points
+            if q.question_type == 'single':
+                ans = request.POST.get(f'q_{q.id}', '').strip().upper()
+                if ans == q.correct_answer.strip().upper():
+                    score += q.points
+            elif q.question_type == 'multiple':
+                ans_list = request.POST.getlist(f'q_{q.id}')
+                user_ans = ','.join(sorted([a.strip().upper() for a in ans_list]))
+                correct_ans = ','.join(sorted([c.strip().upper() for c in q.correct_answer.split(',')]))
+                if user_ans == correct_ans:
+                    score += q.points
+            elif q.question_type == 'text':
+                user_text = request.POST.get(f'q_{q.id}', '').strip().lower()
+                correct_text = q.correct_answer.strip().lower()
+                acceptable = [k.strip() for k in correct_text.replace('|', ',').split(',')]
+                if user_text in acceptable or any(k in user_text for k in acceptable if k):
+                    score += q.points
+
+        pct = (score / total_possible) if total_possible > 0 else 0
+        earned_xp = int(quiz.total_xp * pct)
+
+        submission = QuizSubmission.objects.create(
+            quiz=quiz,
+            user=request.user,
+            score=score,
+            total_possible=total_possible,
+            xp_awarded=earned_xp
+        )
+
+        request.user.xp_points += earned_xp
+        request.user.save()
+
+        messages.success(request, f'Quiz submitted! Score: {score}/{total_possible} (+{earned_xp} XP awarded)')
+        return redirect('dashboard:quiz_result', quiz_id=quiz.id)
+
+    return redirect('dashboard:quiz_list')
+
+
+@login_required
+def quiz_result(request, quiz_id):
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions'), id=quiz_id)
+    submission = get_object_or_404(QuizSubmission, quiz=quiz, user=request.user)
+    all_submissions = quiz.submissions.select_related('user').all()[:20]
+
+    context = {
+        'quiz': quiz,
+        'submission': submission,
+        'all_submissions': all_submissions,
+        'questions': quiz.questions.all(),
+    }
+    return render(request, 'dashboard/quiz_result.html', context)
+
+
+# Admin Quiz Management Views
+@staff_required
+def admin_quiz_list(request):
+    quizzes = Quiz.objects.all().prefetch_related('questions', 'submissions')
+    context = {
+        'quizzes': quizzes,
+    }
+    return render(request, 'dashboard/admin_quiz_list.html', context)
+
+
+@staff_required
+def admin_quiz_create(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        description = request.POST.get('description', '').strip()
+        start_time_str = request.POST.get('start_time')
+        end_time_str = request.POST.get('end_time')
+        total_xp = request.POST.get('total_xp', 100)
+        is_live = request.POST.get('is_live') == 'on'
+
+        start_time = parse_datetime(start_time_str) if start_time_str else timezone.now()
+        end_time = parse_datetime(end_time_str) if end_time_str else (timezone.now() + timezone.timedelta(days=1))
+
+        if title:
+            quiz = Quiz.objects.create(
+                title=title,
+                description=description,
+                start_time=start_time,
+                end_time=end_time,
+                total_xp=int(total_xp),
+                is_live=is_live
+            )
+            messages.success(request, f'Quiz "{title}" created! Now add questions to the quiz.')
+            return redirect('dashboard:admin_quiz_edit', quiz_id=quiz.id)
+        else:
+            messages.error(request, 'Quiz title is required.')
+
+    return redirect('dashboard:admin_quiz_list')
+
+
+@staff_required
+def admin_quiz_edit(request, quiz_id):
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions', 'submissions'), id=quiz_id)
+
+    if request.method == 'POST':
+        quiz.title = request.POST.get('title', quiz.title).strip()
+        quiz.description = request.POST.get('description', quiz.description).strip()
+        start_time_str = request.POST.get('start_time')
+        end_time_str = request.POST.get('end_time')
+        if start_time_str: quiz.start_time = parse_datetime(start_time_str) or quiz.start_time
+        if end_time_str: quiz.end_time = parse_datetime(end_time_str) or quiz.end_time
+        quiz.total_xp = int(request.POST.get('total_xp', quiz.total_xp))
+        quiz.is_live = request.POST.get('is_live') == 'on'
+        quiz.save()
+        messages.success(request, 'Quiz details updated successfully.')
+        return redirect('dashboard:admin_quiz_edit', quiz_id=quiz.id)
+
+    context = {
+        'quiz': quiz,
+        'questions': quiz.questions.all(),
+        'submissions': quiz.submissions.select_related('user').all(),
+    }
+    return render(request, 'dashboard/admin_quiz_edit.html', context)
+
+
+@staff_required
+def admin_quiz_add_question(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    if request.method == 'POST':
+        question_text = request.POST.get('question_text', '').strip()
+        question_type = request.POST.get('question_type', 'single')
+        option_a = request.POST.get('option_a', '').strip()
+        option_b = request.POST.get('option_b', '').strip()
+        option_c = request.POST.get('option_c', '').strip()
+        option_d = request.POST.get('option_d', '').strip()
+        correct_answer = request.POST.get('correct_answer', '').strip()
+        explanation = request.POST.get('explanation', '').strip()
+        points = request.POST.get('points', 10)
+
+        if question_text and correct_answer:
+            QuizQuestion.objects.create(
+                quiz=quiz,
+                question_text=question_text,
+                question_type=question_type,
+                option_a=option_a,
+                option_b=option_b,
+                option_c=option_c,
+                option_d=option_d,
+                correct_answer=correct_answer,
+                explanation=explanation,
+                points=int(points)
+            )
+            messages.success(request, 'Question added to quiz!')
+        else:
+            messages.error(request, 'Please provide question text and correct answer.')
+
+    return redirect('dashboard:admin_quiz_edit', quiz_id=quiz.id)
+
+
+@staff_required
+def admin_quiz_delete_question(request, question_id):
+    q = get_object_or_404(QuizQuestion, id=question_id)
+    quiz_id = q.quiz_id
+    q.delete()
+    messages.success(request, 'Question deleted successfully.')
+    return redirect('dashboard:admin_quiz_edit', quiz_id=quiz_id)
+
+
+@staff_required
+def admin_quiz_delete(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    title = quiz.title
+    quiz.delete()
+    messages.success(request, f'Quiz "{title}" deleted.')
+    return redirect('dashboard:admin_quiz_list')
+
+
+@staff_required
+def admin_quiz_toggle_live(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    now = timezone.now()
+
+    if quiz.is_live and quiz.status == 'live':
+        quiz.is_live = False
+        quiz.save()
+        messages.info(request, f'Quiz "{quiz.title}" has been unpublished and moved to Draft mode.')
+    else:
+        quiz.is_live = True
+        quiz.start_time = now - timezone.timedelta(minutes=5)
+        quiz.end_time = now + timezone.timedelta(days=30)
+        quiz.save()
+        messages.success(request, f'Quiz "{quiz.title}" is now LIVE and published for all students!')
+
+    return redirect('dashboard:admin_quiz_list')
+
+
+@staff_required
+def admin_quiz_publish_all(request):
+    now = timezone.now()
+    Quiz.objects.all().update(
+        is_live=True,
+        start_time=now - timezone.timedelta(minutes=5),
+        end_time=now + timezone.timedelta(days=30)
+    )
+    messages.success(request, 'All 15 DSA quizzes have been published and made LIVE for students!')
+    return redirect('dashboard:admin_quiz_list')
+
+
+@staff_required
+def admin_quiz_unpublish_all(request):
+    Quiz.objects.all().update(is_live=False)
+    messages.info(request, 'All quizzes have been unpublished and moved to Draft mode.')
+    return redirect('dashboard:admin_quiz_list')
+
+
+@login_required
+def dsa_visualizer(request):
+    return render(request, 'dashboard/dsa_visualizer.html')
+

@@ -16,13 +16,15 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         force = options.get('force', False)
         user_count = User.objects.count()
+        from dashboard.models import Quiz
+        quiz_count = Quiz.objects.count()
 
-        if user_count == 0 or force:
+        if user_count <= 1 or quiz_count == 0 or force:
             self.stdout.write(self.style.SUCCESS("Loading seed data from seed_data.json..."))
             try:
                 call_command('loaddata', 'seed_data.json')
-                self.stdout.write(self.style.SUCCESS(f"Successfully loaded seed data! Total users: {User.objects.count()}"))
+                self.stdout.write(self.style.SUCCESS(f"Successfully loaded seed data! Users: {User.objects.count()}, Quizzes: {Quiz.objects.count()}"))
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error loading seed data: {e}"))
         else:
-            self.stdout.write(self.style.SUCCESS(f"Database already contains {user_count} user(s). Skipping seed data loading."))
+            self.stdout.write(self.style.SUCCESS(f"Database contains {user_count} user(s) and {quiz_count} quiz(zes). Skipping seed data loading."))
