@@ -2,6 +2,7 @@
 import os
 import sys
 import subprocess
+import re
 
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -15,10 +16,12 @@ def migrate_data():
 
     # Allow passing database URL as a command-line argument or environment variable
     if len(sys.argv) > 1 and sys.argv[1].strip():
-        db_url = sys.argv[1].strip().strip("'\"")
+        db_url = re.sub(r"\s+", "", sys.argv[1].strip().strip("'\""))
         os.environ["DATABASE_URL"] = db_url
     else:
-        db_url = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
+        db_url = re.sub(r"\s+", "", os.environ.get("DATABASE_URL", "").strip().strip("'\""))
+        if db_url:
+            os.environ["DATABASE_URL"] = db_url
 
     if not db_url or "postgres" not in db_url.lower():
         print("\n⚠️ ERROR: PostgreSQL DATABASE_URL is missing or invalid!")
@@ -40,16 +43,24 @@ def migrate_data():
     subprocess.run([sys.executable, "manage.py", "migrate", "--noinput"], check=True)
 
     print("\n2️⃣ Importing data fixtures into PostgreSQL...")
-    if not os.path.exists("seed_data.json"):
-        print("   Generating fresh seed_data.json snapshot from local SQLite...")
-        subprocess.run(
-            [sys.executable, "manage.py", "dumpdata", "--natural-foreign", "--natural-primary", "-e", "contenttypes", "-e", "auth.Permission", "--indent", "2"],
-            stdout=open("seed_data.json", "w"),
-            check=True
-        )
+    data_files = []
+    if os.path.exists("data"):
+        data_files = sorted([
+            os.path.join("data", f)
+            for f in os.listdir("data")
+            if f.endswith(".json")
+        ])
 
     try:
-        subprocess.run([sys.executable, "manage.py", "loaddata", "seed_data.json"], check=True)
+        if data_files:
+            print(f"   Loading {len(data_files)} fixture files from data/ directory...")
+            subprocess.run([sys.executable, "manage.py", "loaddata", *data_files], check=True)
+        elif os.path.exists("seed_data.json"):
+            print("   Loading fixtures from seed_data.json...")
+            subprocess.run([sys.executable, "manage.py", "loaddata", "seed_data.json"], check=True)
+        else:
+            print("   No seed fixtures found; running seed_db...")
+            subprocess.run([sys.executable, "manage.py", "seed_db"], check=True)
     except subprocess.CalledProcessError:
         print("   ⚠️ Direct loaddata encountered existing records; running smart seed_db...")
         subprocess.run([sys.executable, "manage.py", "seed_db"], check=True)

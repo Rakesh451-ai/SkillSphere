@@ -1,0 +1,268 @@
+[
+  {
+    "model": "notifications.notification",
+    "pk": 40,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": true,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 41,
+    "fields": {
+      "user": [
+        "student_test_1"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 42,
+    "fields": {
+      "user": [
+        "student_test_2"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 43,
+    "fields": {
+      "user": [
+        "student_test_3"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 44,
+    "fields": {
+      "user": [
+        "student_test_4"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 45,
+    "fields": {
+      "user": [
+        "student_test_5"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 46,
+    "fields": {
+      "user": [
+        "student_test_6"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 47,
+    "fields": {
+      "user": [
+        "student_test_7"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 48,
+    "fields": {
+      "user": [
+        "student_test_8"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 49,
+    "fields": {
+      "user": [
+        "student_test_9"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 50,
+    "fields": {
+      "user": [
+        "student_test_10"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 51,
+    "fields": {
+      "user": [
+        "alex_coder"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.516Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 52,
+    "fields": {
+      "user": [
+        "priya_sharma"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.517Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 53,
+    "fields": {
+      "user": [
+        "marcus_v"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.517Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 54,
+    "fields": {
+      "user": [
+        "sophia_chen"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.517Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 55,
+    "fields": {
+      "user": [
+        "rohan_gupta"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.517Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 56,
+    "fields": {
+      "user": [
+        "admin_user"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.517Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 57,
+    "fields": {
+      "user": [
+        "Ayush"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.517Z"
+    }
+  },
+  {
+    "model": "notifications.notification",
+    "pk": 58,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "title": "🚀 New Features Released!",
+      "message": "Check out our updated DSA Visualizer, Coding Games, and Quizzes!",
+      "notification_type": "system",
+      "is_read": false,
+      "created_at": "2026-08-03T10:51:06.517Z"
+    }
+  }
+]

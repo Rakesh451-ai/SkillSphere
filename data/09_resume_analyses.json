@@ -1,0 +1,86 @@
+[
+  {
+    "model": "resume_analysis.resumeanalysis",
+    "pk": 1,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "resume_file": "resumes/Rakesh_Yadav.pdf",
+      "score": 94,
+      "suggestions": [
+        "Add internship experience if you have any.",
+        "Add relevant certifications to strengthen your profile."
+      ],
+      "skills_found": [
+        "Python",
+        "Java",
+        "Javascript",
+        "Django",
+        "Sql",
+        "Html",
+        "Css",
+        "Git",
+        "Linux",
+        "C++",
+        "Rest Api",
+        "Postgresql"
+      ],
+      "sections_found": [
+        "Education",
+        "Experience",
+        "Skills",
+        "Projects",
+        "Achievements"
+      ],
+      "missing_sections": [
+        "Certifications",
+        "Internships",
+        "Summary"
+      ],
+      "created_at": "2026-08-02T17:06:02.465Z"
+    }
+  },
+  {
+    "model": "resume_analysis.resumeanalysis",
+    "pk": 2,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "resume_file": "resumes/Rakesh_Yadav_Pvj9kWQ.pdf",
+      "score": 94,
+      "suggestions": [
+        "Add internship experience if you have any.",
+        "Add relevant certifications to strengthen your profile."
+      ],
+      "skills_found": [
+        "Python",
+        "Java",
+        "Javascript",
+        "Django",
+        "Sql",
+        "Html",
+        "Css",
+        "Git",
+        "Linux",
+        "C++",
+        "Rest Api",
+        "Postgresql"
+      ],
+      "sections_found": [
+        "Education",
+        "Experience",
+        "Skills",
+        "Projects",
+        "Achievements"
+      ],
+      "missing_sections": [
+        "Certifications",
+        "Internships",
+        "Summary"
+      ],
+      "created_at": "2026-08-03T14:23:46.244Z"
+    }
+  }
+]

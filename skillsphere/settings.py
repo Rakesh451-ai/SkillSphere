@@ -7,6 +7,23 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env if present
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / ".env")
+except ImportError:
+    env_file = BASE_DIR / ".env"
+    if env_file.exists():
+        with open(env_file, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    key, val = line.split("=", 1)
+                    key = key.strip()
+                    val = val.strip().strip("'\"")
+                    if key not in os.environ:
+                        os.environ[key] = val
+
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
     "django-insecure-@m!!6l)xq$6+###!u(l#_kg#zk)(b)j29xfb(^d0l8m!s4m0%$",
@@ -95,8 +112,13 @@ TEMPLATES = [
 WSGI_APPLICATION = "skillsphere.wsgi.application"
 
 import dj_database_url
+import re
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
+raw_db_url = os.environ.get("DATABASE_URL", "").strip().strip("'\"")
+# Sanitize URL by removing any accidental spaces, newlines, or line wraps from copy-pasting
+DATABASE_URL = re.sub(r"\s+", "", raw_db_url)
+if DATABASE_URL != raw_db_url:
+    os.environ["DATABASE_URL"] = DATABASE_URL
 
 if DATABASE_URL and "://" in DATABASE_URL:
     is_local_db = any(h in DATABASE_URL.lower() for h in ("localhost", "127.0.0.1", "sqlite"))

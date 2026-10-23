@@ -12,6 +12,7 @@ from django.utils import timezone
 
 from django.http import JsonResponse, HttpResponse
 from recommendations.models import Recommendation
+from .tech_feed import get_dynamic_tech_feed
 
 TECH_NEWS_AND_JOBS = [
     {
@@ -205,7 +206,7 @@ def home(request):
         'contest_labels': contest_labels,
         'contest_rating_history': contest_rating_history,
         'contest_rank_history': contest_rank_history,
-        'tech_feed': TECH_NEWS_AND_JOBS,
+        'tech_feed': get_dynamic_tech_feed('all'),
     }
     return render(request, 'dashboard/home.html', context)
 
@@ -213,17 +214,12 @@ def home(request):
 @login_required
 def api_tech_feed(request):
     feed_type = request.GET.get('type', 'all')
-    if feed_type == 'news':
-        filtered = [item for item in TECH_NEWS_AND_JOBS if item['type'] == 'news']
-    elif feed_type == 'job':
-        filtered = [item for item in TECH_NEWS_AND_JOBS if item['type'] == 'job']
-    else:
-        filtered = TECH_NEWS_AND_JOBS
-
+    items = get_dynamic_tech_feed(feed_type)
     return JsonResponse({
         'status': 'success',
         'timestamp': timezone.now().strftime("%I:%M:%S %p"),
-        'items': filtered
+        'count': len(items),
+        'items': items
     })
 
 

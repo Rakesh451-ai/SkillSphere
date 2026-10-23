@@ -1,0 +1,15 @@
+[
+  {
+    "model": "dashboard.gamehistory",
+    "pk": 2,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "game_type": "parsons",
+      "level": 1,
+      "score": 75,
+      "played_at": "2026-08-03T16:21:26.008Z"
+    }
+  }
+]
