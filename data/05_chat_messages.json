@@ -1,0 +1,86 @@
+[
+  {
+    "model": "dashboard.chatmessage",
+    "pk": 1,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "message": "Testing general live chatroom creation!",
+      "code_snippet": "console.log(\"Hello General Chat!\");",
+      "created_at": "2026-08-02T07:58:22.467Z"
+    }
+  },
+  {
+    "model": "dashboard.chatmessage",
+    "pk": 2,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "message": "hi",
+      "code_snippet": null,
+      "created_at": "2026-08-02T08:04:38.210Z"
+    }
+  },
+  {
+    "model": "dashboard.chatmessage",
+    "pk": 3,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "message": "how are you",
+      "code_snippet": null,
+      "created_at": "2026-08-02T08:04:41.355Z"
+    }
+  },
+  {
+    "model": "dashboard.chatmessage",
+    "pk": 4,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "message": "how to build max heap using bsty",
+      "code_snippet": null,
+      "created_at": "2026-08-02T08:04:50.580Z"
+    }
+  },
+  {
+    "model": "dashboard.chatmessage",
+    "pk": 5,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "message": "#include<iostream> using namespace std; int main(){ cout<<\"Hello\"<<endl;  }",
+      "code_snippet": "#include<iostream>\nusing namespace std;\nint main(){\ncout<<\"Hello\"<<endl;\n\n}",
+      "created_at": "2026-08-02T08:06:07.448Z"
+    }
+  },
+  {
+    "model": "dashboard.chatmessage",
+    "pk": 6,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "message": "Hi  Sir ! How to Study ?",
+      "code_snippet": null,
+      "created_at": "2026-08-02T09:08:58.104Z"
+    }
+  },
+  {
+    "model": "dashboard.chatmessage",
+    "pk": 7,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "message": "hi",
+      "code_snippet": null,
+      "created_at": "2026-08-03T14:52:35.276Z"
+    }
+  }
+]

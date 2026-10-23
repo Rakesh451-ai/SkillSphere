@@ -1,102 +1,113 @@
 {% extends "base.html" %}
-{% block title %}Sign In - SkillSphere Career Studio{% endblock %}
+{% block title %}Sign In - SkillSphere{% endblock %}
 {% block public_content %}
-<div class="min-h-screen flex items-center justify-center p-4 md:p-8 bg-[#090d16] text-slate-100 relative overflow-hidden">
-    <!-- Ambient Background Glows -->
-    <div class="absolute -top-32 -left-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <div class="w-full max-w-4xl bg-slate-900/80 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur-xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
-        <!-- Left Column: Branding Showcase -->
-        <div class="p-8 md:p-12 bg-gradient-to-br from-indigo-900/60 via-slate-900 to-slate-950 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800 relative">
-            <div>
-                <a href="/" class="flex items-center gap-3 text-decoration-none group mb-8">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-                        <i class="fa-solid fa-bolt text-white text-xl"></i>
-                    </div>
-                    <div>
-                        <span class="font-heading font-extrabold text-2xl text-white tracking-tight">SkillSphere</span>
-                        <span class="block text-xs uppercase font-mono tracking-widest text-indigo-400 font-bold">Career Studio</span>
-                    </div>
-                </a>
+<style>
+    .ss-auth {
+        --ss-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+        --ss-body: 'Figtree', 'Inter', system-ui, sans-serif;
+        --ss-line: rgba(148, 163, 184, 0.16);
+        --ss-muted: #94a3b8;
+        --ss-indigo: #818cf8;
+        font-family: var(--ss-body);
+        min-height: 100vh; min-height: 100dvh;
+        display: flex; align-items: center; justify-content: center;
+        padding: 1rem;
+        background: #090d16;
+        color: #f1f5f9;
+    }
+    .ss-auth h1 { font-family: var(--ss-display); letter-spacing: -0.015em; }
 
-                <h2 class="text-2xl md:text-3xl font-extrabold text-white leading-tight mb-3">
-                    Accelerate Your Placement Growth
-                </h2>
-                <p class="text-sm text-slate-400 leading-relaxed mb-6">
-                    Connect your LeetCode profile, solve curated DSA problem sheets, analyze your ATS resume score, and compete on the student leaderboard.
-                </p>
+    .ss-shell {
+        width: 100%; max-width: 440px;
+        border: 1px solid var(--ss-line); border-radius: 24px; overflow: hidden;
+        background: rgba(15, 23, 42, 0.7);
+        box-shadow: 0 30px 80px -30px rgba(0, 0, 0, .7);
+    }
+    .ss-form-side { padding: 2rem 2.25rem; }
+    @media (max-width: 480px) { .ss-form-side { padding: 1.75rem 1.25rem; } }
 
-                <!-- Feature Highlights -->
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-700/50">
-                        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm font-bold">
-                            <i class="fa-solid fa-file-check"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-300">Resume Diagnostic & ATS Score</span>
-                    </div>
-                    <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-700/50">
-                        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">
-                            <i class="fa-solid fa-sync"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-300">Real-Time LeetCode Sync & Streak Tracker</span>
-                    </div>
-                    <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/40 border border-slate-700/50">
-                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">
-                            <i class="fa-solid fa-trophy"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-300">Student Leaderboard & Coding Arcade</span>
-                    </div>
-                </div>
-            </div>
+    .ss-form-title { font-size: 1.75rem; font-weight: 800; margin: 0 0 .3rem; color: #fff; text-align: center; }
+    .ss-form-sub { font-size: .92rem; color: var(--ss-muted); margin: 0 0 1.5rem; text-align: center; }
 
-            <div class="pt-8 text-xs text-slate-500 flex items-center gap-2">
-                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-                <span>Enterprise grade security & data privacy</span>
-            </div>
-        </div>
+    .ss-field { display: flex; flex-direction: column; gap: .3rem; margin-bottom: 1rem; }
+    .ss-field label { font-size: .88rem; font-weight: 600; color: #e2e8f0; }
+    .ss-field input:not([type=checkbox]):not([type=radio]),
+    .ss-field select {
+        width: 100%; padding: .7rem .9rem; border-radius: 12px;
+        background: rgba(2, 6, 23, .6); border: 1px solid rgba(148, 163, 184, .25);
+        color: #f8fafc; font: 500 .95rem var(--ss-body);
+        transition: border-color .15s, box-shadow .15s;
+    }
+    .ss-field input::placeholder { color: #64748b; }
+    .ss-field input:hover { border-color: rgba(148, 163, 184, .45); }
+    .ss-field input:focus {
+        outline: none; border-color: var(--ss-indigo); box-shadow: 0 0 0 3px rgba(129, 140, 248, .25);
+    }
+    .ss-field.has-error input { border-color: #fb7185; }
+    .ss-help { font-size: .8rem; color: #64748b; margin: 0; }
+    .ss-error { font-size: .84rem; color: #fda4af; font-weight: 500; margin: 0; display: flex; gap: .4rem; align-items: flex-start; }
+    .ss-alert {
+        display: flex; gap: .6rem; align-items: flex-start;
+        padding: .7rem .9rem; border-radius: 12px; margin-bottom: 1rem;
+        background: rgba(251, 113, 133, .1); border: 1px solid rgba(251, 113, 133, .3);
+        color: #fda4af; font-size: .88rem;
+    }
 
-        <!-- Right Column: Login Form -->
-        <div class="p-8 md:p-12 flex flex-col justify-center">
-            <div class="mb-6">
-                <h3 class="text-xl font-bold text-white mb-1">Welcome Back</h3>
-                <p class="text-xs text-slate-400">Enter your credentials to access your student dashboard</p>
-            </div>
+    .ss-submit {
+        width: 100%; margin-top: .25rem; padding: .8rem 1rem; border: 0; border-radius: 12px; cursor: pointer;
+        background: #4f46e5; color: #fff; font: 700 .98rem var(--ss-body);
+        display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+        transition: background .15s;
+    }
+    .ss-submit:hover { background: #6366f1; }
+    .ss-submit:focus-visible, .ss-switch a:focus-visible { outline: 2px solid var(--ss-indigo); outline-offset: 3px; }
+    .ss-switch { margin: 1.1rem 0 0; text-align: center; font-size: .9rem; color: var(--ss-muted); }
+    .ss-switch a { color: #a5b4fc; font-weight: 700; text-decoration: none; }
+    .ss-switch a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    @media (prefers-reduced-motion: reduce) { .ss-auth * { transition: none !important; } }
+</style>
+
+<div class="ss-auth">
+    <div class="ss-shell">
+        <section class="ss-form-side">
+            <h1 class="ss-form-title">Welcome back</h1>
+            <!--<p class="ss-form-sub">Sign in to open your student dashboard.</p>-->
 
             {% if form.non_field_errors %}
-            <div class="mb-4 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2">
-                <i class="fa-solid fa-circle-exclamation text-rose-400"></i>
-                <div>
-                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
-                </div>
+            <div class="ss-alert" role="alert">
+                <i class="fa-solid fa-circle-exclamation" style="margin-top:.2rem;"></i>
+                <div>{% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}</div>
             </div>
             {% endif %}
 
-            <form method="post" class="space-y-4">
+            <form method="post" novalidate>
                 {% csrf_token %}
                 {% for field in form %}
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">{{ field.label }}</label>
-                    <div class="relative">
-                        {{ field }}
-                    </div>
+                <div class="ss-field{% if field.errors %} has-error{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<div class="ss-help">{{ field.help_text|safe }}</div>{% endif %}
                     {% for error in field.errors %}
-                    <p class="text-xs text-rose-400 mt-1 font-medium">{{ error }}</p>
+                    <p class="ss-error"><i class="fa-solid fa-circle-exclamation" style="margin-top:.2rem;font-size:.75rem;"></i><span>{{ error }}</span></p>
                     {% endfor %}
                 </div>
                 {% endfor %}
 
-                <button type="submit" class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 group mt-2">
-                    <span>Sign In to Dashboard</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                <button type="submit" class="ss-submit">
+                    <span>Sign in</span>
                 </button>
             </form>
 
-            <div class="mt-6 text-center text-xs text-slate-400">
-                Don't have an account yet? 
-                <a href="{% url 'accounts:register' %}" class="font-bold text-indigo-400 hover:text-indigo-300 text-decoration-none">Create Account &rarr;</a>
-            </div>
-        </div>
+            <p class="ss-switch">
+                Don't have an account yet?
+                <a href="{% url 'accounts:register' %}">Create account</a>
+            </p>
+        </section>
     </div>
 </div>
 {% endblock %}

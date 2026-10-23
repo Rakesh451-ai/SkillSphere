@@ -2039,7 +2039,5 @@ def seed_quizzes(force=False):
                 )
                 created_questions_count += 1
 
-    print(f"Done! Verified 15 Quizzes & 375 Questions in database.")
-
 if __name__ == '__main__':
     seed_quizzes(force=True)

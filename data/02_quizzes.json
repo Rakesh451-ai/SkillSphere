@@ -1,0 +1,227 @@
+[
+  {
+    "model": "dashboard.quiz",
+    "pk": 19,
+    "fields": {
+      "title": "Array Data Structure & Algorithmic Patterns Quiz",
+      "topic": "Array",
+      "difficulty": "Basic to Advanced",
+      "description": "Master array memory layouts, 2-pointers, prefix sums, sliding window arrays, and multidimensional arrays from basic to advanced.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:09:44.947Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 20,
+    "fields": {
+      "title": "String Processing & Pattern Matching Algorithms Quiz",
+      "topic": "String",
+      "difficulty": "Basic to Advanced",
+      "description": "Master string immutability, pattern matching (KMP, Rabin-Karp, Z-algorithm), palindromic expansions, string building, and text parsing.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:09:47.741Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 21,
+    "fields": {
+      "title": "Pointers, Memory Allocation & Address Arithmetic Quiz",
+      "topic": "Pointer",
+      "difficulty": "Basic to Advanced",
+      "description": "Master memory addresses, pointer arithmetic, double pointers, reference safety, heap vs stack memory, dynamic allocation, and memory leaks.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:09:50.533Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 22,
+    "fields": {
+      "title": "Recursion, Backtracking & Recurrence Relations Quiz",
+      "topic": "Recursion",
+      "difficulty": "Basic to Advanced",
+      "description": "Master call stack frames, base cases, tail recursion, state space trees, divide and conquer, Master Theorem, and backtracking pruning.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:09:53.460Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 23,
+    "fields": {
+      "title": "Singly, Doubly & Circular Linked List Master Quiz",
+      "topic": "LinkedList",
+      "difficulty": "Basic to Advanced",
+      "description": "Master dynamic node pointers, 3-pointer reversals, Floyd's cycle detection, fast/slow middle pointer, skip lists, and memory fragmentation.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:09:56.260Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 24,
+    "fields": {
+      "title": "Stack Data Structure & Monotonic Stack Applications Quiz",
+      "topic": "Stack",
+      "difficulty": "Basic to Advanced",
+      "description": "Master LIFO invariants, call stack execution, expression evaluation (Shunting-Yard), monotonic stacks, min stack, and histogram area.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:09:59.038Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 25,
+    "fields": {
+      "title": "Queue, Circular Queue & Priority Queue Systems Quiz",
+      "topic": "Queue",
+      "difficulty": "Basic to Advanced",
+      "description": "Master FIFO scheduling buffers, circular modulo index arithmetic, priority queues, monotonic deques, double-ended queues, and multi-source BFS.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:01.727Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 26,
+    "fields": {
+      "title": "Sliding Window & Two Pointer Techniques Quiz",
+      "topic": "Sliding Window",
+      "difficulty": "Basic to Advanced",
+      "description": "Master fixed vs dynamic window bounds, inward two pointers, fast/slow pointers, frequency map windows, and exact count reductions.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:05.877Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 27,
+    "fields": {
+      "title": "General Trees & Tree Traversals Master Quiz",
+      "topic": "Tree",
+      "difficulty": "Basic to Advanced",
+      "description": "Master tree terminology, height vs depth, DFS (Inorder, Preorder, Postorder), BFS Level-Order, path sums, diameter, and tree construction.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:08.784Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 28,
+    "fields": {
+      "title": "Binary Tree Architecture & Properties Quiz",
+      "topic": "Binary Tree",
+      "difficulty": "Basic to Advanced",
+      "description": "Master binary tree properties, complete vs full vs perfect trees, vertical order, top/bottom views, LCA, and subtree invariants.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:10.928Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 29,
+    "fields": {
+      "title": "Binary Search Tree Invariants & Operations Quiz",
+      "topic": "Binary Search Tree (BST)",
+      "difficulty": "Basic to Advanced",
+      "description": "Master BST search, insert, delete (3 cases), inorder sorting property, BST validation, LCA in BST, floor/ceil, and Kth smallest element.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:13.303Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 30,
+    "fields": {
+      "title": "AVL Trees & Self-Balancing Rotations Quiz",
+      "topic": "AVL Tree",
+      "difficulty": "Basic to Advanced",
+      "description": "Master balance factor invariant (-1, 0, 1), single rotations (LL, RR), double rotations (LR, RL), insertion/deletion rebalancing, and AVL height bounds.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:15.545Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 31,
+    "fields": {
+      "title": "Min-Heap, Max-Heap & Priority Queue Operations Quiz",
+      "topic": "Heap",
+      "difficulty": "Basic to Advanced",
+      "description": "Master heap invariants (Min-Heap, Max-Heap), array representation, Heapify (O(N)), Heap Sort, Priority Queues, K-way merges, and median streams.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:17.962Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 32,
+    "fields": {
+      "title": "Graph Algorithms, Shortest Paths & Topological Sort Quiz",
+      "topic": "Graph",
+      "difficulty": "Basic to Advanced",
+      "description": "Master Adjacency List/Matrix, BFS, DFS, Cycle Detection, Topological Sort (Kahn's), Dijkstra, Bellman-Ford, Kruskal/Prim MST, and Tarjan SCC.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:21.263Z"
+    }
+  },
+  {
+    "model": "dashboard.quiz",
+    "pk": 33,
+    "fields": {
+      "title": "Dynamic Programming (DP) & State Transitions Quiz",
+      "topic": "Dynamic Programming (DP)",
+      "difficulty": "Basic to Advanced",
+      "description": "Master optimal substructure, overlapping subproblems, top-down memoization, bottom-up tabulation, 1D/2D DP, Knapsack variants, LCS, and Bitmask DP.",
+      "start_time": "2026-07-05T17:09:44.934Z",
+      "end_time": "2036-08-01T17:09:44.934Z",
+      "is_live": true,
+      "total_xp": 250,
+      "created_at": "2026-08-04T17:10:23.596Z"
+    }
+  }
+]

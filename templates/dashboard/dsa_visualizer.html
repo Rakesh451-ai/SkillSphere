@@ -170,16 +170,15 @@
         <h4 class="fw-bold mb-1 text-white">
             <i class="bi bi-diagram-3-fill text-warning me-2"></i>DSA Theory Studio
         </h4>
-        <p class="text-muted mb-0 small">Interactive visual guides & step-by-step logic for 12 interview algorithms.</p>
     </div>
-    <div class="d-flex align-items-center gap-2">
+    <!--<div class="d-flex align-items-center gap-2">
         <span class="badge bg-indigo-900/50 text-indigo-300 border border-indigo-500/30 rounded-pill px-3 py-2 small">
             <i class="bi bi-layers-fill text-warning me-1"></i> 12 Algorithms
         </span>
         <span class="badge bg-emerald-900/50 text-emerald-300 border border-emerald-500/30 rounded-pill px-3 py-2 small d-none d-md-inline-block">
             <i class="bi bi-keyboard me-1"></i> Use ← → & Space
         </span>
-    </div>
+    </div>-->
 </div>
 
 <!-- Search & Active Algorithm Bar -->
@@ -1292,7 +1291,7 @@
         keys.forEach((key, idx) => {
             const topic = TOPIC_THEORY_DATA[key];
             const matchesCat = selectedCategory === 'All' || topic.category === selectedCategory;
-            
+
             if (matchesCat) {
                 count++;
                 const isActive = key === currentTopicKey ? 'active' : '';
@@ -1386,7 +1385,7 @@
     function highlightPseudocodeLine() {
         const data = TOPIC_THEORY_DATA[currentTopicKey];
         if (!data || !data.stepCodeLines) return;
-        
+
         document.querySelectorAll('.code-line').forEach(line => line.classList.remove('active-line'));
         const activeLineIdx = data.stepCodeLines[currentStepIndex];
         if (activeLineIdx !== undefined) {
@@ -1521,7 +1520,7 @@
         isPlaying = true;
         document.getElementById('playIcon').className = 'bi bi-pause-fill me-1';
         document.getElementById('playText').textContent = 'Pause';
-        
+
         autoPlayTimer = setInterval(() => {
             const data = TOPIC_THEORY_DATA[currentTopicKey];
             if (currentStepIndex < data.visualSteps.length - 1) {

@@ -1,0 +1,74 @@
+[
+  {
+    "model": "dashboard.discussionpost",
+    "pk": 1,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "title": "Test Problem: Reverse a Linked List",
+      "content": "Given the head of a singly linked list, reverse the list, and return the reversed list.",
+      "code_snippet": "ListNode* reverseList(ListNode* head) {\n    ListNode *prev = nullptr, *curr = head;\n    while(curr) {\n        ListNode* nextTemp = curr->next;\n        curr->next = prev;\n        prev = curr;\n        curr = nextTemp;\n    }\n    return prev;\n}",
+      "post_type": "problem",
+      "category": "DSA",
+      "upvotes": 1,
+      "created_at": "2026-08-02T07:47:55.726Z",
+      "upvoted_users": [
+        [
+          "admin"
+        ]
+      ]
+    }
+  },
+  {
+    "model": "dashboard.discussionpost",
+    "pk": 2,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "title": "Two sum Problem",
+      "content": "Given a array and a  target and we check the sum of two element of array equal to target return 1 else return -1.",
+      "code_snippet": null,
+      "post_type": "problem",
+      "category": "DSA",
+      "upvotes": 1,
+      "created_at": "2026-08-02T07:50:40.054Z",
+      "upvoted_users": [
+        [
+          "admin"
+        ]
+      ]
+    }
+  },
+  {
+    "model": "dashboard.discussionreply",
+    "pk": 1,
+    "fields": {
+      "post": 1,
+      "user": [
+        "admin"
+      ],
+      "content": "Iterative approach runs in O(N) time and O(1) auxiliary space.",
+      "code_solution": "// O(N) Time, O(1) Space Solution",
+      "is_solution": true,
+      "upvotes": 0,
+      "created_at": "2026-08-02T07:47:55.811Z"
+    }
+  },
+  {
+    "model": "dashboard.discussionreply",
+    "pk": 2,
+    "fields": {
+      "post": 2,
+      "user": [
+        "admin"
+      ],
+      "content": "First we sort the array and then apply two pointer apprach .",
+      "code_solution": null,
+      "is_solution": false,
+      "upvotes": 0,
+      "created_at": "2026-08-02T07:51:22.785Z"
+    }
+  }
+]

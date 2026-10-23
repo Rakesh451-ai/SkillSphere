@@ -20,11 +20,30 @@ class Command(BaseCommand):
         quiz_count = Quiz.objects.count()
 
         if user_count <= 1 or quiz_count == 0 or force:
-            self.stdout.write(self.style.SUCCESS("Loading seed data from seed_data.json..."))
-            try:
-                call_command('loaddata', 'seed_data.json')
-                self.stdout.write(self.style.SUCCESS(f"Successfully loaded seed data! Users: {User.objects.count()}, Quizzes: {Quiz.objects.count()}"))
-            except Exception as e:
-                self.stdout.write(self.style.ERROR(f"Error loading seed data: {e}"))
+            data_dir = os.path.join(os.getcwd(), 'data')
+            data_files = []
+            if os.path.exists(data_dir):
+                data_files = sorted([
+                    os.path.join('data', f)
+                    for f in os.listdir(data_dir)
+                    if f.endswith('.json')
+                ])
+
+            if data_files:
+                self.stdout.write(self.style.SUCCESS(f"Loading seed data from {len(data_files)} fixture files in data/ ..."))
+                try:
+                    call_command('loaddata', *data_files)
+                    self.stdout.write(self.style.SUCCESS(f"Successfully loaded seed data from data/! Users: {User.objects.count()}, Quizzes: {Quiz.objects.count()}"))
+                except Exception as e:
+                    self.stdout.write(self.style.ERROR(f"Error loading seed data from data/: {e}"))
+            elif os.path.exists('seed_data.json'):
+                self.stdout.write(self.style.SUCCESS("Loading seed data from seed_data.json..."))
+                try:
+                    call_command('loaddata', 'seed_data.json')
+                    self.stdout.write(self.style.SUCCESS(f"Successfully loaded seed data! Users: {User.objects.count()}, Quizzes: {Quiz.objects.count()}"))
+                except Exception as e:
+                    self.stdout.write(self.style.ERROR(f"Error loading seed data: {e}"))
+            else:
+                self.stdout.write(self.style.WARNING("No seed fixtures found in data/ or seed_data.json."))
         else:
             self.stdout.write(self.style.SUCCESS(f"Database contains {user_count} user(s) and {quiz_count} quiz(zes). Skipping seed data loading."))

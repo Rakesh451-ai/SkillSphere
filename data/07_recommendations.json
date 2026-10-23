@@ -1,0 +1,154 @@
+[
+  {
+    "model": "recommendations.recommendation",
+    "pk": 18,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "title": "",
+      "message": "Build daily practice habits on SkillSphere by solving problems and playing coding games.",
+      "category": "Consistency",
+      "priority": "medium",
+      "action_text": "",
+      "action_url": "",
+      "icon": "bi-lightbulb-fill",
+      "impact_badge": "",
+      "is_read": false,
+      "created_at": "2026-08-02T09:05:50.695Z"
+    }
+  },
+  {
+    "model": "recommendations.recommendation",
+    "pk": 19,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "title": "",
+      "message": "Practice coding arcade games (Speed Typer, Bug Hunter, Big-O Master) to sharpen your compiler eyes and speed.",
+      "category": "Coding Games",
+      "priority": "high",
+      "action_text": "",
+      "action_url": "",
+      "icon": "bi-lightbulb-fill",
+      "impact_badge": "",
+      "is_read": false,
+      "created_at": "2026-08-02T09:05:50.854Z"
+    }
+  },
+  {
+    "model": "recommendations.recommendation",
+    "pk": 20,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "title": "",
+      "message": "Link your LeetCode username on the Leaderboard page to track your solved problems.",
+      "category": "DSA & LeetCode",
+      "priority": "medium",
+      "action_text": "",
+      "action_url": "",
+      "icon": "bi-lightbulb-fill",
+      "impact_badge": "",
+      "is_read": false,
+      "created_at": "2026-08-02T09:05:50.937Z"
+    }
+  },
+  {
+    "model": "recommendations.recommendation",
+    "pk": 21,
+    "fields": {
+      "user": [
+        "Test"
+      ],
+      "title": "",
+      "message": "Upload your resume in the Resume Analyzer to get AI scoring feedback and suggestions.",
+      "category": "Resume",
+      "priority": "medium",
+      "action_text": "",
+      "action_url": "",
+      "icon": "bi-lightbulb-fill",
+      "impact_badge": "",
+      "is_read": false,
+      "created_at": "2026-08-02T09:05:51.029Z"
+    }
+  },
+  {
+    "model": "recommendations.recommendation",
+    "pk": 35,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "title": "Accelerate Placement Readiness",
+      "message": "Your placement readiness is at 53%. Solve core DSA problems and complete arcade coding games to reach 80%+ target readiness.",
+      "category": "Placement Readiness",
+      "priority": "high",
+      "action_text": "Explore Prep Hub",
+      "action_url": "/dashboard/study/",
+      "icon": "bi-briefcase-fill",
+      "impact_badge": "Current: 53%",
+      "is_read": false,
+      "created_at": "2026-08-02T17:09:31.232Z"
+    }
+  },
+  {
+    "model": "recommendations.recommendation",
+    "pk": 36,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "title": "Target Skill Gap: Arrays",
+      "message": "You have not solved any problems in Arrays yet (10 core interview questions available). Tackle this topic next to balance your DSA mastery.",
+      "category": "DSA & Problem Solving",
+      "priority": "high",
+      "action_text": "Practice Arrays",
+      "action_url": "/dashboard/study/#cat-arrays",
+      "icon": "bi-code-square",
+      "impact_badge": "0/10 Solved",
+      "is_read": false,
+      "created_at": "2026-08-02T17:09:31.324Z"
+    }
+  },
+  {
+    "model": "recommendations.recommendation",
+    "pk": 37,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "title": "Master Big-O Time Complexity",
+      "message": "Reach Level 3+ in Big-O Complexity Master to sharpen your speed at analyzing algorithm efficiency under interview pressure.",
+      "category": "Coding Arcade",
+      "priority": "medium",
+      "action_text": "Play Big-O Master",
+      "action_url": "/dashboard/cpp-calculator/",
+      "icon": "bi-controller",
+      "impact_badge": "Current: Lvl 0",
+      "is_read": false,
+      "created_at": "2026-08-02T17:09:31.416Z"
+    }
+  },
+  {
+    "model": "recommendations.recommendation",
+    "pk": 38,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "title": "Start Daily Activity Streak",
+      "message": "Solve 1 DSA question or complete a coding game level today to start your daily streak and earn consistency bonuses.",
+      "category": "Daily Habit",
+      "priority": "medium",
+      "action_text": "Start Streak",
+      "action_url": "/dashboard/study/",
+      "icon": "bi-lightning-charge-fill",
+      "impact_badge": "Streak Bonus",
+      "is_read": false,
+      "created_at": "2026-08-02T17:09:31.516Z"
+    }
+  }
+]
